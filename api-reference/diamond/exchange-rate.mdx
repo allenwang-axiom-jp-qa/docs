@@ -1,0 +1,252 @@
+---
+title: 'Exchange Rate'
+description: 'Manage USDT to CNY exchange rate'
+---
+
+## Get Exchange Rate
+
+<RequestExample>
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/oms/diamonds/rate \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": {
+    "key": "usdt_to_cny_rate",
+    "value": {
+      "rate": 6.8,
+      "auto_sync": false,
+      "last_updated": "2024-12-24T10:30:00+08:00"
+    }
+  },
+  "msg": "success"
+}
+```
+</ResponseExample>
+
+Get current USDT to CNY exchange rate configuration.
+
+**Endpoint**: `GET /api/v1/oms/diamonds/rate`
+
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| key | string | Always "usdt_to_cny_rate" |
+| value.rate | float | Exchange rate (USDT → CNY) |
+| value.auto_sync | boolean | Auto-sync enabled |
+| value.last_updated | string | Last update timestamp (ISO 8601) |
+
+---
+
+## Update Exchange Rate
+
+<RequestExample>
+```bash cURL
+curl -X PUT https://dev-admin.beauty-666.com/api/v1/oms/diamonds/rate \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rate": 7.2,
+    "auto_sync": false
+  }'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Success
+{
+  "code": 0,
+  "data": {
+    "key": "usdt_to_cny_rate",
+    "value": {
+      "rate": 7.2,
+      "auto_sync": false,
+      "last_updated": "2026-01-07T10:30:00+08:00"
+    }
+  },
+  "msg": "更新成功"
+}
+```
+</ResponseExample>
+
+Manually update the exchange rate.
+
+**Endpoint**: `PUT /api/v1/oms/diamonds/rate`
+
+### Request Body
+
+| Field | Type | Required | Validation | Description |
+|-------|------|----------|------------|-------------|
+| rate | float | Yes | > 0 | New exchange rate |
+| auto_sync | boolean | Yes | - | Enable/disable auto-sync |
+
+<Info>
+  The `last_updated` timestamp is automatically set to the current time when you update the rate.
+</Info>
+
+---
+
+## Sync Exchange Rate
+
+<RequestExample>
+```bash cURL
+curl -X POST https://dev-admin.beauty-666.com/api/v1/oms/diamonds/rate/sync \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Success
+{
+  "code": 0,
+  "data": {
+    "key": "usdt_to_cny_rate",
+    "value": {
+      "rate": 7.15,
+      "auto_sync": false,
+      "last_updated": "2026-01-07T10:35:00+08:00"
+    }
+  },
+  "msg": "汇率同步成功"
+}
+```
+
+```json Error
+{
+  "code": 500,
+  "msg": "Failed to fetch rate from CoinGecko API"
+}
+```
+</ResponseExample>
+
+Sync exchange rate from CoinGecko API.
+
+**Endpoint**: `POST /api/v1/oms/diamonds/rate/sync`
+
+### How It Works
+
+1. Fetches the current USDT/CNY rate from CoinGecko API
+2. Updates the exchange rate in the database
+3. Sets `last_updated` to current timestamp
+4. Does not change the `auto_sync` setting
+
+### CoinGecko API
+
+The sync endpoint uses the CoinGecko API to fetch real-time market data:
+
+```
+https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=cny
+```
+
+<Warning>
+  **Rate Limits**: CoinGecko's free API has rate limits. Avoid calling this endpoint too frequently.
+</Warning>
+
+---
+
+## Use Cases
+
+### Manual Rate Management
+
+For stable, predictable pricing:
+
+```json
+{
+  "rate": 7.0,
+  "auto_sync": false
+}
+```
+
+Use manual updates when you want to:
+- Keep prices stable regardless of market fluctuations
+- Set custom exchange rates with margin
+- Control when rates change
+
+### Dynamic Rate Updates
+
+For market-based pricing:
+
+1. Enable `auto_sync: true`
+2. Set up a cron job to call `/rate/sync` periodically
+3. Rates update automatically based on market
+
+## Frontend Integration
+
+### Display Current Rate
+
+```javascript
+import { getExchangeRate } from '@/api/diamonds'
+
+const ExchangeRateDisplay = () => {
+  const [rateData, setRateData] = useState(null)
+
+  useEffect(() => {
+    const fetchRate = async () => {
+      const response = await getExchangeRate()
+      setRateData(response.data.value)
+    }
+    fetchRate()
+  }, [])
+
+  return (
+    <div>
+      <p>Current Rate: 1 USDT = ¥{rateData?.rate}</p>
+      <p>Last Updated: {new Date(rateData?.last_updated).toLocaleString()}</p>
+      <p>Auto Sync: {rateData?.auto_sync ? 'Enabled' : 'Disabled'}</p>
+    </div>
+  )
+}
+```
+
+### Update Rate Form
+
+```javascript
+const updateRate = async (newRate, autoSync) => {
+  try {
+    await axios.put('/api/v1/oms/diamonds/rate', {
+      rate: parseFloat(newRate),
+      auto_sync: autoSync
+    })
+    alert('Exchange rate updated successfully')
+  } catch (error) {
+    alert('Failed to update rate: ' + error.message)
+  }
+}
+```
+
+### Sync from CoinGecko
+
+```javascript
+const syncRate = async () => {
+  try {
+    const response = await axios.post('/api/v1/oms/diamonds/rate/sync')
+    const newRate = response.data.data.value.rate
+    alert(`Rate synced successfully: ${newRate}`)
+  } catch (error) {
+    alert('Failed to sync rate: ' + error.message)
+  }
+}
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Cache the Rate" icon="database">
+    Cache the exchange rate on the frontend to avoid unnecessary API calls
+  </Card>
+  <Card title="Show Last Updated" icon="clock">
+    Always display when the rate was last updated for transparency
+  </Card>
+  <Card title="Handle Sync Errors" icon="triangle-exclamation">
+    Implement proper error handling for sync failures
+  </Card>
+  <Card title="Rate Limits" icon="gauge">
+    Respect CoinGecko API rate limits when auto-syncing
+  </Card>
+</CardGroup>

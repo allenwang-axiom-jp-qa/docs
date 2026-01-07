@@ -1,0 +1,88 @@
+---
+title: 'API Reference Overview'
+description: 'Complete API reference for CMS OMS'
+---
+
+## API Modules
+
+The CMS OMS API is organized into the following modules:
+
+<CardGroup cols={2}>
+  <Card
+    title="Homepage API"
+    icon="house"
+    href="/api-reference/homepage/overview"
+  >
+    Manage homepage modules, items, and preview configurations
+  </Card>
+  <Card
+    title="Diamond API"
+    icon="gem"
+    href="/api-reference/diamond/overview"
+  >
+    Configure diamond packages and manage exchange rates
+  </Card>
+</CardGroup>
+
+## Base URL
+
+```
+https://dev-admin.beauty-666.com/api/v1/oms
+```
+
+## Response Format
+
+All API responses follow this standard format:
+
+```json
+{
+  "code": 0,
+  "data": {
+    // Response data or null
+  },
+  "msg": "success message"
+}
+```
+
+### Common Response Codes
+
+| Code | Description |
+| ---- | ----------- |
+| 0    | Success |
+| 7    | Resource not found |
+| 400  | Bad request (validation error) |
+| 401  | Unauthorized (invalid or missing token) |
+
+## Authentication
+
+All endpoints require JWT authentication:
+
+```bash
+Authorization: Bearer YOUR_JWT_TOKEN
+```
+
+See the [Authentication](/authentication) page for more details.
+
+## Pagination
+
+List endpoints support pagination with the following query parameters:
+
+| Parameter | Type | Default | Description |
+| --------- | ---- | ------- | ----------- |
+| page      | int  | 1       | Page number |
+| pageSize  | int  | 20      | Items per page |
+
+### Pagination Response
+
+```json
+{
+  "code": 0,
+  "data": {
+    "list": [],
+    "total": 100,
+    "page": 1,
+    "pageSize": 20
+  },
+  "msg": "success"
+}
+```

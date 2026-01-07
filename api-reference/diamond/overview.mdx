@@ -1,0 +1,192 @@
+---
+title: 'Diamond API Overview'
+description: 'Manage diamond packages and exchange rates'
+---
+
+## Introduction
+
+The Diamond API allows you to manage virtual currency (diamond) packages and USDT exchange rate configurations.
+
+## Key Features
+
+- **Package Management**: Create, update, and delete diamond packages
+- **Flexible Pricing**: Support both CNY and USDT pricing
+- **Bonus System**: Regular bonuses and first-charge bonuses
+- **Tags**: Mark packages as Hot, Recommended, or Best Value
+- **Exchange Rate**: Manage USDT to CNY exchange rate with auto-sync from CoinGecko
+- **Statistics**: Get overview of all packages
+
+## Database Tables
+
+- `oms_diamond_packages` - Diamond package configurations
+- `oms_diamond_configs` - System configurations (exchange rates, etc.)
+
+## Test Data
+
+The development environment includes 6 test packages:
+
+| Price (CNY) | Diamonds | Status |
+|-------------|----------|--------|
+| ¥10 | 100 | Active |
+| ¥30 | 350 | Active |
+| ¥50 | 600 | Active |
+| ¥100 | 1,300 | Active |
+| ¥500 | 7,000 | Active |
+| ¥999 | 15,000 | Active |
+
+## API Endpoints
+
+### Query Endpoints
+
+<CardGroup cols={2}>
+  <Card
+    title="Get Overview"
+    icon="chart-simple"
+    href="/api-reference/diamond/packages#get-overview"
+  >
+    Get package statistics
+  </Card>
+  <Card
+    title="List Packages"
+    icon="list"
+    href="/api-reference/diamond/packages#list-packages"
+  >
+    Get all packages with pagination
+  </Card>
+  <Card
+    title="Get Package"
+    icon="file"
+    href="/api-reference/diamond/packages#get-package"
+  >
+    Get single package details
+  </Card>
+</CardGroup>
+
+### Management Endpoints
+
+<CardGroup cols={3}>
+  <Card
+    title="Create Package"
+    icon="plus"
+    href="/api-reference/diamond/packages#create-package"
+  >
+    Create new diamond package
+  </Card>
+  <Card
+    title="Update Package"
+    icon="pen"
+    href="/api-reference/diamond/packages#update-package"
+  >
+    Update package configuration
+  </Card>
+  <Card
+    title="Delete Package"
+    icon="trash"
+    href="/api-reference/diamond/packages#delete-package"
+  >
+    Soft delete a package
+  </Card>
+</CardGroup>
+
+### Exchange Rate
+
+<CardGroup cols={3}>
+  <Card
+    title="Get Rate"
+    icon="dollar-sign"
+    href="/api-reference/diamond/exchange-rate#get-rate"
+  >
+    Get current USDT/CNY rate
+  </Card>
+  <Card
+    title="Update Rate"
+    icon="pen"
+    href="/api-reference/diamond/exchange-rate#update-rate"
+  >
+    Update exchange rate
+  </Card>
+  <Card
+    title="Sync Rate"
+    icon="sync"
+    href="/api-reference/diamond/exchange-rate#sync-rate"
+  >
+    Sync from CoinGecko API
+  </Card>
+</CardGroup>
+
+## Package Tags
+
+| Value | Label | Color | Description |
+|-------|-------|-------|-------------|
+| 0 | 无标签 | Default | No special tag |
+| 1 | 热门 | Red | Hot/Popular package |
+| 2 | 推荐 | Blue | Recommended package |
+| 3 | 超值 | Orange | Best value package |
+
+## Package Status
+
+| Value | Label | Description |
+|-------|-------|-------------|
+| 0 | 已下架 | Offline/Disabled |
+| 1 | 已上架 | Online/Active |
+
+## Price Format
+
+All prices are stored in **cents** to avoid floating-point precision issues:
+
+- `price_cny_cents`: Chinese Yuan in cents (100 = ¥1.00)
+- `price_usdt_cents`: USDT in cents (100 = 1.00 USDT)
+
+### Frontend Display
+
+```javascript
+// Convert cents to display format
+const formatPrice = (cents) => (cents / 100).toFixed(2)
+
+// Example
+formatPrice(1000)  // "10.00"
+formatPrice(99999) // "999.99"
+```
+
+## Total Diamonds Calculation
+
+The total diamonds a user receives depends on several factors:
+
+```javascript
+const calculateTotalDiamonds = (pkg, isFirstCharge) => {
+  let total = pkg.diamonds + pkg.bonus_diamonds
+
+  if (isFirstCharge && pkg.first_charge_bonus) {
+    total += pkg.first_charge_bonus_diamonds
+  }
+
+  return total
+}
+```
+
+**Example:**
+- Base diamonds: 1,000
+- Bonus diamonds: 100
+- First charge bonus: 200 (if enabled and is first charge)
+- **Total**: 1,300 diamonds
+
+## Deployment Status
+
+### Development Environment
+
+- **Base URL**: `https://dev-admin.beauty-666.com/api/v1/oms/diamonds`
+- **Database**: `10.1.160.41:3306` / `cms_oms`
+- **Status**: All 10 endpoints operational
+- **Test Data**: 6 packages + USDT rate config
+
+## Version History
+
+### v1.1 (2026-01-06)
+- Fixed exchange rate update duplicate key error
+- Route registration fixes
+- Deployed to dev environment
+
+### v1.0 (2026-01-05)
+- Initial release with complete CRUD
+- Exchange rate management
+- CoinGecko integration

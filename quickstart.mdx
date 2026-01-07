@@ -1,0 +1,89 @@
+---
+title: 'Quickstart'
+description: 'Get started with CMS OMS API in minutes'
+---
+
+## Setup Your Environment
+
+Before you start using the API, make sure you have the following:
+
+<AccordionGroup>
+  <Accordion icon="key" title="Authentication Token">
+    All API requests require a valid JWT token. Contact your administrator to obtain one.
+  </Accordion>
+  <Accordion icon="server" title="Base URL">
+    Development: `https://dev-admin.beauty-666.com/api/v1/oms`
+  </Accordion>
+</AccordionGroup>
+
+## Make Your First Request
+
+<CodeGroup>
+
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/oms/homepage/overview \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+```javascript JavaScript
+const response = await fetch('https://dev-admin.beauty-666.com/api/v1/oms/homepage/overview', {
+  headers: {
+    'Authorization': 'Bearer YOUR_TOKEN'
+  }
+});
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    'https://dev-admin.beauty-666.com/api/v1/oms/homepage/overview',
+    headers={'Authorization': 'Bearer YOUR_TOKEN'}
+)
+print(response.json())
+```
+
+</CodeGroup>
+
+## Response Format
+
+All API responses follow this standard format:
+
+```json
+{
+  "code": 0,
+  "data": {
+    // Response data
+  },
+  "msg": "success"
+}
+```
+
+### Status Codes
+
+| Code | Description |
+| ---- | ----------- |
+| 0    | Success |
+| 7    | Resource not found |
+| Other | Error (check msg field) |
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Homepage API"
+    icon="house"
+    href="/api-reference/homepage/overview"
+  >
+    Learn about homepage management
+  </Card>
+  <Card
+    title="Diamond API"
+    icon="gem"
+    href="/api-reference/diamond/overview"
+  >
+    Explore diamond package configuration
+  </Card>
+</CardGroup>

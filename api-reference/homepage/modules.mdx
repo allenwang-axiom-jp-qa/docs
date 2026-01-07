@@ -1,0 +1,240 @@
+---
+title: 'Module Management'
+description: 'Manage homepage modules'
+api: 'GET https://dev-admin.beauty-666.com/api/v1/oms/homepage'
+---
+
+## Get Overview
+
+<RequestExample>
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/oms/homepage/overview \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": {
+    "total_count": 9,
+    "enabled_count": 7,
+    "disabled_count": 2
+  },
+  "msg": "操作成功"
+}
+```
+</ResponseExample>
+
+Get statistics about homepage modules.
+
+**Endpoint**: `GET /api/v1/oms/homepage/overview`
+
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| total_count | int | Total number of modules (always 9) |
+| enabled_count | int | Number of enabled modules |
+| disabled_count | int | Number of disabled modules |
+
+---
+
+## List Modules
+
+<RequestExample>
+```bash cURL
+curl "https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules?page=1&pageSize=10" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": {
+    "list": [
+      {
+        "ID": 1,
+        "CreatedAt": "2026-01-05T10:00:00Z",
+        "UpdatedAt": "2026-01-06T12:00:00Z",
+        "key": "banner",
+        "title": "首页轮播图",
+        "type": "banner",
+        "config": "{\"autoplay\":true,\"interval\":3000}",
+        "order": 1,
+        "enabled": true
+      }
+    ],
+    "total": 9,
+    "page": 1,
+    "pageSize": 10
+  },
+  "msg": "操作成功"
+}
+```
+</ResponseExample>
+
+Get paginated list of all homepage modules.
+
+**Endpoint**: `GET /api/v1/oms/homepage/modules`
+
+### Query Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| page | int | No | 1 | Page number |
+| pageSize | int | No | 20 | Items per page |
+
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| key | string | Module unique identifier (system-defined, immutable) |
+| title | string | Module title (editable) |
+| type | string | Module type (system-defined, immutable) |
+| config | string | Module configuration JSON (editable) |
+| order | int | Display order (editable, 0-9999) |
+| enabled | boolean | Whether module is enabled (editable) |
+
+---
+
+## Get Module
+
+<RequestExample>
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/1 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": {
+    "ID": 1,
+    "CreatedAt": "2026-01-05T10:00:00Z",
+    "UpdatedAt": "2026-01-06T12:00:00Z",
+    "key": "banner",
+    "title": "首页轮播图",
+    "type": "banner",
+    "config": "{\"autoplay\":true,\"interval\":3000}",
+    "order": 1,
+    "enabled": true
+  },
+  "msg": "操作成功"
+}
+```
+</ResponseExample>
+
+Get details of a single module.
+
+**Endpoint**: `GET /api/v1/oms/homepage/modules/:id`
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | int | Module ID |
+
+---
+
+## Update Module
+
+<RequestExample>
+```bash cURL
+curl -X PUT https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/1 \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "轮播图模块",
+    "config": "{\"autoplay\":false,\"interval\":5000}",
+    "order": 10,
+    "enabled": false
+  }'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Success
+{
+  "code": 0,
+  "data": null,
+  "msg": "更新成功"
+}
+```
+
+```json Error
+{
+  "code": 7,
+  "msg": "模块不存在"
+}
+```
+</ResponseExample>
+
+Update module configuration.
+
+**Endpoint**: `PUT /api/v1/oms/homepage/modules/:id`
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | int | Module ID |
+
+### Request Body
+
+All fields are optional:
+
+| Field | Type | Validation | Description |
+|-------|------|------------|-------------|
+| title | string | 1-100 chars | Module title |
+| config | string | Valid JSON string | Module configuration |
+| order | int | 0-9999 | Display order |
+| enabled | boolean | - | Enable/disable module |
+
+<Warning>
+  **Limitations:**
+  - Only these 4 fields can be updated
+  - `key` and `type` are system-defined and immutable
+  - Module creation and deletion are not supported
+</Warning>
+
+## Module Configuration Examples
+
+### Banner Module
+
+```json
+{
+  "autoplay": true,
+  "interval": 3000,
+  "showIndicator": true,
+  "indicatorPosition": "bottom"
+}
+```
+
+### Grid Module
+
+```json
+{
+  "columns": 4,
+  "rows": 2,
+  "gap": 10,
+  "showTitle": true
+}
+```
+
+### Video Module
+
+```json
+{
+  "layout": "list",
+  "autoplay": false,
+  "showDuration": true
+}
+```
+
+See the [original documentation](/docs/HOMEPAGE_API_DOCUMENTATION.md) for more configuration examples.

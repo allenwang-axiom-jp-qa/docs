@@ -1,0 +1,81 @@
+---
+title: 'Authentication'
+description: 'Learn how to authenticate your API requests'
+---
+
+## JWT Authentication
+
+All API endpoints require authentication using JWT (JSON Web Token) Bearer tokens.
+
+### How to Authenticate
+
+Include your JWT token in the `Authorization` header of every request:
+
+```bash
+Authorization: Bearer YOUR_JWT_TOKEN
+```
+
+### Example Request
+
+<CodeGroup>
+
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+```
+
+```javascript JavaScript
+const config = {
+  headers: {
+    'Authorization': `Bearer ${token}`
+  }
+};
+
+const response = await axios.get('/api/v1/oms/homepage/modules', config);
+```
+
+```python Python
+headers = {
+    'Authorization': f'Bearer {token}'
+}
+
+response = requests.get(
+    'https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules',
+    headers=headers
+)
+```
+
+</CodeGroup>
+
+## Obtaining a Token
+
+Contact your system administrator to obtain a valid JWT token for your environment.
+
+<Warning>
+  Keep your JWT token secure and never share it publicly. Treat it like a password.
+</Warning>
+
+## Token Expiration
+
+JWT tokens have an expiration time. When a token expires, you will receive an authentication error and need to obtain a new token.
+
+### Error Response
+
+```json
+{
+  "code": 401,
+  "msg": "Token expired or invalid"
+}
+```
+
+## Permissions
+
+Different operations may require different permission levels:
+
+- **Read**: View modules and configurations
+- **Write**: Create and update items
+- **Admin**: Delete items and modify system configurations
+
+<Info>
+  All endpoints in this documentation require admin-level permissions.
+</Info>

@@ -1,0 +1,141 @@
+---
+title: 'Homepage API Overview'
+description: 'Manage homepage modules and items'
+---
+
+## Introduction
+
+The Homepage API allows you to manage homepage modules and their items for your application. The system includes 9 pre-configured modules that can be customized.
+
+## Key Features
+
+- **9 Pre-configured Modules**: Fixed modules including banner, hot recommend, category nav, etc.
+- **Module Configuration**: Update titles, config JSON, order, and enabled status
+- **Module Items CRUD**: Full create, read, update, delete support for module items
+- **H5 Preview**: Optimized preview endpoint with batch query (2 queries instead of 10)
+- **Pagination Support**: All list endpoints support pagination
+
+## Pre-configured Modules
+
+| ID | Key | Title | Type | Description |
+|----|-----|-------|------|-------------|
+| 1 | banner | 轮播图 | banner | Homepage carousel |
+| 2 | hot_recommend | 热门推荐 | grid | Hot content grid |
+| 3 | category_nav | 分类导航 | category | Category navigation |
+| 4 | vip_zone | VIP专区 | vip | VIP exclusive content |
+| 5 | featured_videos | 精选视频 | video | Featured videos |
+| 6 | live_streaming | 直播间 | live | Live streaming |
+| 7 | new_arrivals | 最新上架 | product | New products |
+| 8 | discount_zone | 优惠专区 | promotion | Promotions |
+| 9 | customer_service | 客服中心 | service | Customer service |
+
+<Warning>
+  Module creation and deletion are not supported. Only the 9 pre-configured modules exist in the system.
+</Warning>
+
+## Database Tables
+
+- `home_modules` - Homepage modules (9 pre-configured)
+- `home_module_items` - Homepage module items
+
+## API Endpoints
+
+### Module Management
+
+<CardGroup cols={2}>
+  <Card
+    title="Get Overview"
+    icon="chart-simple"
+    href="/api-reference/homepage/modules#get-overview"
+  >
+    Get module statistics
+  </Card>
+  <Card
+    title="List Modules"
+    icon="list"
+    href="/api-reference/homepage/modules#list-modules"
+  >
+    Get all modules with pagination
+  </Card>
+  <Card
+    title="Get Module"
+    icon="file"
+    href="/api-reference/homepage/modules#get-module"
+  >
+    Get single module details
+  </Card>
+  <Card
+    title="Update Module"
+    icon="pen"
+    href="/api-reference/homepage/modules#update-module"
+  >
+    Update module configuration
+  </Card>
+</CardGroup>
+
+### Module Items
+
+<CardGroup cols={2}>
+  <Card
+    title="List Items"
+    icon="list"
+    href="/api-reference/homepage/module-items#list-items"
+  >
+    Get module items with pagination
+  </Card>
+  <Card
+    title="Create Item"
+    icon="plus"
+    href="/api-reference/homepage/module-items#create-item"
+  >
+    Create new module item
+  </Card>
+  <Card
+    title="Update Item"
+    icon="pen"
+    href="/api-reference/homepage/module-items#update-item"
+  >
+    Update module item
+  </Card>
+  <Card
+    title="Delete Item"
+    icon="trash"
+    href="/api-reference/homepage/module-items#delete-item"
+  >
+    Soft delete module item
+  </Card>
+</CardGroup>
+
+### Preview
+
+<CardGroup cols={1}>
+  <Card
+    title="H5 Preview"
+    icon="mobile"
+    href="/api-reference/homepage/preview"
+  >
+    Get optimized preview data for H5 rendering
+  </Card>
+</CardGroup>
+
+## Performance
+
+The H5 preview endpoint is optimized with batch queries:
+
+- **Query Count**: 2 queries (vs 10 in naive implementation)
+- **Response Time**: ~10ms (vs ~50ms)
+- **Load Reduction**: 80% fewer database queries
+
+## Version History
+
+### v1.1 (2026-01-06)
+- Request/Response object standardization
+- Fixed H5 preview N+1 query issue (5x performance improvement)
+- YAGNI optimization (removed module create/delete)
+- Code reduction: 145 lines (24% reduction)
+- Added pagination support
+
+### v1.0 (2026-01-05)
+- Initial release with 9 pre-configured modules
+- Module and item CRUD functionality
+- H5 preview endpoint

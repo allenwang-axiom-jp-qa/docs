@@ -1,0 +1,365 @@
+---
+title: 'Diamond Packages'
+description: 'Manage diamond package configurations'
+---
+
+## Get Overview
+
+<RequestExample>
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/oms/diamonds/overview \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": {
+    "total_count": 6,
+    "active_count": 6,
+    "hot_count": 2,
+    "average_price": 296.5
+  },
+  "msg": "success"
+}
+```
+</ResponseExample>
+
+Get statistics about diamond packages.
+
+**Endpoint**: `GET /api/v1/oms/diamonds/overview`
+
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| total_count | int | Total number of packages |
+| active_count | int | Number of active packages |
+| hot_count | int | Number of packages tagged as "Hot" |
+| average_price | float | Average price in CNY |
+
+---
+
+## List Packages
+
+<RequestExample>
+```bash cURL
+curl "https://dev-admin.beauty-666.com/api/v1/oms/diamonds?page=1&pageSize=10&status=1" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": {
+    "list": [
+      {
+        "id": 1,
+        "diamonds": 100,
+        "bonus_diamonds": 0,
+        "price_cny_cents": 1000,
+        "price_usdt_cents": 150,
+        "first_charge_bonus": false,
+        "first_charge_bonus_diamonds": 0,
+        "tags": 0,
+        "description": "新手推荐",
+        "sort_order": 1,
+        "status": 1,
+        "total_diamonds": 100,
+        "created_at": "2026-01-06T10:00:00Z",
+        "updated_at": "2026-01-06T10:00:00Z"
+      }
+    ],
+    "total": 6,
+    "page": 1,
+    "pageSize": 10
+  },
+  "msg": "success"
+}
+```
+</ResponseExample>
+
+Get paginated list of diamond packages.
+
+**Endpoint**: `GET /api/v1/oms/diamonds`
+
+### Query Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| page | int | No | 1 | Page number |
+| pageSize | int | No | 20 | Items per page |
+| status | int | No | - | Filter by status (0=offline, 1=active) |
+
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| diamonds | int | Base diamond amount |
+| bonus_diamonds | int | Bonus diamonds included |
+| price_cny_cents | int | Price in CNY cents (÷100 for display) |
+| price_usdt_cents | int | Price in USDT cents (÷100 for display) |
+| first_charge_bonus | boolean | First charge bonus enabled |
+| first_charge_bonus_diamonds | int | Extra diamonds for first charge |
+| tags | int | Package tag (0=none, 1=hot, 2=recommended, 3=best value) |
+| description | string | Package description |
+| sort_order | int | Display order |
+| status | int | Status (0=offline, 1=active) |
+| total_diamonds | int | Calculated total (base + bonus) |
+
+---
+
+## Get Package
+
+<RequestExample>
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/oms/diamonds/1 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": {
+    "id": 1,
+    "diamonds": 100,
+    "bonus_diamonds": 0,
+    "price_cny_cents": 1000,
+    "price_usdt_cents": 150,
+    "first_charge_bonus": false,
+    "first_charge_bonus_diamonds": 0,
+    "tags": 0,
+    "description": "新手推荐",
+    "sort_order": 1,
+    "status": 1,
+    "total_diamonds": 100,
+    "created_at": "2026-01-06T10:00:00Z",
+    "updated_at": "2026-01-06T10:00:00Z"
+  },
+  "msg": "success"
+}
+```
+</ResponseExample>
+
+Get details of a single package.
+
+**Endpoint**: `GET /api/v1/oms/diamonds/:id`
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | int | Package ID |
+
+---
+
+## Create Package
+
+<RequestExample>
+```bash cURL
+curl -X POST https://dev-admin.beauty-666.com/api/v1/oms/diamonds \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "diamonds": 2000,
+    "bonus_diamonds": 200,
+    "price_cny_cents": 20000,
+    "price_usdt_cents": 3000,
+    "first_charge_bonus": true,
+    "first_charge_bonus_diamonds": 500,
+    "tags": 2,
+    "description": "超值套餐",
+    "sort_order": 100,
+    "status": 1
+  }'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": {
+    "id": 7,
+    "diamonds": 2000,
+    "bonus_diamonds": 200,
+    "price_cny_cents": 20000,
+    "price_usdt_cents": 3000,
+    "first_charge_bonus": true,
+    "first_charge_bonus_diamonds": 500,
+    "tags": 2,
+    "description": "超值套餐",
+    "sort_order": 100,
+    "status": 1,
+    "total_diamonds": 2200,
+    "created_at": "2026-01-07T10:00:00Z",
+    "updated_at": "2026-01-07T10:00:00Z"
+  },
+  "msg": "创建成功"
+}
+```
+</ResponseExample>
+
+Create a new diamond package.
+
+**Endpoint**: `POST /api/v1/oms/diamonds`
+
+### Request Body
+
+| Field | Type | Required | Validation | Description |
+|-------|------|----------|------------|-------------|
+| diamonds | int | Yes | 1-10,000,000 | Base diamond amount |
+| bonus_diamonds | int | No | 0-20,000,000, ≤2×diamonds | Bonus diamonds |
+| price_cny_cents | int | Yes | 1-10,000,000 | CNY price in cents |
+| price_usdt_cents | int | Yes | 1-1,000,000 | USDT price in cents |
+| first_charge_bonus | boolean | Yes | - | Enable first charge bonus |
+| first_charge_bonus_diamonds | int | Yes | ≥0, ≤diamonds | First charge bonus amount |
+| tags | int | Yes | 0-3 | Package tag |
+| description | string | No | Max 500 chars | Package description |
+| sort_order | int | No | 0-9999 | Display order |
+| status | int | Yes | 0 or 1 | Package status |
+
+### Validation Rules
+
+<Warning>
+  **Important Validation Rules:**
+  - `bonus_diamonds` cannot exceed 2× base `diamonds`
+  - If `first_charge_bonus` is false, `first_charge_bonus_diamonds` must be 0
+  - If `first_charge_bonus` is true, bonus amount cannot exceed base `diamonds`
+</Warning>
+
+---
+
+## Update Package
+
+<RequestExample>
+```bash cURL
+curl -X PUT https://dev-admin.beauty-666.com/api/v1/oms/diamonds/1 \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "price_cny_cents": 1200,
+    "status": 0
+  }'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Success
+{
+  "code": 0,
+  "data": null,
+  "msg": "更新成功"
+}
+```
+</ResponseExample>
+
+Update an existing package.
+
+**Endpoint**: `PUT /api/v1/oms/diamonds/:id`
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | int | Package ID |
+
+### Request Body
+
+All fields are optional - only include fields you want to update:
+
+| Field | Type | Validation | Description |
+|-------|------|------------|-------------|
+| diamonds | int | 1-10,000,000 | Base diamond amount |
+| bonus_diamonds | int | 0-20,000,000, ≤2×diamonds | Bonus diamonds |
+| price_cny_cents | int | 1-10,000,000 | CNY price in cents |
+| price_usdt_cents | int | 1-1,000,000 | USDT price in cents |
+| first_charge_bonus | boolean | - | Enable first charge bonus |
+| first_charge_bonus_diamonds | int | ≥0, ≤diamonds | First charge bonus |
+| tags | int | 0-3 | Package tag |
+| description | string | Max 500 chars | Description |
+| sort_order | int | 0-9999 | Display order |
+| status | int | 0 or 1 | Status |
+
+---
+
+## Delete Package
+
+<RequestExample>
+```bash cURL
+curl -X DELETE https://dev-admin.beauty-666.com/api/v1/oms/diamonds/1 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": null,
+  "msg": "删除成功"
+}
+```
+</ResponseExample>
+
+Soft delete a diamond package.
+
+**Endpoint**: `DELETE /api/v1/oms/diamonds/:id`
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | int | Package ID |
+
+<Info>
+  This is a soft delete - the package is marked as deleted but not physically removed from the database.
+</Info>
+
+## Frontend Examples
+
+### Price Formatting
+
+```javascript
+// Convert cents to display format
+const formatPrice = (cents) => (cents / 100).toFixed(2)
+
+// Examples
+formatPrice(1000)   // "10.00"
+formatPrice(20000)  // "200.00"
+formatPrice(99999)  // "999.99"
+```
+
+### Tag Display
+
+```javascript
+const TAG_CONFIG = {
+  0: { text: '无标签', color: 'default' },
+  1: { text: '热门', color: 'red' },
+  2: { text: '推荐', color: 'blue' },
+  3: { text: '超值', color: 'orange' }
+}
+
+// Usage in React/Vue
+const tagConfig = TAG_CONFIG[package.tags]
+```
+
+### Total Diamonds Calculation
+
+```javascript
+const calculateTotal = (pkg, isFirstCharge = false) => {
+  let total = pkg.diamonds + pkg.bonus_diamonds
+
+  if (isFirstCharge && pkg.first_charge_bonus) {
+    total += pkg.first_charge_bonus_diamonds
+  }
+
+  return total
+}
+```

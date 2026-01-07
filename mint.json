@@ -1,0 +1,94 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "CMS OMS API Documentation",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0D9373",
+    "anchors": {
+      "from": "#0D9373",
+      "to": "#07C983"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "GitHub",
+      "url": "https://github.com/axiom888/cms-site-svc-oms"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Dev Environment",
+    "url": "https://dev-admin.beauty-666.com"
+  },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    },
+    {
+      "name": "Deployment",
+      "url": "deployment"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "Community",
+      "icon": "github",
+      "url": "https://github.com/axiom888/cms-site-svc-oms"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "introduction",
+        "quickstart",
+        "authentication"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/overview"
+      ]
+    },
+    {
+      "group": "Homepage API",
+      "pages": [
+        "api-reference/homepage/overview",
+        "api-reference/homepage/modules",
+        "api-reference/homepage/module-items",
+        "api-reference/homepage/preview"
+      ]
+    },
+    {
+      "group": "Diamond API",
+      "pages": [
+        "api-reference/diamond/overview",
+        "api-reference/diamond/packages",
+        "api-reference/diamond/exchange-rate"
+      ]
+    },
+    {
+      "group": "Deployment",
+      "pages": [
+        "deployment/setup",
+        "deployment/ci-cd"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/axiom888/cms-site-svc-oms"
+  },
+  "api": {
+    "baseUrl": "https://dev-admin.beauty-666.com/api/v1/oms",
+    "auth": {
+      "method": "bearer"
+    }
+  }
+}

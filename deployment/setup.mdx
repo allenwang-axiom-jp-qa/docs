@@ -1,0 +1,262 @@
+---
+title: 'Setup Guide'
+description: 'How to set up and run the CMS OMS service'
+---
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Go**: Version 1.20 or higher
+- **MySQL**: Version 8.0 or higher
+- **etcd**: Version 3.5 or higher (for distributed configuration)
+
+## Environment Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/axiom888/cms-site-svc-oms.git
+cd cms-site-svc-oms
+```
+
+### 2. Install Dependencies
+
+```bash
+go mod download
+```
+
+### 3. Configure Database
+
+Create a MySQL database:
+
+```sql
+CREATE DATABASE cms_oms CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+### 4. Configure Application
+
+Copy the example configuration:
+
+```bash
+cp config.yaml.example config.yaml
+```
+
+Edit `config.yaml` with your database credentials:
+
+```yaml
+mysql:
+  host: localhost
+  port: 3306
+  dbname: cms_oms
+  username: your_username
+  password: your_password
+  config: charset=utf8mb4&parseTime=True&loc=Local
+
+etcd:
+  endpoints:
+    - localhost:2379
+
+server:
+  address: :8080
+```
+
+## Database Migration
+
+The service uses GORM AutoMigrate. Tables will be created automatically on first run.
+
+### Manual Migration
+
+If you need to run migrations manually:
+
+```bash
+# The service will auto-migrate on startup
+go run main.go
+```
+
+### Initial Data
+
+For homepage modules, you need to seed the 9 pre-configured modules. See the SQL files in the `sql/` directory:
+
+```bash
+mysql -u your_username -p cms_oms < sql/home_modules.sql
+```
+
+## Running the Service
+
+### Development Mode
+
+```bash
+# Using config.dev.yaml
+go run main.go -c config.dev.yaml
+```
+
+### Production Mode
+
+```bash
+# Build the binary
+go build -o cms-oms-server
+
+# Run the server
+./cms-oms-server
+```
+
+### Background Mode
+
+```bash
+# Run in background
+nohup ./cms-oms-server > server.log 2>&1 &
+
+# Save PID
+echo $! > server.pid
+```
+
+## Testing the Service
+
+### Health Check
+
+```bash
+curl http://localhost:8080/health
+```
+
+### Test API Endpoints
+
+```bash
+# Get homepage overview
+curl http://localhost:8080/api/v1/oms/homepage/overview \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Get diamond packages
+curl http://localhost:8080/api/v1/oms/diamonds \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+## Environment-Specific Configuration
+
+### Development
+
+```yaml
+# config.dev.yaml
+system:
+  env: development
+  db-type: mysql
+  oss-type: local
+
+mysql:
+  host: 10.1.160.41
+  port: 3306
+  dbname: cms_oms
+```
+
+### Production
+
+```yaml
+# config.yaml
+system:
+  env: production
+  db-type: mysql
+  oss-type: qiniu
+
+mysql:
+  host: your-prod-db-host
+  port: 3306
+  dbname: cms_oms
+```
+
+## Troubleshooting
+
+### Port Already in Use
+
+```bash
+# Find process using port 8080
+lsof -i :8080
+
+# Kill the process
+kill -9 <PID>
+```
+
+### Database Connection Failed
+
+1. Check MySQL is running: `systemctl status mysql`
+2. Verify credentials in config.yaml
+3. Ensure database exists: `SHOW DATABASES;`
+4. Check firewall rules
+
+### etcd Connection Issues
+
+```bash
+# Check etcd status
+etcdctl endpoint health
+
+# Start etcd if not running
+systemctl start etcd
+```
+
+## Docker Setup
+
+### Build Docker Image
+
+```bash
+docker build -t cms-oms:latest .
+```
+
+### Run with Docker Compose
+
+```yaml
+version: '3.8'
+services:
+  app:
+    image: cms-oms:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - CONFIG_FILE=config.docker.yaml
+    volumes:
+      - ./config.docker.yaml:/app/config.yaml
+    depends_on:
+      - mysql
+      - etcd
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: cms_oms
+      MYSQL_ROOT_PASSWORD: your_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  etcd:
+    image: quay.io/coreos/etcd:latest
+    command:
+      - etcd
+      - --advertise-client-urls=http://0.0.0.0:2379
+      - --listen-client-urls=http://0.0.0.0:2379
+
+volumes:
+  mysql_data:
+```
+
+Run with:
+
+```bash
+docker-compose up -d
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="CI/CD Setup"
+    icon="rocket"
+    href="/deployment/ci-cd"
+  >
+    Learn about our CI/CD pipeline
+  </Card>
+  <Card
+    title="API Documentation"
+    icon="book"
+    href="/api-reference/overview"
+  >
+    Explore the API endpoints
+  </Card>
+</CardGroup>

@@ -1,0 +1,274 @@
+---
+title: 'Module Items'
+description: 'Manage items within homepage modules'
+---
+
+## List Items
+
+<RequestExample>
+```bash cURL
+curl "https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/1/items?page=1&pageSize=10" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": {
+    "list": [
+      {
+        "ID": 1,
+        "CreatedAt": "2026-01-05T10:00:00Z",
+        "UpdatedAt": "2026-01-06T12:00:00Z",
+        "module_id": 1,
+        "title": "新年促销",
+        "subtitle": "全场8折起",
+        "image_url": "https://cdn.example.com/banner1.jpg",
+        "link_url": "/promotion/newyear",
+        "link_type": "internal",
+        "sort_order": 1,
+        "enabled": true
+      }
+    ],
+    "total": 5,
+    "page": 1,
+    "pageSize": 10
+  },
+  "msg": "操作成功"
+}
+```
+</ResponseExample>
+
+Get paginated list of items for a specific module.
+
+**Endpoint**: `GET /api/v1/oms/homepage/modules/:moduleId/items`
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| moduleId | int | Module ID |
+
+### Query Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| page | int | No | 1 | Page number |
+| pageSize | int | No | 20 | Items per page |
+
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| module_id | int | Parent module ID |
+| title | string | Item title (required) |
+| subtitle | string | Item subtitle (optional) |
+| image_url | string | Image URL |
+| link_url | string | Click target URL |
+| link_type | string | Link type: internal/external/none |
+| sort_order | int | Sort order (0-9999) |
+| enabled | boolean | Whether item is enabled |
+
+---
+
+## Get Item
+
+<RequestExample>
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/oms/homepage/items/1 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": {
+    "ID": 1,
+    "CreatedAt": "2026-01-05T10:00:00Z",
+    "UpdatedAt": "2026-01-06T12:00:00Z",
+    "module_id": 1,
+    "title": "新年促销",
+    "subtitle": "全场8折起",
+    "image_url": "https://cdn.example.com/banner1.jpg",
+    "link_url": "/promotion/newyear",
+    "link_type": "internal",
+    "sort_order": 1,
+    "enabled": true
+  },
+  "msg": "操作成功"
+}
+```
+</ResponseExample>
+
+Get details of a single module item.
+
+**Endpoint**: `GET /api/v1/oms/homepage/items/:id`
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | int | Item ID |
+
+---
+
+## Create Item
+
+<RequestExample>
+```bash cURL
+curl -X POST https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/1/items \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "春季新品",
+    "subtitle": "新品上市",
+    "image_url": "https://cdn.example.com/spring.jpg",
+    "link_url": "/products/spring",
+    "link_type": "internal",
+    "sort_order": 10,
+    "enabled": true
+  }'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": {
+    "ID": 10,
+    "CreatedAt": "2026-01-06T14:30:00Z",
+    "UpdatedAt": "2026-01-06T14:30:00Z",
+    "module_id": 1,
+    "title": "春季新品",
+    "subtitle": "新品上市",
+    "image_url": "https://cdn.example.com/spring.jpg",
+    "link_url": "/products/spring",
+    "link_type": "internal",
+    "sort_order": 10,
+    "enabled": true
+  },
+  "msg": "创建成功"
+}
+```
+</ResponseExample>
+
+Create a new item for a module.
+
+**Endpoint**: `POST /api/v1/oms/homepage/modules/:moduleId/items`
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| moduleId | int | Module ID |
+
+### Request Body
+
+| Field | Type | Required | Validation | Default | Description |
+|-------|------|----------|------------|---------|-------------|
+| title | string | Yes | 1-100 chars | - | Item title |
+| subtitle | string | No | Max 200 chars | "" | Item subtitle |
+| image_url | string | No | - | "" | Image URL |
+| link_url | string | No | - | "" | Target URL |
+| link_type | string | No | - | "none" | Link type |
+| sort_order | int | No | 0-9999 | 0 | Sort order |
+| enabled | boolean | No | - | true | Enable status |
+
+---
+
+## Update Item
+
+<RequestExample>
+```bash cURL
+curl -X PUT https://dev-admin.beauty-666.com/api/v1/oms/homepage/items/1 \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "春季大促",
+    "subtitle": "限时5折",
+    "enabled": false
+  }'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": null,
+  "msg": "更新成功"
+}
+```
+</ResponseExample>
+
+Update an existing module item.
+
+**Endpoint**: `PUT /api/v1/oms/homepage/items/:id`
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | int | Item ID |
+
+### Request Body
+
+All fields are optional - only include fields you want to update:
+
+| Field | Type | Validation | Description |
+|-------|------|------------|-------------|
+| title | string | 1-100 chars | Item title |
+| subtitle | string | Max 200 chars | Item subtitle |
+| image_url | string | - | Image URL |
+| link_url | string | - | Target URL |
+| link_type | string | - | Link type |
+| sort_order | int | 0-9999 | Sort order |
+| enabled | boolean | - | Enable status |
+
+---
+
+## Delete Item
+
+<RequestExample>
+```bash cURL
+curl -X DELETE https://dev-admin.beauty-666.com/api/v1/oms/homepage/items/1 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": null,
+  "msg": "删除成功"
+}
+```
+</ResponseExample>
+
+Soft delete a module item.
+
+**Endpoint**: `DELETE /api/v1/oms/homepage/items/:id`
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | int | Item ID |
+
+<Info>
+  This is a soft delete - the item is marked as deleted but not physically removed from the database.
+</Info>
+
+## Link Types
+
+| Type | Description | Use Case |
+|------|-------------|----------|
+| internal | Internal app routing | Navigate within the app |
+| external | External URL in browser | Open external websites |
+| none | No link | Display-only items |
