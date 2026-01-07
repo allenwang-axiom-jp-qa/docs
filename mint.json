@@ -61,8 +61,25 @@
       "group": "Homepage API",
       "pages": [
         "api-reference/homepage/overview",
-        "api-reference/homepage/modules",
-        "api-reference/homepage/module-items",
+        {
+          "group": "模块管理",
+          "pages": [
+            "api-reference/homepage/get-overview",
+            "api-reference/homepage/list-modules",
+            "api-reference/homepage/get-module",
+            "api-reference/homepage/update-module"
+          ]
+        },
+        {
+          "group": "模块子项",
+          "pages": [
+            "api-reference/homepage/list-items",
+            "api-reference/homepage/get-item",
+            "api-reference/homepage/create-item",
+            "api-reference/homepage/update-item",
+            "api-reference/homepage/delete-item"
+          ]
+        },
         "api-reference/homepage/preview"
       ]
     },

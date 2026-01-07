@@ -1,0 +1,76 @@
+---
+title: '更新模块子项'
+api: 'PUT https://dev-admin.beauty-666.com/api/v1/oms/homepage/items/{id}'
+description: '更新子项的标题、图片、链接等信息'
+---
+
+更新指定子项的配置信息，所有字段都是可选的。
+
+## Headers
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token
+</ParamField>
+
+<ParamField header="Content-Type" type="string" required>
+  application/json
+</ParamField>
+
+## Path Parameters
+
+<ParamField path="id" type="integer" required>
+  子项 ID
+</ParamField>
+
+## Body
+
+<ParamField body="title" type="string">
+  子项标题（1-100 字符）
+</ParamField>
+
+<ParamField body="subtitle" type="string">
+  子项副标题（最多 200 字符）
+</ParamField>
+
+<ParamField body="image_url" type="string">
+  图片 URL
+</ParamField>
+
+<ParamField body="link_url" type="string">
+  跳转链接
+</ParamField>
+
+<ParamField body="link_type" type="string">
+  链接类型
+</ParamField>
+
+<ParamField body="sort_order" type="integer">
+  排序顺序（0-9999）
+</ParamField>
+
+<ParamField body="enabled" type="boolean">
+  是否启用
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT https://dev-admin.beauty-666.com/api/v1/oms/homepage/items/1 \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "春季大促", "enabled": false}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 Success
+{
+  "code": 0,
+  "data": null,
+  "msg": "更新成功"
+}
+```
+
+</ResponseExample>

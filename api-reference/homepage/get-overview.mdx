@@ -1,0 +1,92 @@
+---
+title: '获取模块统计概览'
+api: 'GET https://dev-admin.beauty-666.com/api/v1/oms/homepage/overview'
+description: '获取首页模块的统计信息，包括总数、启用数量和禁用数量'
+---
+
+获取首页模块统计概览，返回模块总数、已启用数量和已禁用数量。
+
+## Headers
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+</ParamField>
+
+## Response
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  统计数据对象
+
+  <Expandable title="data 字段">
+    <ResponseField name="total_count" type="integer">
+      模块总数（固定为 9）
+    </ResponseField>
+
+    <ResponseField name="enabled_count" type="integer">
+      已启用的模块数量
+    </ResponseField>
+
+    <ResponseField name="disabled_count" type="integer">
+      已禁用的模块数量
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  响应消息
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/oms/homepage/overview \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+```javascript JavaScript
+const response = await fetch('https://dev-admin.beauty-666.com/api/v1/oms/homepage/overview', {
+  headers: {
+    'Authorization': 'Bearer YOUR_TOKEN'
+  }
+});
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    'https://dev-admin.beauty-666.com/api/v1/oms/homepage/overview',
+    headers={'Authorization': 'Bearer YOUR_TOKEN'}
+)
+data = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 Success
+{
+  "code": 0,
+  "data": {
+    "total_count": 9,
+    "enabled_count": 7,
+    "disabled_count": 2
+  },
+  "msg": "操作成功"
+}
+```
+
+```json 401 Unauthorized
+{
+  "code": 401,
+  "msg": "Token expired or invalid"
+}
+```
+
+</ResponseExample>

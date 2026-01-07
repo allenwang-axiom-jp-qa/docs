@@ -1,0 +1,65 @@
+---
+title: '删除模块子项'
+api: 'DELETE https://dev-admin.beauty-666.com/api/v1/oms/homepage/items/{id}'
+description: '软删除指定的模块子项'
+---
+
+删除指定的模块子项。这是软删除，数据会被标记为已删除但不会物理删除。
+
+## Headers
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token
+</ParamField>
+
+## Path Parameters
+
+<ParamField path="id" type="integer" required>
+  子项 ID
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE https://dev-admin.beauty-666.com/api/v1/oms/homepage/items/1 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+```javascript JavaScript
+const itemId = 1;
+const response = await fetch(
+  `https://dev-admin.beauty-666.com/api/v1/oms/homepage/items/${itemId}`,
+  {
+    method: 'DELETE',
+    headers: {
+      'Authorization': 'Bearer YOUR_TOKEN'
+    }
+  }
+);
+const data = await response.json();
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 Success
+{
+  "code": 0,
+  "data": null,
+  "msg": "删除成功"
+}
+```
+
+```json 404 Not Found
+{
+  "code": 7,
+  "msg": "子项不存在"
+}
+```
+
+</ResponseExample>
+
+<Info>
+  这是软删除操作，数据会被标记为删除状态但不会从数据库中物理删除。
+</Info>

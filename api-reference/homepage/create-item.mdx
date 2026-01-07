@@ -1,0 +1,221 @@
+---
+title: '创建模块子项'
+api: 'POST https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/{moduleId}/items'
+description: '为指定模块创建新的子项'
+---
+
+为指定模块创建一个新的子项，可用于添加轮播图、推荐内容等。
+
+## Headers
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+</ParamField>
+
+<ParamField header="Content-Type" type="string" required>
+  请求内容类型，必须为 `application/json`
+</ParamField>
+
+## Path Parameters
+
+<ParamField path="moduleId" type="integer" required>
+  模块 ID，取值范围 1-9
+</ParamField>
+
+## Body
+
+<ParamField body="title" type="string" required>
+  子项标题，长度 1-100 个字符
+</ParamField>
+
+<ParamField body="subtitle" type="string">
+  子项副标题，最多 200 个字符
+</ParamField>
+
+<ParamField body="image_url" type="string">
+  图片 URL 地址
+</ParamField>
+
+<ParamField body="link_url" type="string">
+  点击跳转的目标链接
+</ParamField>
+
+<ParamField body="link_type" type="string">
+  链接类型，可选值：`internal`（内部）、`external`（外部）、`none`（无链接）
+</ParamField>
+
+<ParamField body="sort_order" type="integer" default="0">
+  排序顺序，取值范围 0-9999，数值越小越靠前
+</ParamField>
+
+<ParamField body="enabled" type="boolean" default="true">
+  是否启用，`true` 为启用，`false` 为禁用
+</ParamField>
+
+## Response
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  创建成功的子项对象
+
+  <Expandable title="子项对象">
+    <ResponseField name="ID" type="integer">
+      子项 ID
+    </ResponseField>
+
+    <ResponseField name="module_id" type="integer">
+      所属模块 ID
+    </ResponseField>
+
+    <ResponseField name="title" type="string">
+      子项标题
+    </ResponseField>
+
+    <ResponseField name="subtitle" type="string">
+      子项副标题
+    </ResponseField>
+
+    <ResponseField name="image_url" type="string">
+      图片 URL
+    </ResponseField>
+
+    <ResponseField name="link_url" type="string">
+      跳转链接
+    </ResponseField>
+
+    <ResponseField name="link_type" type="string">
+      链接类型
+    </ResponseField>
+
+    <ResponseField name="sort_order" type="integer">
+      排序顺序
+    </ResponseField>
+
+    <ResponseField name="enabled" type="boolean">
+      是否启用
+    </ResponseField>
+
+    <ResponseField name="CreatedAt" type="string">
+      创建时间
+    </ResponseField>
+
+    <ResponseField name="UpdatedAt" type="string">
+      更新时间
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  响应消息
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/1/items \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "春季新品",
+    "subtitle": "新品上市",
+    "image_url": "https://cdn.example.com/spring.jpg",
+    "link_url": "/products/spring",
+    "link_type": "internal",
+    "sort_order": 10,
+    "enabled": true
+  }'
+```
+
+```javascript JavaScript
+const moduleId = 1;
+const response = await fetch(
+  `https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/${moduleId}/items`,
+  {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer YOUR_TOKEN',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      title: '春季新品',
+      subtitle: '新品上市',
+      image_url: 'https://cdn.example.com/spring.jpg',
+      link_url: '/products/spring',
+      link_type: 'internal',
+      sort_order: 10,
+      enabled: true
+    })
+  }
+);
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+module_id = 1
+payload = {
+    'title': '春季新品',
+    'subtitle': '新品上市',
+    'image_url': 'https://cdn.example.com/spring.jpg',
+    'link_url': '/products/spring',
+    'link_type': 'internal',
+    'sort_order': 10,
+    'enabled': True
+}
+
+response = requests.post(
+    f'https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/{module_id}/items',
+    headers={
+        'Authorization': 'Bearer YOUR_TOKEN',
+        'Content-Type': 'application/json'
+    },
+    json=payload
+)
+data = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 Success
+{
+  "code": 0,
+  "data": {
+    "ID": 10,
+    "CreatedAt": "2026-01-06T14:30:00Z",
+    "UpdatedAt": "2026-01-06T14:30:00Z",
+    "module_id": 1,
+    "title": "春季新品",
+    "subtitle": "新品上市",
+    "image_url": "https://cdn.example.com/spring.jpg",
+    "link_url": "/products/spring",
+    "link_type": "internal",
+    "sort_order": 10,
+    "enabled": true
+  },
+  "msg": "创建成功"
+}
+```
+
+```json 400 Bad Request
+{
+  "code": 400,
+  "msg": "请求参数错误: title 不能为空"
+}
+```
+
+</ResponseExample>
+
+## 验证规则
+
+<Check>
+  - **title**: 必填，1-100 个字符
+  - **subtitle**: 可选，最多 200 个字符
+  - **sort_order**: 可选，0-9999，默认 0
+  - **enabled**: 可选，默认 true
+</Check>

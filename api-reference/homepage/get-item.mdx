@@ -1,0 +1,64 @@
+---
+title: '获取子项详情'
+api: 'GET https://dev-admin.beauty-666.com/api/v1/oms/homepage/items/{id}'
+description: '根据 ID 获取单个子项的详细信息'
+---
+
+获取指定 ID 的模块子项详细信息。
+
+## Headers
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+</ParamField>
+
+## Path Parameters
+
+<ParamField path="id" type="integer" required>
+  子项 ID
+</ParamField>
+
+## Response
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  子项详情对象
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  响应消息
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/oms/homepage/items/1 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 Success
+{
+  "code": 0,
+  "data": {
+    "ID": 1,
+    "module_id": 1,
+    "title": "新年促销",
+    "subtitle": "全场8折起",
+    "image_url": "https://cdn.example.com/banner1.jpg",
+    "link_url": "/promotion/newyear",
+    "link_type": "internal",
+    "sort_order": 1,
+    "enabled": true
+  },
+  "msg": "操作成功"
+}
+```
+
+</ResponseExample>

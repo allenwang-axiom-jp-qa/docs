@@ -1,0 +1,191 @@
+---
+title: '获取模块子项列表'
+api: 'GET https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/{moduleId}/items'
+description: '分页获取指定模块的所有子项'
+---
+
+获取指定模块下的所有子项列表，支持分页查询。
+
+## Headers
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+</ParamField>
+
+## Path Parameters
+
+<ParamField path="moduleId" type="integer" required>
+  模块 ID，取值范围 1-9
+</ParamField>
+
+## Query Parameters
+
+<ParamField query="page" type="integer" default="1">
+  页码，从 1 开始
+</ParamField>
+
+<ParamField query="pageSize" type="integer" default="20">
+  每页数量，最大 100
+</ParamField>
+
+## Response
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  响应数据对象
+
+  <Expandable title="data 字段">
+    <ResponseField name="list" type="array">
+      子项列表数组
+
+      <Expandable title="子项对象">
+        <ResponseField name="ID" type="integer">
+          子项 ID
+        </ResponseField>
+
+        <ResponseField name="module_id" type="integer">
+          所属模块 ID
+        </ResponseField>
+
+        <ResponseField name="title" type="string">
+          子项标题
+        </ResponseField>
+
+        <ResponseField name="subtitle" type="string">
+          子项副标题
+        </ResponseField>
+
+        <ResponseField name="image_url" type="string">
+          图片 URL
+        </ResponseField>
+
+        <ResponseField name="link_url" type="string">
+          点击跳转链接
+        </ResponseField>
+
+        <ResponseField name="link_type" type="string">
+          链接类型：internal（内部）、external（外部）、none（无链接）
+        </ResponseField>
+
+        <ResponseField name="sort_order" type="integer">
+          排序顺序（0-9999）
+        </ResponseField>
+
+        <ResponseField name="enabled" type="boolean">
+          是否启用
+        </ResponseField>
+
+        <ResponseField name="CreatedAt" type="string">
+          创建时间（ISO 8601）
+        </ResponseField>
+
+        <ResponseField name="UpdatedAt" type="string">
+          更新时间（ISO 8601）
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+
+    <ResponseField name="total" type="integer">
+      总记录数
+    </ResponseField>
+
+    <ResponseField name="page" type="integer">
+      当前页码
+    </ResponseField>
+
+    <ResponseField name="pageSize" type="integer">
+      每页数量
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  响应消息
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl "https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/1/items?page=1&pageSize=10" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+```javascript JavaScript
+const moduleId = 1;
+const params = new URLSearchParams({ page: 1, pageSize: 10 });
+
+const response = await fetch(
+  `https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/${moduleId}/items?${params}`,
+  {
+    headers: {
+      'Authorization': 'Bearer YOUR_TOKEN'
+    }
+  }
+);
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+module_id = 1
+params = {'page': 1, 'pageSize': 10}
+
+response = requests.get(
+    f'https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/{module_id}/items',
+    headers={'Authorization': 'Bearer YOUR_TOKEN'},
+    params=params
+)
+data = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 Success
+{
+  "code": 0,
+  "data": {
+    "list": [
+      {
+        "ID": 1,
+        "CreatedAt": "2026-01-05T10:00:00Z",
+        "UpdatedAt": "2026-01-06T12:00:00Z",
+        "module_id": 1,
+        "title": "新年促销",
+        "subtitle": "全场8折起",
+        "image_url": "https://cdn.example.com/banner1.jpg",
+        "link_url": "/promotion/newyear",
+        "link_type": "internal",
+        "sort_order": 1,
+        "enabled": true
+      }
+    ],
+    "total": 5,
+    "page": 1,
+    "pageSize": 10
+  },
+  "msg": "操作成功"
+}
+```
+
+```json 400 Bad Request
+{
+  "code": 400,
+  "msg": "无效的模块ID"
+}
+```
+
+</ResponseExample>
+
+## 链接类型说明
+
+| Type | 说明 | 使用场景 |
+|------|------|----------|
+| internal | 内部跳转 | App 内路由导航 |
+| external | 外部链接 | 打开浏览器访问外部网站 |
+| none | 无链接 | 仅用于展示，不可点击 |

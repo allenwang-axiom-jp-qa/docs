@@ -1,0 +1,137 @@
+---
+title: '获取单个模块详情'
+api: 'GET https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/{id}'
+description: '根据 ID 获取单个模块的详细信息'
+---
+
+获取指定 ID 的模块详细信息，包括配置、状态等所有字段。
+
+## Headers
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+</ParamField>
+
+## Path Parameters
+
+<ParamField path="id" type="integer" required>
+  模块 ID，取值范围 1-9
+</ParamField>
+
+## Response
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  模块详情对象
+
+  <Expandable title="模块对象">
+    <ResponseField name="ID" type="integer">
+      模块 ID
+    </ResponseField>
+
+    <ResponseField name="key" type="string">
+      模块唯一标识（系统预设，不可修改）
+    </ResponseField>
+
+    <ResponseField name="title" type="string">
+      模块标题
+    </ResponseField>
+
+    <ResponseField name="type" type="string">
+      模块类型
+    </ResponseField>
+
+    <ResponseField name="config" type="string">
+      模块配置 JSON 字符串
+    </ResponseField>
+
+    <ResponseField name="order" type="integer">
+      显示顺序
+    </ResponseField>
+
+    <ResponseField name="enabled" type="boolean">
+      是否启用
+    </ResponseField>
+
+    <ResponseField name="CreatedAt" type="string">
+      创建时间
+    </ResponseField>
+
+    <ResponseField name="UpdatedAt" type="string">
+      更新时间
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  响应消息
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/1 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+```javascript JavaScript
+const moduleId = 1;
+const response = await fetch(`https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/${moduleId}`, {
+  headers: {
+    'Authorization': 'Bearer YOUR_TOKEN'
+  }
+});
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+module_id = 1
+response = requests.get(
+    f'https://dev-admin.beauty-666.com/api/v1/oms/homepage/modules/{module_id}',
+    headers={'Authorization': 'Bearer YOUR_TOKEN'}
+)
+data = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 Success
+{
+  "code": 0,
+  "data": {
+    "ID": 1,
+    "CreatedAt": "2026-01-05T10:00:00Z",
+    "UpdatedAt": "2026-01-06T12:00:00Z",
+    "key": "banner",
+    "title": "首页轮播图",
+    "type": "banner",
+    "config": "{\"autoplay\":true,\"interval\":3000}",
+    "order": 1,
+    "enabled": true
+  },
+  "msg": "操作成功"
+}
+```
+
+```json 404 Not Found
+{
+  "code": 7,
+  "msg": "模块不存在"
+}
+```
+
+```json 401 Unauthorized
+{
+  "code": 401,
+  "msg": "Token expired or invalid"
+}
+```
+
+</ResponseExample>
