@@ -1,0 +1,109 @@
+---
+title: '获取套餐概览统计'
+api: 'GET https://dev-admin.beauty-666.com/api/v1/oms/subscriptions/overview'
+description: '获取会员套餐的统计信息，包括总数、上架数、下架数、平均价格'
+---
+
+获取会员套餐的统计概览，用于管理后台首页展示套餐总体情况。
+
+## 请求头
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+</ParamField>
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  统计数据对象
+
+  <Expandable title="统计数据">
+    <ResponseField name="total_count" type="integer">
+      套餐总数（包含上架和下架）
+    </ResponseField>
+
+    <ResponseField name="active_count" type="integer">
+      已上架套餐数量（status = 1）
+    </ResponseField>
+
+    <ResponseField name="inactive_count" type="integer">
+      已下架套餐数量（status = 0）
+    </ResponseField>
+
+    <ResponseField name="average_price" type="number">
+      人民币平均价格（所有套餐的平均值）
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  响应消息
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/oms/subscriptions/overview \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+```javascript JavaScript
+const response = await fetch(
+  'https://dev-admin.beauty-666.com/api/v1/oms/subscriptions/overview',
+  {
+    headers: {
+      'Authorization': 'Bearer YOUR_TOKEN'
+    }
+  }
+);
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    'https://dev-admin.beauty-666.com/api/v1/oms/subscriptions/overview',
+    headers={'Authorization': 'Bearer YOUR_TOKEN'}
+)
+data = response.json()
+print(data)
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 成功
+{
+  "code": 0,
+  "data": {
+    "total_count": 4,
+    "active_count": 4,
+    "inactive_count": 0,
+    "average_price": 141.95
+  },
+  "msg": "获取套餐概览成功"
+}
+```
+
+```json 401 未授权
+{
+  "code": 401,
+  "msg": "Token expired or invalid"
+}
+```
+
+</ResponseExample>
+
+## 使用场景
+
+此接口通常用于：
+- 管理后台首页展示套餐统计卡片
+- 数据看板展示套餐数量趋势
+- 快速了解套餐整体情况

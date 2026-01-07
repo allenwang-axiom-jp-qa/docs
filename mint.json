@@ -102,11 +102,12 @@
     {
       "group": "会员配置",
       "pages": [
-        "api-reference/vip/get-subscription-plans",
-        "api-reference/vip/create-subscription-plans",
-        "api-reference/vip/get-subscription-plans-by-id",
-        "api-reference/vip/update-subscription-plans-by-id",
-        "api-reference/vip/delete-subscription-plans-by-id"
+        "api-reference/vip/get-subscriptions-overview",
+        "api-reference/vip/get-subscriptions",
+        "api-reference/vip/get-subscription-detail",
+        "api-reference/vip/create-subscription",
+        "api-reference/vip/update-subscription",
+        "api-reference/vip/delete-subscription"
       ]
     },
     {

@@ -1,0 +1,109 @@
+---
+title: '获取套餐详情'
+api: 'GET https://dev-admin.beauty-666.com/api/v1/oms/subscriptions/{id}'
+description: '根据 ID 获取单个会员套餐的详细信息'
+---
+
+根据套餐 ID 获取单个会员套餐的完整详细信息，包括所有配置和计算字段。
+
+## 请求头
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+</ParamField>
+
+## 路径参数
+
+<ParamField path="id" type="integer" required>
+  套餐 ID
+</ParamField>
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  套餐详情对象（字段说明同列表接口）
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  响应消息
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/oms/subscriptions/1 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+```javascript JavaScript
+const subscriptionId = 1;
+const response = await fetch(
+  `https://dev-admin.beauty-666.com/api/v1/oms/subscriptions/${subscriptionId}`,
+  {
+    headers: {
+      'Authorization': 'Bearer YOUR_TOKEN'
+    }
+  }
+);
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+subscription_id = 1
+response = requests.get(
+    f'https://dev-admin.beauty-666.com/api/v1/oms/subscriptions/{subscription_id}',
+    headers={'Authorization': 'Bearer YOUR_TOKEN'}
+)
+data = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 成功
+{
+  "code": 0,
+  "data": {
+    "id": 1,
+    "created_at": "2026-01-06T10:30:00Z",
+    "updated_at": "2026-01-06T10:30:00Z",
+    "name": "月度VIP会员",
+    "duration_type": "月度会员",
+    "duration_days": 30,
+    "price_cny": "29.90",
+    "original_price_cny": "39.90",
+    "price_usdt": "4.50",
+    "original_price_usdt": "6.00",
+    "benefits": [
+      "全站视频免费看",
+      "高清画质观看",
+      "去除广告",
+      "专属会员标识"
+    ],
+    "status": 1,
+    "sort_order": 1,
+    "description": "性价比之选",
+    "cny_discount_percent": 74,
+    "usdt_discount_percent": 75,
+    "benefits_count": 4
+  },
+  "msg": "获取套餐详情成功"
+}
+```
+
+```json 404 套餐不存在
+{
+  "code": 7,
+  "data": null,
+  "msg": "套餐不存在"
+}
+```
+
+</ResponseExample>

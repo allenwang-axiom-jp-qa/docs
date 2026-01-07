@@ -1,0 +1,164 @@
+---
+title: '创建套餐'
+api: 'POST https://dev-admin.beauty-666.com/api/v1/oms/subscriptions'
+description: '创建新的会员套餐配置'
+---
+
+创建新的会员套餐配置，需要提供套餐名称、时长、价格、权益等必填信息。
+
+## 请求头
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token
+</ParamField>
+
+<ParamField header="Content-Type" type="string" required>
+  必须为 `application/json`
+</ParamField>
+
+## 请求体
+
+<ParamField body="name" type="string" required>
+  套餐名称（如"月度VIP会员"）
+</ParamField>
+
+<ParamField body="duration_type" type="string" required>
+  时长类型（如"月度会员"、"季度会员"、"年度会员"、"半年会员"）
+</ParamField>
+
+<ParamField body="duration_days" type="integer" required>
+  时长天数，必须 ≥1（如 30、90、180、365）
+</ParamField>
+
+<ParamField body="price_cny" type="string" required>
+  人民币价格，DECIMAL 字符串格式（如 "29.90"）
+</ParamField>
+
+<ParamField body="original_price_cny" type="string">
+  人民币原价，DECIMAL 字符串格式（可选，如 "39.90"）
+</ParamField>
+
+<ParamField body="price_usdt" type="string" required>
+  USDT 价格，DECIMAL 字符串格式（如 "4.50"）
+</ParamField>
+
+<ParamField body="original_price_usdt" type="string">
+  USDT 原价，DECIMAL 字符串格式（可选，如 "6.00"）
+</ParamField>
+
+<ParamField body="benefits" type="array" required>
+  会员权益列表（字符串数组），至少 1 项
+
+  示例：`["全站视频免费看", "高清画质观看", "去除广告"]`
+</ParamField>
+
+<ParamField body="status" type="integer" default="1">
+  状态：0=下架，1=上架（默认 1）
+</ParamField>
+
+<ParamField body="sort_order" type="integer" default="0">
+  排序值，数字越小越靠前（默认 0）
+</ParamField>
+
+<ParamField body="description" type="string">
+  备注说明（可选）
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST https://dev-admin.beauty-666.com/api/v1/oms/subscriptions \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "月度VIP会员",
+    "duration_type": "月度会员",
+    "duration_days": 30,
+    "price_cny": "29.90",
+    "original_price_cny": "39.90",
+    "price_usdt": "4.50",
+    "original_price_usdt": "6.00",
+    "benefits": [
+      "全站视频免费看",
+      "高清画质观看",
+      "去除广告",
+      "专属会员标识"
+    ],
+    "status": 1,
+    "sort_order": 1,
+    "description": "性价比之选"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch(
+  'https://dev-admin.beauty-666.com/api/v1/oms/subscriptions',
+  {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer YOUR_TOKEN',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: "月度VIP会员",
+      duration_type: "月度会员",
+      duration_days: 30,
+      price_cny: "29.90",  // 注意：必须是字符串
+      price_usdt: "4.50",
+      benefits: ["全站视频免费看", "高清画质观看"]
+    })
+  }
+);
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+payload = {
+    'name': '月度VIP会员',
+    'duration_type': '月度会员',
+    'duration_days': 30,
+    'price_cny': '29.90',  # 字符串格式
+    'price_usdt': '4.50',
+    'benefits': ['全站视频免费看', '高清画质观看']
+}
+
+response = requests.post(
+    'https://dev-admin.beauty-666.com/api/v1/oms/subscriptions',
+    headers={
+        'Authorization': 'Bearer YOUR_TOKEN',
+        'Content-Type': 'application/json'
+    },
+    json=payload
+)
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 成功
+{
+  "code": 0,
+  "data": null,
+  "msg": "创建套餐成功"
+}
+```
+
+```json 400 参数验证失败
+{
+  "code": 7,
+  "data": null,
+  "msg": "参数验证失败: name为必填字段"
+}
+```
+
+</ResponseExample>
+
+<Warning>
+  **重要事项：**
+  - 价格字段必须发送**字符串格式**（如 `"29.90"`），不是数字
+  - `benefits` 数组至少需要 1 项权益
+  - `duration_days` 必须 ≥1
+</Warning>

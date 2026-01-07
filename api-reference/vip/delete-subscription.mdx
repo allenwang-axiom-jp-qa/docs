@@ -1,0 +1,85 @@
+---
+title: '删除套餐'
+api: 'DELETE https://dev-admin.beauty-666.com/api/v1/oms/subscriptions/{id}'
+description: '删除指定 ID 的会员套餐（软删除）'
+---
+
+删除指定的会员套餐。这是软删除操作，套餐会被标记为删除状态但不会从数据库中物理删除。
+
+## 请求头
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token
+</ParamField>
+
+## 路径参数
+
+<ParamField path="id" type="integer" required>
+  套餐 ID
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE https://dev-admin.beauty-666.com/api/v1/oms/subscriptions/1 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+```javascript JavaScript
+const subscriptionId = 1;
+const response = await fetch(
+  `https://dev-admin.beauty-666.com/api/v1/oms/subscriptions/${subscriptionId}`,
+  {
+    method: 'DELETE',
+    headers: {
+      'Authorization': 'Bearer YOUR_TOKEN'
+    }
+  }
+);
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+subscription_id = 1
+response = requests.delete(
+    f'https://dev-admin.beauty-666.com/api/v1/oms/subscriptions/{subscription_id}',
+    headers={'Authorization': 'Bearer YOUR_TOKEN'}
+)
+data = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 成功
+{
+  "code": 0,
+  "data": null,
+  "msg": "删除套餐成功"
+}
+```
+
+```json 404 套餐不存在
+{
+  "code": 7,
+  "data": null,
+  "msg": "套餐不存在"
+}
+```
+
+</ResponseExample>
+
+<Warning>
+  **软删除说明：**
+  - 这是软删除操作，数据不会从数据库中物理删除
+  - 已删除的套餐不会在列表查询中返回
+  - 软删除的数据可以通过数据库直接恢复
+  - 删除后套餐 ID 不会被重复使用
+</Warning>
+
+<Info>
+  建议使用"下架"功能（设置 `status=0`）而不是删除，这样可以保留套餐的历史记录并随时恢复上架。
+</Info>
