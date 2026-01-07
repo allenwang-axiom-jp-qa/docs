@@ -1,0 +1,82 @@
+---
+title: '重新排序标签'
+api: 'PUT https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tags/reorder'
+description: '批量重新排序标签'
+---
+
+批量重新排序标签
+
+## 请求体
+
+<ParamField body="tag_ids" type="array<integer>" required>
+  标签ID数组
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="message" type="string">
+  字段说明
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tags/reorder" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "value"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tags/reorder', {
+  method: 'PUT',
+  headers: {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    key: 'value'
+  })
+});
+
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+url = 'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tags/reorder'
+headers = {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+}
+data = {
+    'key': 'value'
+}
+
+response = requests.put(url, headers=headers, json=data)
+result = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 排序成功
+{
+  "code": 0,
+  "msg": "success",
+  "data": {}
+}
+```
+```json 401 未授权
+{
+  "code": 401,
+  "msg": "未授权，请先登录"
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,104 @@
+---
+title: '更新推荐配置'
+api: 'PUT https://dev-admin.beauty-666.com/api/recommend/config'
+description: '更新推荐算法的权重配置'
+---
+
+更新推荐算法的权重配置
+
+## 请求头
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+</ParamField>
+
+## 请求体
+
+<ParamField body="content_similarity" type="number">
+  字段说明，示例: `0.5`
+</ParamField>
+
+<ParamField body="user_preference" type="number">
+  字段说明，示例: `0.25`
+</ParamField>
+
+<ParamField body="popularity" type="number">
+  字段说明，示例: `0.15`
+</ParamField>
+
+<ParamField body="diversity" type="number">
+  字段说明，示例: `0.1`
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="key" type="string">
+  配置键
+</ResponseField>
+
+<ResponseField name="value" type="string">
+  配置值
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://dev-admin.beauty-666.com/api/recommend/config" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "value"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://dev-admin.beauty-666.com/api/recommend/config', {
+  method: 'PUT',
+  headers: {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    key: 'value'
+  })
+});
+
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+url = 'https://dev-admin.beauty-666.com/api/recommend/config'
+headers = {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+}
+data = {
+    'key': 'value'
+}
+
+response = requests.put(url, headers=headers, json=data)
+result = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 更新成功
+{
+  "code": 0,
+  "msg": "success",
+  "data": {}
+}
+```
+```json 401 未授权
+{
+  "code": 401,
+  "msg": "未授权，请先登录"
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,220 @@
+================================================================================
+CMS 服务系统 API 文档 - 文件概览
+================================================================================
+
+生成时间: 2026-01-07
+文档版本: 1.0.0
+
+================================================================================
+主要目录
+================================================================================
+
+/Users/allen/Desktop/docs/
+├── api-reference/              # API 文档主目录（48个MDX文件）
+│   ├── algorithm/             # 推荐算法（2个文件）
+│   ├── categories/            # 分类管理（10个文件）
+│   ├── diamond/               # 钻石配置（6个文件）
+│   ├── exchange-rate/         # 汇率配置（3个文件）
+│   ├── homepage-items/        # 模块子项管理（5个文件）
+│   ├── homepage-modules/      # 首页模块管理（4个文件）
+│   ├── preview/               # 预览接口（1个文件）
+│   ├── system/                # 系统接口（2个文件）
+│   ├── tags/                  # 标签管理（6个文件）
+│   ├── video/                 # 视频管理（4个文件）
+│   ├── vip/                   # 会员配置（5个文件）
+│   ├── generated_files.json   # 文件清单
+│   └── navigation_config.json # 导航配置
+├── README.md                   # 项目概述
+├── QUICK_START.md             # 快速开始指南（推荐首先阅读）
+├── MINTLIFY_INTEGRATION_GUIDE.md # 详细集成指南
+├── GENERATION_SUMMARY.md      # 生成总结报告
+└── FILES_OVERVIEW.txt         # 本文件
+
+================================================================================
+工具脚本
+================================================================================
+
+/Users/allen/Desktop/
+├── generate_mintlify_docs.py  # 文档生成脚本
+└── verify_docs.py             # 文档验证脚本
+
+================================================================================
+源文件
+================================================================================
+
+/Users/allen/Desktop/
+└── CMS服务系统API.openapi.json # OpenAPI 规范文件（源数据）
+
+================================================================================
+文档统计
+================================================================================
+
+总接口数:          48 个
+分类数:            11 个
+文档格式:          Mintlify MDX
+内容语言:          简体中文
+Base URL:          https://dev-admin.beauty-666.com
+总文档大小:        约 91 KB
+平均文件大小:      约 1.9 KB
+
+================================================================================
+分类明细
+================================================================================
+
+1.  系统接口           2 个文件   /api-reference/system/
+2.  视频管理           4 个文件   /api-reference/video/
+3.  会员配置           5 个文件   /api-reference/vip/
+4.  分类管理          10 个文件   /api-reference/categories/
+5.  标签管理           6 个文件   /api-reference/tags/
+6.  钻石配置           6 个文件   /api-reference/diamond/
+7.  汇率配置           3 个文件   /api-reference/exchange-rate/
+8.  首页模块管理       4 个文件   /api-reference/homepage-modules/
+9.  模块子项管理       5 个文件   /api-reference/homepage-items/
+10. 预览接口           1 个文件   /api-reference/preview/
+11. 推荐算法           2 个文件   /api-reference/algorithm/
+
+================================================================================
+使用指南文档
+================================================================================
+
+1. README.md
+   - 项目整体概述
+   - 目录结构说明
+   - 使用场景示例
+   - 推荐阅读顺序
+
+2. QUICK_START.md ⭐ (推荐首先阅读)
+   - 3步快速集成
+   - 最简单的使用方式
+   - 常见问题解答
+   - 重新生成步骤
+
+3. MINTLIFY_INTEGRATION_GUIDE.md
+   - 详细的集成步骤
+   - mint.json 配置示例
+   - 自定义配置说明
+   - 部署指南
+
+4. GENERATION_SUMMARY.md
+   - 完整的文件列表
+   - 生成过程说明
+   - 技术信息
+   - 注意事项
+
+5. FILES_OVERVIEW.txt (本文件)
+   - 所有文件概览
+   - 快速参考
+
+================================================================================
+配置文件
+================================================================================
+
+1. generated_files.json
+   路径: /Users/allen/Desktop/docs/api-reference/generated_files.json
+   说明: 包含所有生成文件的元数据（路径、分类、标题、API）
+
+2. navigation_config.json
+   路径: /Users/allen/Desktop/docs/api-reference/navigation_config.json
+   说明: Mintlify mint.json 导航配置模板
+
+================================================================================
+快速命令参考
+================================================================================
+
+查看快速开始指南:
+$ cat /Users/allen/Desktop/docs/QUICK_START.md
+
+复制文档到 Mintlify 项目:
+$ cp -r /Users/allen/Desktop/docs/api-reference /path/to/mintlify-project/
+
+重新生成文档:
+$ cd /Users/allen/Desktop
+$ python3 generate_mintlify_docs.py
+
+验证文档完整性:
+$ cd /Users/allen/Desktop
+$ python3 verify_docs.py
+
+查看文件清单:
+$ cat /Users/allen/Desktop/docs/api-reference/generated_files.json
+
+查看导航配置:
+$ cat /Users/allen/Desktop/docs/api-reference/navigation_config.json
+
+================================================================================
+API 文档示例文件
+================================================================================
+
+系统健康检查:
+/Users/allen/Desktop/docs/api-reference/system/get-health.mdx
+
+获取视频列表:
+/Users/allen/Desktop/docs/api-reference/video/get-videos-list.mdx
+
+创建订阅套餐:
+/Users/allen/Desktop/docs/api-reference/vip/create-subscription-plans.mdx
+
+获取分类树:
+/Users/allen/Desktop/docs/api-reference/categories/get-categories-tree.mdx
+
+创建钻石套餐:
+/Users/allen/Desktop/docs/api-reference/diamond/create-oms-diamonds.mdx
+
+同步实时汇率:
+/Users/allen/Desktop/docs/api-reference/exchange-rate/create-oms-diamonds-rate-sync.mdx
+
+获取首页模块:
+/Users/allen/Desktop/docs/api-reference/homepage-modules/get-admgmt-homepage-modules.mdx
+
+================================================================================
+技术信息
+================================================================================
+
+生成工具:       Python 3
+文档格式:       Mintlify MDX
+OpenAPI 版本:   3.0.1
+组件库:         Mintlify Components (@mintlify/components)
+样式语言:       Tailwind CSS (Mintlify 内置)
+部署平台:       Mintlify Cloud / Vercel / Netlify / 自托管
+
+================================================================================
+下一步操作
+================================================================================
+
+1. ✓ 文档已生成（48个文件）
+2. ✓ 文档已验证（100%完整）
+3. [ ] 阅读 QUICK_START.md
+4. [ ] 复制文档到 Mintlify 项目
+5. [ ] 更新 mint.json 配置
+6. [ ] 启动本地预览 (mintlify dev)
+7. [ ] 自定义样式和内容
+8. [ ] 部署到生产环境
+
+================================================================================
+支持资源
+================================================================================
+
+Mintlify 官方文档:    https://mintlify.com/docs
+OpenAPI 规范文档:     https://swagger.io/specification/
+Mintlify Dashboard:   https://mintlify.com/dashboard
+
+本地文档:
+- README.md
+- QUICK_START.md
+- MINTLIFY_INTEGRATION_GUIDE.md
+- GENERATION_SUMMARY.md
+
+================================================================================
+联系信息
+================================================================================
+
+项目:           CMS 服务系统 API 文档
+生成日期:       2026-01-07
+文档版本:       1.0.0
+OpenAPI 版本:   3.0.1
+
+================================================================================
+
+使用愉快！祝项目顺利！
+
+================================================================================

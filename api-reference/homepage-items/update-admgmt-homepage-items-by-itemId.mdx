@@ -1,0 +1,129 @@
+---
+title: '更新模块子项'
+api: 'PUT https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/items/{itemId}'
+description: '更新指定子项的信息'
+---
+
+更新指定子项的信息
+
+## 路径参数
+
+<ParamField path="itemId" type="integer" required>
+  子项ID
+</ParamField>
+
+
+## 请求体
+
+<ParamField body="title" type="string">
+  标题，1-100字符，示例: `更新后的标题`
+</ParamField>
+
+<ParamField body="subtitle" type="string">
+  副标题，最多200字符，示例: `更新后的副标题`
+</ParamField>
+
+<ParamField body="image_url" type="string">
+  图片/封面URL，示例: `https://cdn.example.com/new-banner.jpg`
+</ParamField>
+
+<ParamField body="link_url" type="string">
+  跳转链接，示例: `/new-promotion`
+</ParamField>
+
+<ParamField body="link_type" type="string (internal, external, none)">
+  链接类型，示例: `internal`
+</ParamField>
+
+<ParamField body="duration" type="string">
+  视频时长，最多20字符，示例: `15:20`
+</ParamField>
+
+<ParamField body="icon" type="string">
+  图标，最多50字符，示例: `⭐`
+</ParamField>
+
+<ParamField body="sort_order" type="integer">
+  排序值，0-9999，示例: `2`
+</ParamField>
+
+<ParamField body="enabled" type="boolean">
+  是否启用
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  字段说明
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  字段说明
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  字段说明
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/items/{YOUR_ITEMID}" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "value"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/items/{YOUR_ITEMID}', {
+  method: 'PUT',
+  headers: {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    key: 'value'
+  })
+});
+
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+url = 'https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/items/{YOUR_ITEMID}'
+headers = {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+}
+data = {
+    'key': 'value'
+}
+
+response = requests.put(url, headers=headers, json=data)
+result = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 更新成功
+{
+  "code": 0,
+  "msg": "success",
+  "data": {}
+}
+```
+```json 401 未授权
+{
+  "code": 401,
+  "msg": "未授权，请先登录"
+}
+```
+
+</ResponseExample>

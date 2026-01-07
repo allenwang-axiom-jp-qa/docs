@@ -1,0 +1,109 @@
+---
+title: '更新模块配置'
+api: 'PUT https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/modules/{moduleId}'
+description: '更新模块的标题、配置、排序和启用状态'
+---
+
+更新模块的标题、配置、排序和启用状态
+
+## 路径参数
+
+<ParamField path="moduleId" type="integer" required>
+  模块ID
+</ParamField>
+
+
+## 请求体
+
+<ParamField body="title" type="string">
+  模块标题，1-100字符，示例: `新的标题`
+</ParamField>
+
+<ParamField body="config" type="string">
+  模块配置JSON字符串，示例: `{"autoplay":false,"interval":5000,"minCount":2,"maxCount":6}`
+</ParamField>
+
+<ParamField body="order" type="integer">
+  显示顺序，0-9999，示例: `2`
+</ParamField>
+
+<ParamField body="enabled" type="boolean">
+  是否启用，示例: `True`
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  字段说明
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  字段说明
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  字段说明
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/modules/{YOUR_MODULEID}" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "value"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/modules/{YOUR_MODULEID}', {
+  method: 'PUT',
+  headers: {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    key: 'value'
+  })
+});
+
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+url = 'https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/modules/{YOUR_MODULEID}'
+headers = {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+}
+data = {
+    'key': 'value'
+}
+
+response = requests.put(url, headers=headers, json=data)
+result = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 更新成功
+{
+  "code": 0,
+  "msg": "success",
+  "data": {}
+}
+```
+```json 401 未授权
+{
+  "code": 401,
+  "msg": "未授权，请先登录"
+}
+```
+
+</ResponseExample>

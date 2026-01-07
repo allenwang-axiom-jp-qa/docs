@@ -1,0 +1,95 @@
+---
+title: '更新USDT汇率配置'
+api: 'PUT https://dev-admin.beauty-666.com/diamonds/rate'
+description: ''
+---
+
+
+
+## 请求体
+
+<ParamField body="rate" type="number" required>
+  汇率（1 USDT = X CNY），示例: `6.8`
+</ParamField>
+
+<ParamField body="auto_sync" type="boolean">
+  是否自动同步
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  响应消息
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  响应数据
+</ResponseField>
+
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://dev-admin.beauty-666.com/diamonds/rate" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "value"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://dev-admin.beauty-666.com/diamonds/rate', {
+  method: 'PUT',
+  headers: {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    key: 'value'
+  })
+});
+
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+url = 'https://dev-admin.beauty-666.com/diamonds/rate'
+headers = {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+}
+data = {
+    'key': 'value'
+}
+
+response = requests.put(url, headers=headers, json=data)
+result = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 更新成功
+{
+  "code": 0,
+  "msg": "success",
+  "data": {}
+}
+```
+```json 401 未授权
+{
+  "code": 401,
+  "msg": "未授权，请先登录"
+}
+```
+
+</ResponseExample>

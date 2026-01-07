@@ -1,0 +1,80 @@
+---
+title: '删除模块子项'
+api: 'DELETE https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/items/{itemId}'
+description: '删除指定的模块子项'
+---
+
+删除指定的模块子项
+
+## 路径参数
+
+<ParamField path="itemId" type="integer" required>
+  子项ID
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  字段说明
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  字段说明
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  字段说明
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/items/{YOUR_ITEMID}" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+```javascript JavaScript
+const response = await fetch('https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/items/{YOUR_ITEMID}', {
+  method: 'DELETE',
+  headers: {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+  }
+});
+
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+url = 'https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/items/{YOUR_ITEMID}'
+headers = {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+}
+
+response = requests.delete(url, headers=headers)
+result = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 删除成功
+{
+  "code": 0,
+  "msg": "success",
+  "data": {}
+}
+```
+```json 401 未授权
+{
+  "code": 401,
+  "msg": "未授权，请先登录"
+}
+```
+
+</ResponseExample>

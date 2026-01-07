@@ -1,0 +1,338 @@
+[
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/system/get-health.mdx",
+    "category": "系统",
+    "subdir": "system",
+    "title": "健康检查",
+    "api": "GET /site-svc-video-mgmt/health"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/system/get-version.mdx",
+    "category": "系统",
+    "subdir": "system",
+    "title": "获取版本信息",
+    "api": "GET /site-svc-video-mgmt/version"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/video/get-videos-status.mdx",
+    "category": "视频管理",
+    "subdir": "video",
+    "title": "获取视频状态",
+    "api": "GET /api/v1/site-svc-video-mgmt/videos/status"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/video/get-videos-list.mdx",
+    "category": "视频管理",
+    "subdir": "video",
+    "title": "获取视频列表",
+    "api": "GET /api/v1/site-svc-video-mgmt/videos/list"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/video/get-videos-detail.mdx",
+    "category": "视频管理",
+    "subdir": "video",
+    "title": "获取视频详情",
+    "api": "GET /api/v1/site-svc-video-mgmt/videos/detail"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/video/update-videos.mdx",
+    "category": "视频管理",
+    "subdir": "video",
+    "title": "批量更新视频状态",
+    "api": "PUT /api/v1/site-svc-video-mgmt/videos"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/vip/get-subscription-plans.mdx",
+    "category": "会员配置",
+    "subdir": "vip",
+    "title": "获取订阅套餐列表",
+    "api": "GET /subscription-plans"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/vip/create-subscription-plans.mdx",
+    "category": "会员配置",
+    "subdir": "vip",
+    "title": "创建订阅套餐",
+    "api": "POST /subscription-plans"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/vip/get-subscription-plans-by-id.mdx",
+    "category": "会员配置",
+    "subdir": "vip",
+    "title": "获取单个订阅套餐",
+    "api": "GET /subscription-plans/{id}"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/vip/update-subscription-plans-by-id.mdx",
+    "category": "会员配置",
+    "subdir": "vip",
+    "title": "更新订阅套餐",
+    "api": "PUT /subscription-plans/{id}"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/vip/delete-subscription-plans-by-id.mdx",
+    "category": "会员配置",
+    "subdir": "vip",
+    "title": "删除订阅套餐",
+    "api": "DELETE /subscription-plans/{id}"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/preview/get-admgmt-homepage-preview-h5.mdx",
+    "category": "预览接口",
+    "subdir": "preview",
+    "title": "获取H5预览数据",
+    "api": "GET /api/v1/admgmt/homepage/preview/h5"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/homepage-items/get-admgmt-homepage-modules-by-moduleId-items.mdx",
+    "category": "子项管理",
+    "subdir": "homepage-items",
+    "title": "获取模块子项列表",
+    "api": "GET /api/v1/admgmt/homepage/modules/{moduleId}/items"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/homepage-items/create-admgmt-homepage-modules-by-moduleId-items.mdx",
+    "category": "子项管理",
+    "subdir": "homepage-items",
+    "title": "创建模块子项",
+    "api": "POST /api/v1/admgmt/homepage/modules/{moduleId}/items"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/homepage-items/get-admgmt-homepage-items-by-itemId.mdx",
+    "category": "子项管理",
+    "subdir": "homepage-items",
+    "title": "获取单个子项详情",
+    "api": "GET /api/v1/admgmt/homepage/items/{itemId}"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/homepage-items/update-admgmt-homepage-items-by-itemId.mdx",
+    "category": "子项管理",
+    "subdir": "homepage-items",
+    "title": "更新模块子项",
+    "api": "PUT /api/v1/admgmt/homepage/items/{itemId}"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/homepage-items/delete-admgmt-homepage-items-by-itemId.mdx",
+    "category": "子项管理",
+    "subdir": "homepage-items",
+    "title": "删除模块子项",
+    "api": "DELETE /api/v1/admgmt/homepage/items/{itemId}"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/homepage-modules/get-admgmt-homepage-overview.mdx",
+    "category": "模块管理",
+    "subdir": "homepage-modules",
+    "title": "获取首页模块统计概览",
+    "api": "GET /api/v1/admgmt/homepage/overview"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/homepage-modules/get-admgmt-homepage-modules.mdx",
+    "category": "模块管理",
+    "subdir": "homepage-modules",
+    "title": "获取首页模块列表",
+    "api": "GET /api/v1/admgmt/homepage/modules"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/homepage-modules/get-admgmt-homepage-modules-by-moduleId.mdx",
+    "category": "模块管理",
+    "subdir": "homepage-modules",
+    "title": "获取单个模块详情",
+    "api": "GET /api/v1/admgmt/homepage/modules/{moduleId}"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/homepage-modules/update-admgmt-homepage-modules-by-moduleId.mdx",
+    "category": "模块管理",
+    "subdir": "homepage-modules",
+    "title": "更新模块配置",
+    "api": "PUT /api/v1/admgmt/homepage/modules/{moduleId}"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/categories/get-tags.mdx",
+    "category": "分类管理",
+    "subdir": "categories",
+    "title": "获取分类路径",
+    "api": "GET /api/v1/site-svc-video-mgmt/tags"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/tags/create-tag.mdx",
+    "category": "标签管理",
+    "subdir": "tags",
+    "title": "创建标签",
+    "api": "POST /api/v1/site-svc-video-mgmt/tag"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/tags/get-tag.mdx",
+    "category": "标签管理",
+    "subdir": "tags",
+    "title": "获取单个标签",
+    "api": "GET /api/v1/site-svc-video-mgmt/tag"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/tags/update-tag.mdx",
+    "category": "标签管理",
+    "subdir": "tags",
+    "title": "更新标签",
+    "api": "PUT /api/v1/site-svc-video-mgmt/tag"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/tags/delete-tag.mdx",
+    "category": "标签管理",
+    "subdir": "tags",
+    "title": "删除标签",
+    "api": "DELETE /api/v1/site-svc-video-mgmt/tag"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/tags/update-tags-reorder.mdx",
+    "category": "标签管理",
+    "subdir": "tags",
+    "title": "重新排序标签",
+    "api": "PUT /api/v1/site-svc-video-mgmt/tags/reorder"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/tags/get-tags-stats.mdx",
+    "category": "标签管理",
+    "subdir": "tags",
+    "title": "获取标签统计",
+    "api": "GET /api/v1/site-svc-video-mgmt/tags/stats"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/categories/get-categories.mdx",
+    "category": "分类管理",
+    "subdir": "categories",
+    "title": "获取分类列表",
+    "api": "GET /api/v1/site-svc-video-mgmt/categories"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/categories/create-category.mdx",
+    "category": "分类管理",
+    "subdir": "categories",
+    "title": "创建分类",
+    "api": "POST /api/v1/site-svc-video-mgmt/category"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/categories/update-category.mdx",
+    "category": "分类管理",
+    "subdir": "categories",
+    "title": "更新分类",
+    "api": "PUT /api/v1/site-svc-video-mgmt/category"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/categories/delete-category.mdx",
+    "category": "分类管理",
+    "subdir": "categories",
+    "title": "删除分类",
+    "api": "DELETE /api/v1/site-svc-video-mgmt/category"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/categories/get-categories-tree.mdx",
+    "category": "分类管理",
+    "subdir": "categories",
+    "title": "获取分类树",
+    "api": "GET /api/v1/site-svc-video-mgmt/categories/tree"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/categories/get-categories-stats.mdx",
+    "category": "分类管理",
+    "subdir": "categories",
+    "title": "获取分类统计",
+    "api": "GET /api/v1/categories/stats"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/categories/get-category.mdx",
+    "category": "分类管理",
+    "subdir": "categories",
+    "title": "获取单个分类",
+    "api": "GET /api/v1/category"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/categories/get-category-children.mdx",
+    "category": "分类管理",
+    "subdir": "categories",
+    "title": "获取分类子项",
+    "api": "GET /api/v1/site-svc-video-mgmt/category/children"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/categories/update-category-drag.mdx",
+    "category": "分类管理",
+    "subdir": "categories",
+    "title": "拖拽分类",
+    "api": "PUT /api/v1/site-svc-video-mgmt/category/drag"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/algorithm/get-api-recommend-config.mdx",
+    "category": "推荐算法",
+    "subdir": "algorithm",
+    "title": "获取推荐配置",
+    "api": "GET /api/recommend/config"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/algorithm/update-api-recommend-config.mdx",
+    "category": "推荐算法",
+    "subdir": "algorithm",
+    "title": "更新推荐配置",
+    "api": "PUT /api/recommend/config"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/exchange-rate/get-oms-diamonds-rate.mdx",
+    "category": "汇率配置",
+    "subdir": "exchange-rate",
+    "title": "获取USDT汇率配置",
+    "api": "GET /oms/diamonds/rate"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/exchange-rate/update-diamonds-rate.mdx",
+    "category": "汇率配置",
+    "subdir": "exchange-rate",
+    "title": "更新USDT汇率配置",
+    "api": "PUT /diamonds/rate"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/exchange-rate/create-oms-diamonds-rate-sync.mdx",
+    "category": "汇率配置",
+    "subdir": "exchange-rate",
+    "title": "同步实时汇率",
+    "api": "POST /api/v1/oms/diamonds/rate/sync"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/diamond/get-oms-diamonds.mdx",
+    "category": "钻石配置",
+    "subdir": "diamond",
+    "title": "获取钻石套餐列表（分页）",
+    "api": "GET /api/v1/oms/diamonds"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/diamond/create-oms-diamonds.mdx",
+    "category": "钻石配置",
+    "subdir": "diamond",
+    "title": "创建钻石套餐",
+    "api": "POST /api/v1/oms/diamonds"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/diamond/get-oms-diamonds-by-id.mdx",
+    "category": "钻石配置",
+    "subdir": "diamond",
+    "title": "获取单个钻石套餐详情",
+    "api": "GET /api/v1/oms/diamonds/{id}"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/diamond/delete-oms-diamonds-by-id.mdx",
+    "category": "钻石配置",
+    "subdir": "diamond",
+    "title": "删除钻石套餐",
+    "api": "DELETE /api/v1/oms/diamonds/{id}"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/diamond/update-diamonds-by-id.mdx",
+    "category": "钻石配置",
+    "subdir": "diamond",
+    "title": "更新钻石套餐",
+    "api": "PUT /diamonds/{id}"
+  },
+  {
+    "path": "/Users/allen/Desktop/docs/api-reference/diamond/get-oms-diamonds-overview.mdx",
+    "category": "钻石配置",
+    "subdir": "diamond",
+    "title": "获取钻石套餐概览统计",
+    "api": "GET /api/v1/oms/diamonds/overview"
+  }
+]

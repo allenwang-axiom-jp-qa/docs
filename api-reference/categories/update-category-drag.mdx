@@ -1,0 +1,90 @@
+---
+title: '拖拽分类'
+api: 'PUT https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/category/drag'
+description: '拖拽调整分类的顺序和层级'
+---
+
+拖拽调整分类的顺序和层级
+
+## 请求体
+
+<ParamField body="category_id" type="integer" required>
+  分类ID
+</ParamField>
+
+<ParamField body="parent_id" type="integer">
+  父分类ID
+</ParamField>
+
+<ParamField body="sort_order" type="integer">
+  排序
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="message" type="string">
+  字段说明
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/category/drag" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "value"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/category/drag', {
+  method: 'PUT',
+  headers: {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    key: 'value'
+  })
+});
+
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+url = 'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/category/drag'
+headers = {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+}
+data = {
+    'key': 'value'
+}
+
+response = requests.put(url, headers=headers, json=data)
+result = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 操作成功
+{
+  "code": 0,
+  "msg": "success",
+  "data": {}
+}
+```
+```json 401 未授权
+{
+  "code": 401,
+  "msg": "未授权，请先登录"
+}
+```
+
+</ResponseExample>

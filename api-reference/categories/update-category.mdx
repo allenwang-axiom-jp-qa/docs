@@ -1,0 +1,113 @@
+---
+title: '更新分类'
+api: 'PUT https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/category'
+description: '更新指定分类的信息'
+---
+
+更新指定分类的信息
+
+## 查询参数
+
+<ParamField query="category_id" type="string" required>
+  分类ID
+</ParamField>
+
+<ParamField query="categoryId" type="string">
+  
+</ParamField>
+
+
+## 请求体
+
+<ParamField body="name" type="string">
+  分类名称
+</ParamField>
+
+<ParamField body="identifier" type="string">
+  标识符
+</ParamField>
+
+<ParamField body="parent_id" type="integer">
+  父分类ID
+</ParamField>
+
+<ParamField body="sort_order" type="integer">
+  排序
+</ParamField>
+
+<ParamField body="status" type="integer">
+  状态
+</ParamField>
+
+<ParamField body="description" type="string">
+  描述
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="message" type="string">
+  字段说明
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/category?category_id={YOUR_CATEGORY_ID}&categoryId={YOUR_CATEGORYID}" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "value"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/category?category_id={YOUR_CATEGORY_ID}&categoryId={YOUR_CATEGORYID}', {
+  method: 'PUT',
+  headers: {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    key: 'value'
+  })
+});
+
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+url = 'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/category?category_id={YOUR_CATEGORY_ID}&categoryId={YOUR_CATEGORYID}'
+headers = {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+}
+data = {
+    'key': 'value'
+}
+
+response = requests.put(url, headers=headers, json=data)
+result = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 更新成功
+{
+  "code": 0,
+  "msg": "success",
+  "data": {}
+}
+```
+```json 401 未授权
+{
+  "code": 401,
+  "msg": "未授权，请先登录"
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,135 @@
+---
+title: '创建模块子项'
+api: 'POST https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/modules/{moduleId}/items'
+description: '为指定模块创建新的子项'
+---
+
+为指定模块创建新的子项
+
+## 路径参数
+
+<ParamField path="moduleId" type="integer" required>
+  模块ID
+</ParamField>
+
+
+## 请求体
+
+<ParamField body="title" type="string" required>
+  标题，1-100字符，示例: `新年促销`
+</ParamField>
+
+<ParamField body="subtitle" type="string">
+  副标题，最多200字符，示例: `全场8折起`
+</ParamField>
+
+<ParamField body="image_url" type="string">
+  图片/封面URL，示例: `https://cdn.example.com/banner1.jpg`
+</ParamField>
+
+<ParamField body="link_url" type="string">
+  跳转链接，示例: `/promotion/newyear`
+</ParamField>
+
+<ParamField body="link_type" type="string (internal, external, none)">
+  链接类型，示例: `internal`
+</ParamField>
+
+<ParamField body="duration" type="string">
+  视频时长，最多20字符，示例: `12:34`
+</ParamField>
+
+<ParamField body="icon" type="string">
+  图标，最多50字符，示例: `🏠`
+</ParamField>
+
+<ParamField body="sort_order" type="integer" required>
+  排序值，0-9999，示例: `1`
+</ParamField>
+
+<ParamField body="enabled" type="boolean">
+  是否启用，默认true，示例: `True`
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  字段说明
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  字段说明
+  
+  <Expandable title="展开详情">
+    <ResponseField name="item" type="object">
+      首页模块子项
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  字段说明
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/modules/{YOUR_MODULEID}/items" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "value"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/modules/{YOUR_MODULEID}/items', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    key: 'value'
+  })
+});
+
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+url = 'https://dev-admin.beauty-666.com/api/v1/admgmt/homepage/modules/{YOUR_MODULEID}/items'
+headers = {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+}
+data = {
+    'key': 'value'
+}
+
+response = requests.post(url, headers=headers, json=data)
+result = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 创建成功
+{
+  "code": 0,
+  "msg": "success",
+  "data": {}
+}
+```
+```json 401 未授权
+{
+  "code": 401,
+  "msg": "未授权，请先登录"
+}
+```
+
+</ResponseExample>

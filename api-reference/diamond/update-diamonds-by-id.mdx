@@ -1,0 +1,138 @@
+---
+title: '更新钻石套餐'
+api: 'PUT https://dev-admin.beauty-666.com/diamonds/{id}'
+description: ''
+---
+
+
+
+## 路径参数
+
+<ParamField path="id" type="integer" required>
+  
+</ParamField>
+
+
+## 请求体
+
+<ParamField body="diamonds" type="integer">
+  字段说明
+</ParamField>
+
+<ParamField body="bonus_diamonds" type="integer">
+  字段说明
+</ParamField>
+
+<ParamField body="price_cny_cents" type="integer">
+  字段说明
+</ParamField>
+
+<ParamField body="price_usdt_cents" type="integer">
+  字段说明
+</ParamField>
+
+<ParamField body="first_charge_bonus" type="boolean">
+  字段说明
+</ParamField>
+
+<ParamField body="first_charge_bonus_diamonds" type="integer">
+  字段说明
+</ParamField>
+
+<ParamField body="tags" type="string (热门, 推荐, 超值, )">
+  字段说明
+</ParamField>
+
+<ParamField body="description" type="string">
+  字段说明
+</ParamField>
+
+<ParamField body="sort_order" type="integer">
+  字段说明
+</ParamField>
+
+<ParamField body="status" type="string (active, inactive)">
+  字段说明
+</ParamField>
+
+<ParamField body="meta" type="string">
+  字段说明
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  响应消息
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  响应数据
+</ResponseField>
+
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://dev-admin.beauty-666.com/diamonds/{YOUR_ID}" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "value"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://dev-admin.beauty-666.com/diamonds/{YOUR_ID}', {
+  method: 'PUT',
+  headers: {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    key: 'value'
+  })
+});
+
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+url = 'https://dev-admin.beauty-666.com/diamonds/{YOUR_ID}'
+headers = {
+    'Authorization': 'Bearer YOUR_TOKEN',
+    'Content-Type': 'application/json'
+}
+data = {
+    'key': 'value'
+}
+
+response = requests.put(url, headers=headers, json=data)
+result = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 更新成功
+{
+  "code": 0,
+  "msg": "success",
+  "data": {}
+}
+```
+```json 401 未授权
+{
+  "code": 401,
+  "msg": "未授权，请先登录"
+}
+```
+
+</ResponseExample>

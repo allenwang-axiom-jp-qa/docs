@@ -1,88 +1,5 @@
 {
-  "$schema": "https://mintlify.com/schema.json",
-  "name": "CMS OMS API Documentation",
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "favicon": "/favicon.png",
-  "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
-    "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
-    }
-  },
-  "topbarLinks": [
-    {
-      "name": "GitHub",
-      "url": "https://github.com/axiom888/cms-site-svc-oms"
-    }
-  ],
-  "topbarCtaButton": {
-    "name": "Dev Environment",
-    "url": "https://dev-admin.beauty-666.com"
-  },
-  "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    },
-    {
-      "name": "Deployment",
-      "url": "deployment"
-    }
-  ],
-  "anchors": [
-    {
-      "name": "Community",
-      "icon": "github",
-      "url": "https://github.com/axiom888/cms-site-svc-oms"
-    }
-  ],
   "navigation": [
-    {
-      "group": "Getting Started",
-      "pages": [
-        "introduction",
-        "quickstart",
-        "authentication"
-      ]
-    },
-    {
-      "group": "API Reference",
-      "pages": [
-        "api-reference/overview"
-      ]
-    },
-    {
-      "group": "Homepage API",
-      "pages": [
-        "api-reference/homepage/overview",
-        {
-          "group": "模块管理",
-          "pages": [
-            "api-reference/homepage/get-overview",
-            "api-reference/homepage/list-modules",
-            "api-reference/homepage/get-module",
-            "api-reference/homepage/update-module"
-          ]
-        },
-        {
-          "group": "模块子项",
-          "pages": [
-            "api-reference/homepage/list-items",
-            "api-reference/homepage/get-item",
-            "api-reference/homepage/create-item",
-            "api-reference/homepage/update-item",
-            "api-reference/homepage/delete-item"
-          ]
-        },
-        "api-reference/homepage/preview"
-      ]
-    },
     {
       "group": "系统接口",
       "pages": [
@@ -155,7 +72,7 @@
       ]
     },
     {
-      "group": "首页模块管理（自动生成）",
+      "group": "首页模块管理",
       "pages": [
         "api-reference/homepage-modules/get-admgmt-homepage-overview",
         "api-reference/homepage-modules/get-admgmt-homepage-modules",
@@ -164,7 +81,7 @@
       ]
     },
     {
-      "group": "模块子项管理（自动生成）",
+      "group": "模块子项管理",
       "pages": [
         "api-reference/homepage-items/get-admgmt-homepage-modules-by-moduleId-items",
         "api-reference/homepage-items/get-admgmt-homepage-items-by-itemId",
@@ -185,22 +102,12 @@
         "api-reference/algorithm/get-api-recommend-config",
         "api-reference/algorithm/update-api-recommend-config"
       ]
-    },
-    {
-      "group": "Deployment",
-      "pages": [
-        "deployment/setup",
-        "deployment/ci-cd"
-      ]
     }
   ],
-  "footerSocials": {
-    "github": "https://github.com/axiom888/cms-site-svc-oms"
-  },
-  "api": {
-    "baseUrl": "https://dev-admin.beauty-666.com/api/v1/oms",
-    "auth": {
-      "method": "bearer"
-    }
+  "metadata": {
+    "total_endpoints": 48,
+    "generated_at": "2026-01-07",
+    "base_url": "https://dev-admin.beauty-666.com",
+    "description": "CMS服务系统API文档 - 从OpenAPI规范自动生成"
   }
 }
