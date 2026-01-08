@@ -1,0 +1,157 @@
+---
+title: '获取推荐配置'
+api: 'GET https://dev-admin.beauty-666.com/api/recommend/config'
+description: '获取推荐算法的权重配置，包括内容相似度、用户偏好、热度和多样性等参数'
+---
+
+获取当前推荐算法使用的权重配置，用于调整推荐系统的推荐策略。
+
+## 请求头
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+</ParamField>
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  推荐配置对象
+
+  <Expandable title="配置字段">
+    <ResponseField name="content_similarity" type="number">
+      内容相似度权重（0.0-1.0）
+
+      用于调整基于内容相似性的推荐强度。值越大，推荐的内容与用户历史浏览内容越相似。
+    </ResponseField>
+
+    <ResponseField name="user_preference" type="number">
+      用户偏好权重（0.0-1.0）
+
+      用于调整基于用户个性化偏好的推荐强度。值越大，越倾向于推荐用户喜欢的类型。
+    </ResponseField>
+
+    <ResponseField name="popularity" type="number">
+      热度权重（0.0-1.0）
+
+      用于调整基于内容热度的推荐强度。值越大，越倾向于推荐热门内容。
+    </ResponseField>
+
+    <ResponseField name="diversity" type="number">
+      多样性权重（0.0-1.0）
+
+      用于调整推荐内容的多样性。值越大，推荐结果越多样化，避免过度集中。
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  响应消息
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/recommend/config \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+```javascript JavaScript
+const response = await fetch(
+  'https://dev-admin.beauty-666.com/api/recommend/config',
+  {
+    headers: {
+      'Authorization': 'Bearer YOUR_TOKEN'
+    }
+  }
+);
+const data = await response.json();
+console.log('推荐配置:', data.data);
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    'https://dev-admin.beauty-666.com/api/recommend/config',
+    headers={'Authorization': 'Bearer YOUR_TOKEN'}
+)
+config = response.json()
+print(f"推荐配置: {config['data']}")
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 获取成功
+{
+  "code": 0,
+  "data": {
+    "content_similarity": 0.3,
+    "user_preference": 0.4,
+    "popularity": 0.2,
+    "diversity": 0.1
+  },
+  "msg": "获取推荐配置成功"
+}
+```
+
+```json 401 未授权
+{
+  "code": 401,
+  "msg": "Token expired or invalid"
+}
+```
+
+</ResponseExample>
+
+## 权重说明
+
+推荐算法使用以下四个权重来计算推荐分数：
+
+### 1. 内容相似度 (content_similarity)
+- **作用**: 基于内容特征的相似性推荐
+- **适用场景**: 用户看了某类视频，推荐相似主题的内容
+- **调整建议**:
+  - 提高：增强"看了这个的人也看了..."效果
+  - 降低：减少重复类型内容推荐
+
+### 2. 用户偏好 (user_preference)
+- **作用**: 基于用户历史行为的个性化推荐
+- **适用场景**: 根据用户点赞、收藏、观看时长等行为推荐
+- **调整建议**:
+  - 提高：更精准的个性化推荐
+  - 降低：减少"信息茧房"效应
+
+### 3. 热度 (popularity)
+- **作用**: 基于内容受欢迎程度的推荐
+- **适用场景**: 推荐热门、流行的内容
+- **调整建议**:
+  - 提高：更多推荐热门内容
+  - 降低：给长尾内容更多曝光机会
+
+### 4. 多样性 (diversity)
+- **作用**: 增加推荐结果的多样性
+- **适用场景**: 避免推荐内容过于单一
+- **调整建议**:
+  - 提高：推荐更多不同类型的内容
+  - 降低：推荐更聚焦于特定类型
+
+<Info>
+  **权重平衡建议**：
+  - 所有权重之和建议为 1.0（100%）
+  - 典型配置：用户偏好 40%、内容相似度 30%、热度 20%、多样性 10%
+  - 可根据业务目标灵活调整
+</Info>
+
+## 使用场景
+
+此接口通常用于：
+- 查看当前推荐策略配置
+- 对比不同配置的效果
+- 配置管理界面的数据展示
+- A/B 测试中的参数记录

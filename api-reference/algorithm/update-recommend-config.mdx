@@ -1,0 +1,272 @@
+---
+title: '更新推荐配置'
+api: 'PUT https://dev-admin.beauty-666.com/api/recommend/config'
+description: '更新推荐算法的权重配置，调整推荐策略'
+---
+
+更新推荐算法的权重配置，可以实时调整推荐系统的推荐策略。所有权重字段都是可选的，只更新传递的字段。
+
+## 请求头
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+</ParamField>
+
+<ParamField header="Content-Type" type="string" required>
+  必须为 `application/json`
+</ParamField>
+
+## 请求体
+
+所有字段都是可选的，只传需要更新的权重：
+
+<ParamField body="content_similarity" type="number">
+  内容相似度权重（取值范围：0.0-1.0）
+
+  控制基于内容相似性的推荐强度
+</ParamField>
+
+<ParamField body="user_preference" type="number">
+  用户偏好权重（取值范围：0.0-1.0）
+
+  控制基于用户个性化偏好的推荐强度
+</ParamField>
+
+<ParamField body="popularity" type="number">
+  热度权重（取值范围：0.0-1.0）
+
+  控制基于内容热度的推荐强度
+</ParamField>
+
+<ParamField body="diversity" type="number">
+  多样性权重（取值范围：0.0-1.0）
+
+  控制推荐内容的多样性程度
+</ParamField>
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  更新后的完整配置对象
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  响应消息
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+# 更新所有权重
+curl -X PUT https://dev-admin.beauty-666.com/api/recommend/config \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content_similarity": 0.3,
+    "user_preference": 0.4,
+    "popularity": 0.2,
+    "diversity": 0.1
+  }'
+```
+
+```javascript JavaScript
+// 仅更新部分权重
+const response = await fetch(
+  'https://dev-admin.beauty-666.com/api/recommend/config',
+  {
+    method: 'PUT',
+    headers: {
+      'Authorization': 'Bearer YOUR_TOKEN',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      user_preference: 0.5,  // 提高个性化推荐权重
+      diversity: 0.15        // 增加多样性
+    })
+  }
+);
+const data = await response.json();
+console.log('更新成功:', data.data);
+```
+
+```python Python
+import requests
+
+# 调整热度权重
+payload = {
+    'popularity': 0.3  # 增加热门内容推荐
+}
+
+response = requests.put(
+    'https://dev-admin.beauty-666.com/api/recommend/config',
+    headers={
+        'Authorization': 'Bearer YOUR_TOKEN',
+        'Content-Type': 'application/json'
+    },
+    json=payload
+)
+result = response.json()
+print(f"更新结果: {result['msg']}")
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 更新成功
+{
+  "code": 0,
+  "data": {
+    "content_similarity": 0.3,
+    "user_preference": 0.4,
+    "popularity": 0.2,
+    "diversity": 0.1
+  },
+  "msg": "更新推荐配置成功"
+}
+```
+
+```json 400 参数错误
+{
+  "code": 400,
+  "msg": "权重值必须在 0.0-1.0 之间"
+}
+```
+
+```json 401 未授权
+{
+  "code": 401,
+  "msg": "Token expired or invalid"
+}
+```
+
+</ResponseExample>
+
+## 配置策略示例
+
+### 1. 平衡型策略（推荐）
+适合大多数场景，平衡各方面因素：
+
+```json
+{
+  "content_similarity": 0.3,
+  "user_preference": 0.4,
+  "popularity": 0.2,
+  "diversity": 0.1
+}
+```
+
+### 2. 个性化优先策略
+强化个性化推荐，适合老用户：
+
+```json
+{
+  "content_similarity": 0.25,
+  "user_preference": 0.5,
+  "popularity": 0.15,
+  "diversity": 0.1
+}
+```
+
+### 3. 热门优先策略
+优先推荐热门内容，适合新用户或冷启动：
+
+```json
+{
+  "content_similarity": 0.2,
+  "user_preference": 0.2,
+  "popularity": 0.5,
+  "diversity": 0.1
+}
+```
+
+### 4. 探索型策略
+增加内容多样性，避免信息茧房：
+
+```json
+{
+  "content_similarity": 0.25,
+  "user_preference": 0.35,
+  "popularity": 0.15,
+  "diversity": 0.25
+}
+```
+
+<Warning>
+  **重要提示：**
+  - 每个权重值必须在 0.0 到 1.0 之间
+  - 建议所有权重之和为 1.0（100%）
+  - 配置更新后立即生效，会影响所有用户的推荐结果
+  - 建议在低峰时段进行重大调整
+  - 可以通过 A/B 测试验证配置效果
+</Warning>
+
+## 调整指南
+
+### 如何提升内容发现率
+```json
+{
+  "diversity": 0.2  // 增加多样性权重
+}
+```
+
+### 如何增加用户粘性
+```json
+{
+  "user_preference": 0.5  // 提高个性化权重
+}
+```
+
+### 如何推广新内容
+```json
+{
+  "popularity": 0.15,  // 降低热度权重
+  "diversity": 0.2     // 增加多样性
+}
+```
+
+### 如何应对冷启动
+```json
+{
+  "popularity": 0.4,       // 提高热度权重
+  "user_preference": 0.2   // 降低个性化（新用户无历史数据）
+}
+```
+
+<Info>
+  **最佳实践：**
+  - 定期监控推荐效果指标（CTR、观看时长、跳出率）
+  - 小幅调整（每次调整 ±0.05-0.1）
+  - 记录每次调整的时间和原因
+  - 给系统足够时间（至少24小时）观察效果
+  - 考虑不同时段、不同用户群体的差异
+</Info>
+
+## 监控建议
+
+更新配置后，建议监控以下指标：
+
+- **点击率 (CTR)**：推荐内容的点击率变化
+- **观看时长**：用户平均观看时长
+- **跳出率**：用户快速离开的比例
+- **内容覆盖率**：推荐内容的多样性
+- **用户留存**：次日留存、7日留存等
+
+## 回滚操作
+
+如果新配置效果不佳，可以快速回滚到之前的配置：
+
+```javascript
+// 保存旧配置
+const oldConfig = await getRecommendConfig();
+
+// 更新新配置
+await updateRecommendConfig(newConfig);
+
+// 如果效果不好，回滚
+await updateRecommendConfig(oldConfig);
+```

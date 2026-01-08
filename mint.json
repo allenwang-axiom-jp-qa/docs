@@ -183,8 +183,8 @@
     {
       "group": "推荐算法",
       "pages": [
-        "api-reference/algorithm/get-api-recommend-config",
-        "api-reference/algorithm/update-api-recommend-config"
+        "api-reference/algorithm/get-recommend-config",
+        "api-reference/algorithm/update-recommend-config"
       ]
     },
     {
