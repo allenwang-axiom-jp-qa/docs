@@ -1,69 +1,88 @@
 ---
 title: '获取单个标签'
 api: 'GET https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag'
-description: '根据ID获取单个标签详情'
+description: '根据标签ID获取单个标签详情'
 ---
 
-根据ID获取单个标签详情
+根据标签ID获取单个标签的完整信息。
 
 ## 查询参数
 
-<ParamField query="tag_id" type="string" required>
-  标签ID
+<ParamField query="tagId" type="integer" required>
+  标签数据库主键ID
 </ParamField>
-
 
 ## 响应
 
-<ResponseField name="id" type="integer">
-  标签ID
+<ResponseField name="code" type="integer">
+  业务状态码（0表示成功）
 </ResponseField>
 
-<ResponseField name="tag_id" type="string">
-  标签ID字符串
+<ResponseField name="msg" type="string">
+  响应消息
 </ResponseField>
 
-<ResponseField name="name" type="string">
+<ResponseField name="data" type="object">
+  标签详情
+</ResponseField>
+
+<ResponseField name="data.id" type="integer">
+  数据库主键ID
+</ResponseField>
+
+<ResponseField name="data.tagId" type="string">
+  标签唯一标识符，格式：TAG001
+</ResponseField>
+
+<ResponseField name="data.name" type="string">
   标签名称
 </ResponseField>
 
-<ResponseField name="identifier" type="string">
-  标识符
+<ResponseField name="data.categoryId" type="integer">
+  所属分类ID
 </ResponseField>
 
-<ResponseField name="tag_type" type="integer">
-  标签类型
+<ResponseField name="data.categoryName" type="string">
+  所属分类名称
 </ResponseField>
 
-<ResponseField name="use_count" type="integer">
+<ResponseField name="data.tagType" type="integer">
+  标签类型：0=普通类型，1=热门类型
+</ResponseField>
+
+<ResponseField name="data.useCount" type="integer">
   使用次数
 </ResponseField>
 
-<ResponseField name="status" type="integer">
-  状态
+<ResponseField name="data.videoCount" type="integer">
+  关联视频数量
 </ResponseField>
 
-<ResponseField name="sort_order" type="integer">
-  排序
+<ResponseField name="data.status" type="integer">
+  状态：0=禁用，1=启用
 </ResponseField>
 
-<ResponseField name="description" type="string">
-  描述
+<ResponseField name="data.sortOrder" type="integer">
+  排序顺序
 </ResponseField>
 
-<ResponseField name="created_time" type="integer">
-  创建时间
+<ResponseField name="data.description" type="string">
+  标签描述
+</ResponseField>
+
+<ResponseField name="data.createdTime" type="integer">
+  创建时间（Unix时间戳，秒）
 </ResponseField>
 
 <RequestExample>
 
 ```bash cURL
-curl -X GET "https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag?tag_id={YOUR_TAG_ID}" \
+curl -X GET "https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag?tagId=1" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 ```javascript JavaScript
-const response = await fetch('https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag?tag_id={YOUR_TAG_ID}', {
+const response = await fetch('https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag?tagId=1', {
   method: 'GET',
   headers: {
     'Authorization': 'Bearer YOUR_TOKEN',
@@ -77,13 +96,14 @@ const data = await response.json();
 ```python Python
 import requests
 
-url = 'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag?tag_id={YOUR_TAG_ID}'
+url = 'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag'
+params = {'tagId': 1}
 headers = {
     'Authorization': 'Bearer YOUR_TOKEN',
     'Content-Type': 'application/json'
 }
 
-response = requests.get(url, headers=headers)
+response = requests.get(url, params=params, headers=headers)
 result = response.json()
 ```
 
@@ -94,14 +114,35 @@ result = response.json()
 ```json 200 获取成功
 {
   "code": 0,
-  "msg": "success",
-  "data": {}
+  "msg": "获取成功",
+  "data": {
+    "id": 1,
+    "tagId": "TAG001",
+    "name": "热门推荐",
+    "categoryId": 1,
+    "categoryName": "内容类型",
+    "tagType": 1,
+    "useCount": 156,
+    "videoCount": 42,
+    "status": 1,
+    "sortOrder": 1,
+    "description": "热门推荐视频标签",
+    "createdTime": 1704067200
+  }
 }
 ```
-```json 401 未授权
+
+```json 400 参数错误
 {
-  "code": 401,
-  "msg": "未授权，请先登录"
+  "code": 400,
+  "msg": "invalid tagId"
+}
+```
+
+```json 404 标签不存在
+{
+  "code": 404,
+  "msg": "标签不存在"
 }
 ```
 

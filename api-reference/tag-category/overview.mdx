@@ -1,0 +1,89 @@
+---
+title: 'Tag Category Management'
+description: '标签分类创建、组织和管理相关的API接口'
+---
+
+## Overview
+
+标签分类管理API允许您对标签进行分类管理，建立层次化的标签组织结构。
+
+## Features
+
+- **分类创建与管理**: 创建、更新、删除标签分类
+- **标签关联**: 管理分类下的标签
+- **排序管理**: 支持调整分类顺序
+- **状态控制**: 启用/禁用分类
+- **统计信息**: 获取分类使用统计
+
+## Available Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/tag-categories` | [获取分类列表](/api-reference/tag-category/get-tag-categories) |
+| GET | `/tag-category` | [获取单个分类详情](/api-reference/tag-category/get-tag-category) |
+| POST | `/tag-category` | [创建新分类](/api-reference/tag-category/create-tag-category) |
+| PUT | `/tag-category` | [更新分类信息](/api-reference/tag-category/update-tag-category) |
+| DELETE | `/tag-category` | [删除分类](/api-reference/tag-category/delete-tag-category) |
+| GET | `/tag-categories/stats` | [获取分类统计](/api-reference/tag-category/get-tag-category-stats) |
+
+## Base URL
+
+```
+/api/v1/site-svc-video-mgmt
+```
+
+## Data Model
+
+### Tag Category Object
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | int | 数据库主键ID |
+| categoryId | string | 分类唯一标识符 (CAT001) |
+| name | string | 分类名称 |
+| icon | string | 分类图标URL |
+| description | string | 分类描述 |
+| tagCount | int | 该分类下的标签数量 |
+| sortOrder | int | 排序顺序 |
+| status | int | 状态: 0=禁用, 1=启用 |
+| createdAt | int | 创建时间 (Unix时间戳) |
+| updatedAt | int | 更新时间 (Unix时间戳) |
+| createdBy | string | 创建人 |
+| updatedBy | string | 更新人 |
+
+## Quick Start
+
+### 1. 获取所有启用的分类
+
+```bash
+curl "https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag-categories?status=1"
+```
+
+### 2. 创建新分类
+
+```bash
+curl -X POST "https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag-category" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "内容类型", "description": "按内容分类的标签"}'
+```
+
+### 3. 获取分类统计
+
+```bash
+curl "https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag-categories/stats"
+```
+
+## Relationship with Tags
+
+标签和分类是多对一的关系：
+- 每个标签必须属于一个分类
+- 一个分类可以包含多个标签
+- 分类被禁用时，其下的标签仍然可以正常使用
+
+<Note>
+  分类名称在系统中必须唯一。创建分类时，系统会自动生成唯一的 categoryId。
+</Note>
+
+<Warning>
+  删除分类前，请确保该分类下没有关联的标签。建议先将标签迁移到其他分类。
+</Warning>

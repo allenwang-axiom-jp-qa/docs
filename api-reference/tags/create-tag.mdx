@@ -1,38 +1,53 @@
 ---
 title: '创建标签'
 api: 'POST https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag'
-description: '创建一个新的标签'
+description: '创建新的视频标签'
 ---
 
-创建一个新的标签
+创建一个新的视频标签。标签名称在系统中必须唯一，系统会自动生成标签标识符（tagId）。
 
-## 请求体
+<Note>
+  标签必须关联到一个分类（categoryId 为必填项）
+</Note>
+
+## 请求参数
 
 <ParamField body="name" type="string" required>
-  标签名称
+  标签名称，必须唯一，最大长度100字符
 </ParamField>
 
-<ParamField body="identifier" type="string" required>
-  标识符
+<ParamField body="categoryId" type="integer" required>
+  所属分类ID，必须是有效的分类
 </ParamField>
 
-<ParamField body="tag_type" type="integer">
-  标签类型
+<ParamField body="tagType" type="integer" default="0">
+  标签类型：0=普通类型，1=热门类型
 </ParamField>
 
-<ParamField body="status" type="integer">
-  状态
+<ParamField body="status" type="integer" default="1">
+  状态：0=禁用，1=启用
 </ParamField>
 
 <ParamField body="description" type="string">
-  描述
+  标签描述
 </ParamField>
-
 
 ## 响应
 
-<ResponseField name="tag_id" type="integer">
-  标签ID
+<ResponseField name="code" type="integer">
+  业务状态码（0表示成功）
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  响应消息
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  创建结果
+</ResponseField>
+
+<ResponseField name="data.tagId" type="integer">
+  新创建标签的数据库主键ID
 </ResponseField>
 
 <RequestExample>
@@ -42,7 +57,11 @@ curl -X POST "https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "key": "value"
+    "name": "新标签",
+    "categoryId": 1,
+    "tagType": 0,
+    "status": 1,
+    "description": "这是一个新标签"
   }'
 ```
 
@@ -54,7 +73,11 @@ const response = await fetch('https://dev-admin.beauty-666.com/api/v1/site-svc-v
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    key: 'value'
+    name: '新标签',
+    categoryId: 1,
+    tagType: 0,
+    status: 1,
+    description: '这是一个新标签'
   })
 });
 
@@ -69,11 +92,15 @@ headers = {
     'Authorization': 'Bearer YOUR_TOKEN',
     'Content-Type': 'application/json'
 }
-data = {
-    'key': 'value'
+payload = {
+    'name': '新标签',
+    'categoryId': 1,
+    'tagType': 0,
+    'status': 1,
+    'description': '这是一个新标签'
 }
 
-response = requests.post(url, headers=headers, json=data)
+response = requests.post(url, json=payload, headers=headers)
 result = response.json()
 ```
 
@@ -81,17 +108,27 @@ result = response.json()
 
 <ResponseExample>
 
-```json 201 创建成功
+```json 200 创建成功
 {
   "code": 0,
-  "msg": "success",
-  "data": {}
+  "msg": "创建成功",
+  "data": {
+    "tagId": 10
+  }
 }
 ```
-```json 401 未授权
+
+```json 400 参数错误
 {
-  "code": 401,
-  "msg": "未授权，请先登录"
+  "code": 400,
+  "msg": "缺少必填字段"
+}
+```
+
+```json 400 名称重复
+{
+  "code": 1002,
+  "msg": "标签名称已存在"
 }
 ```
 

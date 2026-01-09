@@ -1,0 +1,154 @@
+---
+title: 'Get Tag Category Detail'
+api: 'GET /api/v1/site-svc-video-mgmt/tag-category'
+description: '获取单个标签分类的详细信息'
+---
+
+## Overview
+
+根据分类ID获取单个标签分类的完整信息，包括该分类下的标签数量。
+
+## Query Parameters
+
+<ParamField query="id" type="int" required>
+  分类数据库主键ID
+</ParamField>
+
+## Response
+
+<ResponseField name="code" type="int" required>
+  业务状态码（0表示成功）
+</ResponseField>
+
+<ResponseField name="data" type="object" required>
+  分类详情
+
+  <Expandable title="data properties">
+    <ResponseField name="id" type="int">
+      数据库主键ID
+    </ResponseField>
+
+    <ResponseField name="categoryId" type="string">
+      分类唯一标识符，格式：CAT001
+    </ResponseField>
+
+    <ResponseField name="name" type="string">
+      分类名称
+    </ResponseField>
+
+    <ResponseField name="icon" type="string">
+      分类图标URL
+    </ResponseField>
+
+    <ResponseField name="description" type="string">
+      分类描述
+    </ResponseField>
+
+    <ResponseField name="tagCount" type="int">
+      该分类下的标签数量
+    </ResponseField>
+
+    <ResponseField name="sortOrder" type="int">
+      排序顺序
+    </ResponseField>
+
+    <ResponseField name="status" type="int">
+      状态：0=禁用，1=启用
+    </ResponseField>
+
+    <ResponseField name="createdAt" type="int">
+      创建时间（Unix时间戳，秒）
+    </ResponseField>
+
+    <ResponseField name="updatedAt" type="int">
+      更新时间（Unix时间戳，秒）
+    </ResponseField>
+
+    <ResponseField name="createdBy" type="string">
+      创建人
+    </ResponseField>
+
+    <ResponseField name="updatedBy" type="string">
+      更新人
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="msg" type="string" required>
+  响应消息
+</ResponseField>
+
+<ResponseExample>
+
+```json Response
+{
+  "code": 0,
+  "data": {
+    "id": 1,
+    "categoryId": "CAT001",
+    "name": "内容类型",
+    "icon": "https://cdn.example.com/icons/content.png",
+    "description": "视频内容分类标签",
+    "tagCount": 15,
+    "sortOrder": 1,
+    "status": 1,
+    "createdAt": 1704067200,
+    "updatedAt": 1704067200,
+    "createdBy": "admin",
+    "updatedBy": "admin"
+  },
+  "msg": "获取成功"
+}
+```
+
+</ResponseExample>
+
+## Example Usage
+
+<CodeGroup>
+
+```javascript JavaScript
+async function getTagCategory(id) {
+  const response = await fetch(
+    `https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag-category?id=${id}`
+  );
+  const result = await response.json();
+
+  if (result.code === 0) {
+    return result.data;
+  } else {
+    throw new Error(result.msg);
+  }
+}
+```
+
+```python Python
+import requests
+
+def get_tag_category(category_id):
+    response = requests.get(
+        'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag-category',
+        params={'id': category_id}
+    )
+    result = response.json()
+
+    if result['code'] == 0:
+        return result['data']
+    else:
+        raise Exception(result['msg'])
+```
+
+```bash cURL
+curl "https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag-category?id=1"
+```
+
+</CodeGroup>
+
+## Error Codes
+
+| 错误码 | 含义 | HTTP状态码 |
+|--------|------|-----------|
+| 0 | 成功 | 200 |
+| 400 | 参数错误（缺少id或格式错误） | 400 |
+| 404 | 分类不存在 | 404 |
+| 500 | 服务器内部错误 | 500 |

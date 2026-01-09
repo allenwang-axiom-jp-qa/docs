@@ -128,12 +128,26 @@
     {
       "group": "标签管理",
       "pages": [
+        "api-reference/tags/overview",
+        "api-reference/tags/get-tags",
         "api-reference/tags/get-tag",
-        "api-reference/tags/get-tags-stats",
         "api-reference/tags/create-tag",
         "api-reference/tags/update-tag",
+        "api-reference/tags/delete-tag",
         "api-reference/tags/update-tags-reorder",
-        "api-reference/tags/delete-tag"
+        "api-reference/tags/get-tags-stats"
+      ]
+    },
+    {
+      "group": "标签分类管理",
+      "pages": [
+        "api-reference/tag-category/overview",
+        "api-reference/tag-category/get-tag-categories",
+        "api-reference/tag-category/get-tag-category",
+        "api-reference/tag-category/create-tag-category",
+        "api-reference/tag-category/update-tag-category",
+        "api-reference/tag-category/delete-tag-category",
+        "api-reference/tag-category/get-tag-category-stats"
       ]
     },
     {

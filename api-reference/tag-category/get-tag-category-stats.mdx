@@ -1,0 +1,113 @@
+---
+title: 'Get Tag Category Statistics'
+api: 'GET /api/v1/site-svc-video-mgmt/tag-categories/stats'
+description: '获取标签分类统计信息'
+---
+
+## Overview
+
+获取标签分类的整体统计信息，包括总分类数、启用分类数、关联标签总数和平均标签数。
+
+## Response
+
+<ResponseField name="code" type="int" required>
+  业务状态码（0表示成功）
+</ResponseField>
+
+<ResponseField name="data" type="object" required>
+  统计数据
+
+  <Expandable title="data properties">
+    <ResponseField name="totalCount" type="int">
+      分类总数
+    </ResponseField>
+
+    <ResponseField name="activeCount" type="int">
+      启用状态的分类数量
+    </ResponseField>
+
+    <ResponseField name="totalTags" type="int">
+      所有分类下的标签总数
+    </ResponseField>
+
+    <ResponseField name="avgTags" type="float">
+      平均每个分类的标签数量
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="msg" type="string" required>
+  响应消息
+</ResponseField>
+
+<ResponseExample>
+
+```json Response
+{
+  "code": 0,
+  "data": {
+    "totalCount": 5,
+    "activeCount": 4,
+    "totalTags": 50,
+    "avgTags": 10.0
+  },
+  "msg": "获取成功"
+}
+```
+
+</ResponseExample>
+
+## Example Usage
+
+<CodeGroup>
+
+```javascript JavaScript
+async function getTagCategoryStats() {
+  const response = await fetch(
+    'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag-categories/stats'
+  );
+  const result = await response.json();
+
+  if (result.code === 0) {
+    console.log('分类总数:', result.data.totalCount);
+    console.log('启用分类:', result.data.activeCount);
+    console.log('标签总数:', result.data.totalTags);
+    console.log('平均标签数:', result.data.avgTags);
+    return result.data;
+  } else {
+    throw new Error(result.msg);
+  }
+}
+```
+
+```python Python
+import requests
+
+def get_tag_category_stats():
+    response = requests.get(
+        'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag-categories/stats'
+    )
+    result = response.json()
+
+    if result['code'] == 0:
+        print(f"分类总数: {result['data']['totalCount']}")
+        print(f"启用分类: {result['data']['activeCount']}")
+        print(f"标签总数: {result['data']['totalTags']}")
+        print(f"平均标签数: {result['data']['avgTags']}")
+        return result['data']
+    else:
+        raise Exception(result['msg'])
+```
+
+```bash cURL
+curl "https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag-categories/stats"
+```
+
+</CodeGroup>
+
+## Error Codes
+
+| 错误码 | 含义 | HTTP状态码 |
+|--------|------|-----------|
+| 0 | 成功 | 200 |
+| 500 | 服务器内部错误 | 500 |

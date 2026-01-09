@@ -1,31 +1,43 @@
 ---
 title: '获取标签统计'
 api: 'GET https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tags/stats'
-description: '获取标签的统计信息'
+description: '获取标签统计信息'
 ---
 
-获取标签的统计信息
+获取标签的整体统计信息，包括总数、各类型数量、启用数量和关联视频总数。
 
 ## 响应
 
-<ResponseField name="total" type="integer">
-  总数
+<ResponseField name="code" type="integer">
+  业务状态码（0表示成功）
 </ResponseField>
 
-<ResponseField name="normal_type" type="integer">
-  普通类型
+<ResponseField name="msg" type="string">
+  响应消息
 </ResponseField>
 
-<ResponseField name="hot_type" type="integer">
-  热门类型
+<ResponseField name="data" type="object">
+  统计数据
 </ResponseField>
 
-<ResponseField name="enabled" type="integer">
-  已启用
+<ResponseField name="data.total" type="integer">
+  标签总数
 </ResponseField>
 
-<ResponseField name="total_videos" type="integer">
-  关联视频总数
+<ResponseField name="data.normalType" type="integer">
+  普通类型标签数量
+</ResponseField>
+
+<ResponseField name="data.hotType" type="integer">
+  热门类型标签数量
+</ResponseField>
+
+<ResponseField name="data.enabled" type="integer">
+  启用状态的标签数量
+</ResponseField>
+
+<ResponseField name="data.totalVideos" type="integer">
+  标签关联的视频总数（去重后）
 </ResponseField>
 
 <RequestExample>
@@ -67,14 +79,14 @@ result = response.json()
 ```json 200 获取成功
 {
   "code": 0,
-  "msg": "success",
-  "data": {}
-}
-```
-```json 401 未授权
-{
-  "code": 401,
-  "msg": "未授权，请先登录"
+  "msg": "获取成功",
+  "data": {
+    "total": 50,
+    "normalType": 40,
+    "hotType": 10,
+    "enabled": 45,
+    "totalVideos": 280
+  }
 }
 ```
 

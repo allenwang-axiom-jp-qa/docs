@@ -1,0 +1,131 @@
+---
+title: 'Update Tag Category'
+api: 'PUT /api/v1/site-svc-video-mgmt/tag-category'
+description: '更新标签分类信息'
+---
+
+## Overview
+
+更新指定标签分类的信息。只需传入需要更新的字段，未传入的字段将保持原值。
+
+## Query Parameters
+
+<ParamField query="id" type="int" required>
+  要更新的分类数据库主键ID
+</ParamField>
+
+## Request Body
+
+<ParamField body="name" type="string">
+  分类名称，如果修改需确保唯一
+</ParamField>
+
+<ParamField body="icon" type="string">
+  分类图标URL
+</ParamField>
+
+<ParamField body="description" type="string">
+  分类描述
+</ParamField>
+
+<ParamField body="sortOrder" type="int">
+  排序顺序
+</ParamField>
+
+<ParamField body="status" type="int">
+  状态：0=禁用，1=启用
+</ParamField>
+
+## Response
+
+<ResponseField name="code" type="int" required>
+  业务状态码（0表示成功）
+</ResponseField>
+
+<ResponseField name="msg" type="string" required>
+  响应消息
+</ResponseField>
+
+<ResponseExample>
+
+```json Response
+{
+  "code": 0,
+  "msg": "更新成功"
+}
+```
+
+</ResponseExample>
+
+## Example Usage
+
+<CodeGroup>
+
+```javascript JavaScript
+async function updateTagCategory(id, updates) {
+  const response = await fetch(
+    `https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag-category?id=${id}`,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updates)
+    }
+  );
+  const result = await response.json();
+
+  if (result.code === 0) {
+    return true;
+  } else {
+    throw new Error(result.msg);
+  }
+}
+
+// 使用示例：更新分类名称和状态
+updateTagCategory(1, {
+  name: '更新后的分类名',
+  status: 0
+});
+```
+
+```python Python
+import requests
+
+def update_tag_category(category_id, **updates):
+    response = requests.put(
+        'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag-category',
+        params={'id': category_id},
+        json=updates
+    )
+    result = response.json()
+
+    if result['code'] == 0:
+        return True
+    else:
+        raise Exception(result['msg'])
+
+# 使用示例
+update_tag_category(1, name='更新后的分类名', status=0)
+```
+
+```bash cURL
+curl -X PUT "https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag-category?id=1" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "更新后的分类名",
+    "status": 0
+  }'
+```
+
+</CodeGroup>
+
+## Error Codes
+
+| 错误码 | 含义 | HTTP状态码 |
+|--------|------|-----------|
+| 0 | 成功 | 200 |
+| 400 | 参数错误（缺少id或格式错误） | 400 |
+| 404 | 分类不存在 | 404 |
+| 1002 | 分类名称已被其他分类使用 | 400 |
+| 500 | 服务器内部错误 | 500 |

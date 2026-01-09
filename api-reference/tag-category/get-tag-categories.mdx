@@ -1,0 +1,222 @@
+---
+title: 'Get Tag Categories List'
+api: 'GET /api/v1/site-svc-video-mgmt/tag-categories'
+description: '获取标签分类列表，支持分页、关键词搜索和状态筛选'
+---
+
+## Overview
+
+获取标签分类列表接口，支持以下功能：
+- 分页查询
+- 关键词模糊搜索（按名称）
+- 按状态筛选
+- 返回每个分类下的标签数量
+
+## Query Parameters
+
+<ParamField query="page" type="int" default="1">
+  页码，从1开始
+</ParamField>
+
+<ParamField query="pageSize" type="int" default="20">
+  每页数量
+</ParamField>
+
+<ParamField query="keyword" type="string">
+  搜索关键词，模糊匹配分类名称
+</ParamField>
+
+<ParamField query="status" type="int">
+  状态筛选：0=禁用，1=启用
+</ParamField>
+
+## Response
+
+<ResponseField name="code" type="int" required>
+  业务状态码（0表示成功）
+</ResponseField>
+
+<ResponseField name="data" type="object" required>
+  响应数据
+
+  <Expandable title="data properties">
+    <ResponseField name="total" type="int">
+      总记录数
+    </ResponseField>
+
+    <ResponseField name="page" type="int">
+      当前页码
+    </ResponseField>
+
+    <ResponseField name="list" type="array">
+      分类列表
+
+      <Expandable title="list item properties">
+        <ResponseField name="id" type="int">
+          数据库主键ID
+        </ResponseField>
+
+        <ResponseField name="categoryId" type="string">
+          分类唯一标识符，格式：CAT001
+        </ResponseField>
+
+        <ResponseField name="name" type="string">
+          分类名称
+        </ResponseField>
+
+        <ResponseField name="icon" type="string">
+          分类图标URL
+        </ResponseField>
+
+        <ResponseField name="description" type="string">
+          分类描述
+        </ResponseField>
+
+        <ResponseField name="tagCount" type="int">
+          该分类下的标签数量
+        </ResponseField>
+
+        <ResponseField name="sortOrder" type="int">
+          排序顺序，数字越小越靠前
+        </ResponseField>
+
+        <ResponseField name="status" type="int">
+          状态：0=禁用，1=启用
+        </ResponseField>
+
+        <ResponseField name="createdAt" type="int">
+          创建时间（Unix时间戳，秒）
+        </ResponseField>
+
+        <ResponseField name="updatedAt" type="int">
+          更新时间（Unix时间戳，秒）
+        </ResponseField>
+
+        <ResponseField name="createdBy" type="string">
+          创建人
+        </ResponseField>
+
+        <ResponseField name="updatedBy" type="string">
+          更新人
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="msg" type="string" required>
+  响应消息
+</ResponseField>
+
+<ResponseExample>
+
+```json Response
+{
+  "code": 0,
+  "data": {
+    "total": 5,
+    "page": 1,
+    "list": [
+      {
+        "id": 1,
+        "categoryId": "CAT001",
+        "name": "内容类型",
+        "icon": "https://cdn.example.com/icons/content.png",
+        "description": "视频内容分类标签",
+        "tagCount": 15,
+        "sortOrder": 1,
+        "status": 1,
+        "createdAt": 1704067200,
+        "updatedAt": 1704067200,
+        "createdBy": "admin",
+        "updatedBy": "admin"
+      },
+      {
+        "id": 2,
+        "categoryId": "CAT002",
+        "name": "风格类型",
+        "icon": "https://cdn.example.com/icons/style.png",
+        "description": "视频风格分类标签",
+        "tagCount": 8,
+        "sortOrder": 2,
+        "status": 1,
+        "createdAt": 1704067200,
+        "updatedAt": 1704067200,
+        "createdBy": "admin",
+        "updatedBy": "admin"
+      }
+    ]
+  },
+  "msg": "获取成功"
+}
+```
+
+</ResponseExample>
+
+## Example Usage
+
+<CodeGroup>
+
+```javascript JavaScript
+async function getTagCategories(params = {}) {
+  const query = new URLSearchParams({
+    page: params.page || 1,
+    pageSize: params.pageSize || 20,
+    ...(params.keyword && { keyword: params.keyword }),
+    ...(params.status !== undefined && { status: params.status })
+  });
+
+  const response = await fetch(
+    `https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag-categories?${query}`
+  );
+  const result = await response.json();
+
+  if (result.code === 0) {
+    return result.data;
+  } else {
+    throw new Error(result.msg);
+  }
+}
+
+// 使用示例
+getTagCategories({ keyword: '内容', status: 1 });
+```
+
+```python Python
+import requests
+
+def get_tag_categories(page=1, page_size=20, keyword=None, status=None):
+    params = {
+        'page': page,
+        'pageSize': page_size
+    }
+    if keyword:
+        params['keyword'] = keyword
+    if status is not None:
+        params['status'] = status
+
+    response = requests.get(
+        'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag-categories',
+        params=params
+    )
+    result = response.json()
+
+    if result['code'] == 0:
+        return result['data']
+    else:
+        raise Exception(result['msg'])
+```
+
+```bash cURL
+curl "https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tag-categories?page=1&pageSize=20&status=1"
+```
+
+</CodeGroup>
+
+## Error Codes
+
+| 错误码 | 含义 | HTTP状态码 |
+|--------|------|-----------|
+| 0 | 成功 | 200 |
+| 400 | 参数错误 | 400 |
+| 500 | 服务器内部错误 | 500 |

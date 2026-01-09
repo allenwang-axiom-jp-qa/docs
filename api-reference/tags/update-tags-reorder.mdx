@@ -1,22 +1,33 @@
 ---
-title: '重新排序标签'
+title: '标签排序'
 api: 'PUT https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tags/reorder'
-description: '批量重新排序标签'
+description: '批量调整标签的排序顺序'
 ---
 
-批量重新排序标签
+批量调整标签的排序顺序。传入标签ID数组，按照数组顺序设置标签的排序值（sortOrder）。
 
-## 请求体
+<Note>
+  数组中第一个标签的 sortOrder 为 1，第二个为 2，以此类推。
+</Note>
 
-<ParamField body="tag_ids" type="array<integer>" required>
-  标签ID数组
+## 请求参数
+
+<ParamField body="tagIds" type="array" required>
+  标签ID数组，按期望的顺序排列。最少1个，最多100个。
 </ParamField>
-
 
 ## 响应
 
-<ResponseField name="message" type="string">
-  字段说明
+<ResponseField name="code" type="integer">
+  业务状态码（0表示成功）
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  响应消息
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  排序结果
 </ResponseField>
 
 <RequestExample>
@@ -26,7 +37,7 @@ curl -X PUT "https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/tags/re
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "key": "value"
+    "tagIds": [3, 1, 5, 2, 4]
   }'
 ```
 
@@ -38,7 +49,7 @@ const response = await fetch('https://dev-admin.beauty-666.com/api/v1/site-svc-v
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    key: 'value'
+    tagIds: [3, 1, 5, 2, 4]
   })
 });
 
@@ -53,11 +64,11 @@ headers = {
     'Authorization': 'Bearer YOUR_TOKEN',
     'Content-Type': 'application/json'
 }
-data = {
-    'key': 'value'
+payload = {
+    'tagIds': [3, 1, 5, 2, 4]
 }
 
-response = requests.put(url, headers=headers, json=data)
+response = requests.put(url, json=payload, headers=headers)
 result = response.json()
 ```
 
@@ -68,14 +79,17 @@ result = response.json()
 ```json 200 排序成功
 {
   "code": 0,
-  "msg": "success",
-  "data": {}
+  "msg": "排序成功",
+  "data": {
+    "message": "Success"
+  }
 }
 ```
-```json 401 未授权
+
+```json 400 参数错误
 {
-  "code": 401,
-  "msg": "未授权，请先登录"
+  "code": 400,
+  "msg": "数组为空或超出限制"
 }
 ```
 
