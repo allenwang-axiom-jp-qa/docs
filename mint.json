@@ -213,7 +213,7 @@
     "github": "https://github.com/axiom888/cms-site-svc-oms"
   },
   "api": {
-    "baseUrl": "https://dev-admin.beauty-666.com/api/v1/oms",
+    "baseUrl": "https://dev-admin.beauty-666.com",
     "auth": {
       "method": "bearer"
     }

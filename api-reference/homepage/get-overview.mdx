@@ -1,10 +1,10 @@
 ---
-title: '获取模块统计概览'
+title: '获取统计概览'
 api: 'GET https://dev-admin.beauty-666.com/api/v1/oms/homepage/overview'
-description: '获取首页模块的统计信息，包括总数、启用数量和禁用数量'
+description: '获取首页模块的统计信息，包括总数、启用数和禁用数'
 ---
 
-获取首页模块统计概览，返回模块总数、已启用数量和已禁用数量。
+获取所有首页模块的统计概览数据，用于管理后台仪表板展示。
 
 ## Headers
 
@@ -82,11 +82,22 @@ data = response.json()
 }
 ```
 
-```json 401 Unauthorized
+```json 401 未授权
 {
-  "code": 401,
-  "msg": "Token expired or invalid"
+  "code": 7,
+  "msg": "未登录或非法访问"
 }
 ```
 
 </ResponseExample>
+
+## 使用场景
+
+此接口通常用于：
+- 管理后台首页仪表板数据展示
+- 快速了解首页模块配置状态
+- 监控哪些模块已启用/禁用
+
+<Info>
+  **系统说明**：首页系统预设了 9 个固定模块类型（banner、navigation、video_list、product_grid、swiper、icon_nav、notice、coupon、ad_banner），不能新增或删除模块，只能启用/禁用和编辑配置。
+</Info>
