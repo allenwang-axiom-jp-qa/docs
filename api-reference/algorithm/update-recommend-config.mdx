@@ -1,272 +1,395 @@
 ---
 title: '更新推荐配置'
-api: 'PUT https://dev-admin.beauty-666.com/api/recommend/config'
-description: '更新推荐算法的权重配置，调整推荐策略'
+api: 'PUT /api/v1/site-svc-video-mgmt/recommend/config'
+description: '更新推荐算法配置（用户行为权重或热度召回权重）'
 ---
 
-更新推荐算法的权重配置，可以实时调整推荐系统的推荐策略。所有权重字段都是可选的，只更新传递的字段。
+## Overview
 
-## 请求头
+更新推荐算法配置，支持更新两种独立的权重配置：
 
-<ParamField header="Authorization" type="string" required>
-  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+- **用户行为权重 (user_behavior_weights)**: 设置不同用户行为的得分权重
+- **热度召回权重 (hot_weights)**: 设置热度计算的各项指标权重
+
+<Warning>
+  热度召回权重的所有值之和必须等于 1.0（允许±0.0001误差），否则更新将失败。
+</Warning>
+
+## Request Body
+
+<ParamField body="configType" type="string" required>
+  配置类型，可选值:
+  - `user_behavior_weights`: 用户行为权重
+  - `hot_weights`: 热度召回权重
 </ParamField>
 
-<ParamField header="Content-Type" type="string" required>
-  必须为 `application/json`
+<ParamField body="value" type="object" required>
+  配置值（JSON对象），根据 configType 不同而不同
 </ParamField>
 
-## 请求体
-
-所有字段都是可选的，只传需要更新的权重：
-
-<ParamField body="content_similarity" type="number">
-  内容相似度权重（取值范围：0.0-1.0）
-
-  控制基于内容相似性的推荐强度
+<ParamField body="updatedBy" type="string" required>
+  更新人标识
 </ParamField>
 
-<ParamField body="user_preference" type="number">
-  用户偏好权重（取值范围：0.0-1.0）
+## Value Schema
 
-  控制基于用户个性化偏好的推荐强度
+### User Behavior Weights
+
+当 `configType = "user_behavior_weights"` 时，value 对象必须包含以下字段：
+
+<ParamField body="value.view_valid" type="int" required>
+  有效观看得分（观看超过30秒）
 </ParamField>
 
-<ParamField body="popularity" type="number">
-  热度权重（取值范围：0.0-1.0）
-
-  控制基于内容热度的推荐强度
+<ParamField body="value.view_complete" type="int" required>
+  完播得分
 </ParamField>
 
-<ParamField body="diversity" type="number">
-  多样性权重（取值范围：0.0-1.0）
-
-  控制推荐内容的多样性程度
+<ParamField body="value.like" type="int" required>
+  点赞得分
 </ParamField>
 
-## 响应
+<ParamField body="value.favorite" type="int" required>
+  收藏得分
+</ParamField>
 
-<ResponseField name="code" type="integer">
-  响应状态码，0 表示成功
+<ParamField body="value.share" type="int" required>
+  分享得分
+</ParamField>
+
+<ParamField body="value.pay" type="int" required>
+  付款得分
+</ParamField>
+
+### Hot Weights
+
+当 `configType = "hot_weights"` 时，value 对象必须包含以下字段（总和必须为1.0）：
+
+<ParamField body="value.like" type="float" required>
+  点赞权重（0-1之间的小数）
+</ParamField>
+
+<ParamField body="value.share" type="float" required>
+  分享权重（0-1之间的小数）
+</ParamField>
+
+<ParamField body="value.favorite" type="float" required>
+  收藏权重（0-1之间的小数）
+</ParamField>
+
+## Response
+
+<ResponseField name="code" type="int" required>
+  业务状态码
+  - `0`: 成功
+  - `40001`: 参数验证失败
+  - `50001`: 服务器内部错误
 </ResponseField>
 
 <ResponseField name="data" type="object">
-  更新后的完整配置对象
+  更新后的配置数据
+
+  <Expandable title="data properties">
+    <ResponseField name="configType" type="string">
+      配置类型
+    </ResponseField>
+
+    <ResponseField name="value" type="object">
+      配置值
+    </ResponseField>
+  </Expandable>
 </ResponseField>
 
-<ResponseField name="msg" type="string">
+<ResponseField name="msg" type="string" required>
   响应消息
 </ResponseField>
 
 <RequestExample>
 
-```bash cURL
-# 更新所有权重
-curl -X PUT https://dev-admin.beauty-666.com/api/recommend/config \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "content_similarity": 0.3,
-    "user_preference": 0.4,
-    "popularity": 0.2,
-    "diversity": 0.1
-  }'
-```
-
-```javascript JavaScript
-// 仅更新部分权重
-const response = await fetch(
-  'https://dev-admin.beauty-666.com/api/recommend/config',
-  {
-    method: 'PUT',
-    headers: {
-      'Authorization': 'Bearer YOUR_TOKEN',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      user_preference: 0.5,  // 提高个性化推荐权重
-      diversity: 0.15        // 增加多样性
-    })
-  }
-);
-const data = await response.json();
-console.log('更新成功:', data.data);
-```
-
-```python Python
-import requests
-
-# 调整热度权重
-payload = {
-    'popularity': 0.3  # 增加热门内容推荐
+```json Update User Behavior Weights
+{
+  "configType": "user_behavior_weights",
+  "value": {
+    "view_valid": 1,
+    "view_complete": 3,
+    "like": 5,
+    "favorite": 8,
+    "share": 10,
+    "pay": 20
+  },
+  "updatedBy": "admin"
 }
+```
 
-response = requests.put(
-    'https://dev-admin.beauty-666.com/api/recommend/config',
-    headers={
-        'Authorization': 'Bearer YOUR_TOKEN',
-        'Content-Type': 'application/json'
-    },
-    json=payload
-)
-result = response.json()
-print(f"更新结果: {result['msg']}")
+```json Update Hot Weights
+{
+  "configType": "hot_weights",
+  "value": {
+    "like": 0.5,
+    "share": 0.3,
+    "favorite": 0.2
+  },
+  "updatedBy": "admin"
+}
 ```
 
 </RequestExample>
 
 <ResponseExample>
 
-```json 200 更新成功
+```json Success Response
 {
   "code": 0,
   "data": {
-    "content_similarity": 0.3,
-    "user_preference": 0.4,
-    "popularity": 0.2,
-    "diversity": 0.1
+    "configType": "user_behavior_weights",
+    "value": {
+      "view_valid": 1,
+      "view_complete": 3,
+      "like": 5,
+      "favorite": 8,
+      "share": 10,
+      "pay": 20
+    }
   },
   "msg": "更新推荐配置成功"
 }
 ```
 
-```json 400 参数错误
+```json Error: Invalid Parameters
 {
-  "code": 400,
-  "msg": "权重值必须在 0.0-1.0 之间"
+  "code": 40001,
+  "msg": "参数验证失败: Key: 'ReqUpdateRecommendWeights.ConfigType' Error:Field validation for 'ConfigType' failed on the 'required' tag"
 }
 ```
 
-```json 401 未授权
+```json Error: Invalid Hot Weights Sum
 {
-  "code": 401,
-  "msg": "Token expired or invalid"
+  "code": 50001,
+  "msg": "hot weights sum must equal 1.0"
+}
+```
+
+```json Error: Missing Required Field
+{
+  "code": 50001,
+  "msg": "invalid user behavior weights: missing required field: view_valid"
 }
 ```
 
 </ResponseExample>
 
-## 配置策略示例
+## Validation Rules
 
-### 1. 平衡型策略（推荐）
-适合大多数场景，平衡各方面因素：
+### User Behavior Weights Validation
 
-```json
-{
-  "content_similarity": 0.3,
-  "user_preference": 0.4,
-  "popularity": 0.2,
-  "diversity": 0.1
-}
-```
+<Check>
+  **必填字段**: 所有6个字段都必须提供（view_valid, view_complete, like, favorite, share, pay）
+</Check>
 
-### 2. 个性化优先策略
-强化个性化推荐，适合老用户：
+<Check>
+  **数值类型**: 所有字段必须是整数（int）
+</Check>
 
-```json
-{
-  "content_similarity": 0.25,
-  "user_preference": 0.5,
-  "popularity": 0.15,
-  "diversity": 0.1
-}
-```
+<Check>
+  **建议范围**: 建议按价值递增设置，付款行为建议设置最高分数
+</Check>
 
-### 3. 热门优先策略
-优先推荐热门内容，适合新用户或冷启动：
+### Hot Weights Validation
 
-```json
-{
-  "content_similarity": 0.2,
-  "user_preference": 0.2,
-  "popularity": 0.5,
-  "diversity": 0.1
-}
-```
+<Check>
+  **必填字段**: 所有3个字段都必须提供（like, share, favorite）
+</Check>
 
-### 4. 探索型策略
-增加内容多样性，避免信息茧房：
+<Check>
+  **数值类型**: 所有字段必须是浮点数（float）
+</Check>
 
-```json
-{
-  "content_similarity": 0.25,
-  "user_preference": 0.35,
-  "popularity": 0.15,
-  "diversity": 0.25
-}
-```
+<Check>
+  **权重总和**: 所有权重之和必须等于 1.0（允许±0.0001误差）
+</Check>
 
 <Warning>
-  **重要提示：**
-  - 每个权重值必须在 0.0 到 1.0 之间
-  - 建议所有权重之和为 1.0（100%）
-  - 配置更新后立即生效，会影响所有用户的推荐结果
-  - 建议在低峰时段进行重大调整
-  - 可以通过 A/B 测试验证配置效果
+  如果热度权重总和不等于1.0，API将返回错误 `hot weights sum must equal 1.0`
 </Warning>
 
-## 调整指南
+## Error Codes
 
-### 如何提升内容发现率
-```json
-{
-  "diversity": 0.2  // 增加多样性权重
+| 错误码 | 含义 | HTTP状态码 | 说明 |
+|--------|------|-----------|------|
+| 0 | 成功 | 200 | 配置更新成功 |
+| 40001 | 参数验证失败 | 400 | 请求参数格式错误或缺少必填字段 |
+| 50001 | 服务器内部错误 | 500 | 权重验证失败或数据库错误 |
+
+## Example Usage
+
+<CodeGroup>
+
+```javascript JavaScript
+// 更新用户行为权重
+async function updateUserBehaviorWeights() {
+  const response = await fetch(
+    'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config',
+    {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        configType: 'user_behavior_weights',
+        value: {
+          view_valid: 1,
+          view_complete: 3,
+          like: 5,
+          favorite: 8,
+          share: 10,
+          pay: 20
+        },
+        updatedBy: 'admin'
+      })
+    }
+  );
+
+  const result = await response.json();
+  if (result.code === 0) {
+    return result.data;
+  } else {
+    throw new Error(result.msg);
+  }
+}
+
+// 更新热度召回权重（带前端验证）
+async function updateHotWeights(like, share, favorite) {
+  // 前端验证
+  const sum = like + share + favorite;
+  if (Math.abs(sum - 1.0) > 0.0001) {
+    throw new Error(`权重总和必须为1.0，当前为: ${sum}`);
+  }
+
+  const response = await fetch(
+    'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config',
+    {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        configType: 'hot_weights',
+        value: { like, share, favorite },
+        updatedBy: 'admin'
+      })
+    }
+  );
+
+  const result = await response.json();
+  if (result.code === 0) {
+    return result.data;
+  } else {
+    throw new Error(result.msg);
+  }
 }
 ```
 
-### 如何增加用户粘性
-```json
-{
-  "user_preference": 0.5  // 提高个性化权重
-}
+```python Python
+import requests
+
+def update_user_behavior_weights():
+    response = requests.put(
+        'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config',
+        json={
+            'configType': 'user_behavior_weights',
+            'value': {
+                'view_valid': 1,
+                'view_complete': 3,
+                'like': 5,
+                'favorite': 8,
+                'share': 10,
+                'pay': 20
+            },
+            'updatedBy': 'admin'
+        }
+    )
+    result = response.json()
+
+    if result['code'] == 0:
+        return result['data']
+    else:
+        raise Exception(result['msg'])
+
+def update_hot_weights(like, share, favorite):
+    # 前端验证
+    total = like + share + favorite
+    if abs(total - 1.0) > 0.0001:
+        raise ValueError(f'权重总和必须为1.0，当前为: {total}')
+
+    response = requests.put(
+        'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config',
+        json={
+            'configType': 'hot_weights',
+            'value': {
+                'like': like,
+                'share': share,
+                'favorite': favorite
+            },
+            'updatedBy': 'admin'
+        }
+    )
+    result = response.json()
+
+    if result['code'] == 0:
+        return result['data']
+    else:
+        raise Exception(result['msg'])
 ```
 
-### 如何推广新内容
-```json
-{
-  "popularity": 0.15,  // 降低热度权重
-  "diversity": 0.2     // 增加多样性
-}
+```bash cURL (User Behavior)
+curl -X PUT https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config \
+  -H "Content-Type: application/json" \
+  -d '{
+    "configType": "user_behavior_weights",
+    "value": {
+      "view_valid": 1,
+      "view_complete": 3,
+      "like": 5,
+      "favorite": 8,
+      "share": 10,
+      "pay": 20
+    },
+    "updatedBy": "admin"
+  }'
 ```
 
-### 如何应对冷启动
-```json
-{
-  "popularity": 0.4,       // 提高热度权重
-  "user_preference": 0.2   // 降低个性化（新用户无历史数据）
-}
+```bash cURL (Hot Weights)
+curl -X PUT https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config \
+  -H "Content-Type: application/json" \
+  -d '{
+    "configType": "hot_weights",
+    "value": {
+      "like": 0.5,
+      "share": 0.3,
+      "favorite": 0.2
+    },
+    "updatedBy": "admin"
+  }'
 ```
+
+</CodeGroup>
+
+## Best Practices
+
+<Tip>
+  **权重调整建议**
+  - 定期根据用户行为数据调整权重
+  - 监控推荐效果，迭代优化配置
+  - 建议在低峰期调整配置以减少影响
+</Tip>
 
 <Info>
-  **最佳实践：**
-  - 定期监控推荐效果指标（CTR、观看时长、跳出率）
-  - 小幅调整（每次调整 ±0.05-0.1）
-  - 记录每次调整的时间和原因
-  - 给系统足够时间（至少24小时）观察效果
-  - 考虑不同时段、不同用户群体的差异
+  **配置生效**: 配置更新后立即生效，无需重启服务
 </Info>
 
-## 监控建议
+<Tip>
+  **前端集成**: 建议在前端添加实时验证，特别是热度权重的总和验证，提供更好的用户体验
+</Tip>
 
-更新配置后，建议监控以下指标：
-
-- **点击率 (CTR)**：推荐内容的点击率变化
-- **观看时长**：用户平均观看时长
-- **跳出率**：用户快速离开的比例
-- **内容覆盖率**：推荐内容的多样性
-- **用户留存**：次日留存、7日留存等
-
-## 回滚操作
-
-如果新配置效果不佳，可以快速回滚到之前的配置：
-
-```javascript
-// 保存旧配置
-const oldConfig = await getRecommendConfig();
-
-// 更新新配置
-await updateRecommendConfig(newConfig);
-
-// 如果效果不好，回滚
-await updateRecommendConfig(oldConfig);
-```
+<Warning>
+  **数据一致性**
+  - 使用事务确保配置更新的原子性
+  - 保留配置更新历史便于回滚
+  - 建议记录每次配置变更的操作人和时间
+</Warning>

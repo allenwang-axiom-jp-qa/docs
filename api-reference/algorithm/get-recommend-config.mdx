@@ -1,157 +1,210 @@
 ---
 title: '获取推荐配置'
-api: 'GET https://dev-admin.beauty-666.com/api/recommend/config'
-description: '获取推荐算法的权重配置，包括内容相似度、用户偏好、热度和多样性等参数'
+api: 'GET /api/v1/site-svc-video-mgmt/recommend/config'
+description: '获取推荐算法配置，包括用户行为权重和热度召回权重'
 ---
 
-获取当前推荐算法使用的权重配置，用于调整推荐系统的推荐策略。
+## Overview
 
-## 请求头
+获取推荐算法配置，包括两种独立的权重配置：
 
-<ParamField header="Authorization" type="string" required>
-  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
-</ParamField>
+- **用户行为权重 (User Behavior Weights)**: 根据用户不同的行为类型设置对应的得分权重
+- **热度召回权重 (Hot Weights)**: 设置热度计算时各项指标的权重比例
 
-## 响应
+<Note>
+  所有权重配置会实时生效，影响推荐算法的计算结果。
+</Note>
 
-<ResponseField name="code" type="integer">
-  响应状态码，0 表示成功
+## Response
+
+<ResponseField name="code" type="int" required>
+  业务状态码（0表示成功）
 </ResponseField>
 
-<ResponseField name="data" type="object">
-  推荐配置对象
+<ResponseField name="data" type="object" required>
+  推荐配置数据
 
-  <Expandable title="配置字段">
-    <ResponseField name="content_similarity" type="number">
-      内容相似度权重（0.0-1.0）
+  <Expandable title="data properties">
+    <ResponseField name="userBehaviorWeights" type="object">
+      用户行为权重配置
 
-      用于调整基于内容相似性的推荐强度。值越大，推荐的内容与用户历史浏览内容越相似。
+      <Expandable title="userBehaviorWeights properties">
+        <ResponseField name="view_valid" type="int">
+          有效观看得分（观看超过30秒），默认值: 1
+        </ResponseField>
+
+        <ResponseField name="view_complete" type="int">
+          完播得分，默认值: 3
+        </ResponseField>
+
+        <ResponseField name="like" type="int">
+          点赞得分，默认值: 5
+        </ResponseField>
+
+        <ResponseField name="favorite" type="int">
+          收藏得分，默认值: 8
+        </ResponseField>
+
+        <ResponseField name="share" type="int">
+          分享得分，默认值: 10
+        </ResponseField>
+
+        <ResponseField name="pay" type="int">
+          付款得分，默认值: 20
+        </ResponseField>
+      </Expandable>
     </ResponseField>
 
-    <ResponseField name="user_preference" type="number">
-      用户偏好权重（0.0-1.0）
+    <ResponseField name="hotWeights" type="object">
+      热度召回权重配置（所有权重之和必须等于 1.0）
 
-      用于调整基于用户个性化偏好的推荐强度。值越大，越倾向于推荐用户喜欢的类型。
+      <Expandable title="hotWeights properties">
+        <ResponseField name="like" type="float">
+          点赞权重，默认值: 0.5 (50%)
+        </ResponseField>
+
+        <ResponseField name="share" type="float">
+          分享权重，默认值: 0.3 (30%)
+        </ResponseField>
+
+        <ResponseField name="favorite" type="float">
+          收藏权重，默认值: 0.2 (20%)
+        </ResponseField>
+      </Expandable>
     </ResponseField>
 
-    <ResponseField name="popularity" type="number">
-      热度权重（0.0-1.0）
-
-      用于调整基于内容热度的推荐强度。值越大，越倾向于推荐热门内容。
-    </ResponseField>
-
-    <ResponseField name="diversity" type="number">
-      多样性权重（0.0-1.0）
-
-      用于调整推荐内容的多样性。值越大，推荐结果越多样化，避免过度集中。
+    <ResponseField name="hotWeightsSumValid" type="boolean" required>
+      热度权重总和是否有效（是否等于1.0，允许±0.0001误差）
     </ResponseField>
   </Expandable>
 </ResponseField>
 
-<ResponseField name="msg" type="string">
+<ResponseField name="msg" type="string" required>
   响应消息
 </ResponseField>
 
-<RequestExample>
-
-```bash cURL
-curl https://dev-admin.beauty-666.com/api/recommend/config \
-  -H "Authorization: Bearer YOUR_TOKEN"
-```
-
-```javascript JavaScript
-const response = await fetch(
-  'https://dev-admin.beauty-666.com/api/recommend/config',
-  {
-    headers: {
-      'Authorization': 'Bearer YOUR_TOKEN'
-    }
-  }
-);
-const data = await response.json();
-console.log('推荐配置:', data.data);
-```
-
-```python Python
-import requests
-
-response = requests.get(
-    'https://dev-admin.beauty-666.com/api/recommend/config',
-    headers={'Authorization': 'Bearer YOUR_TOKEN'}
-)
-config = response.json()
-print(f"推荐配置: {config['data']}")
-```
-
-</RequestExample>
-
 <ResponseExample>
 
-```json 200 获取成功
+```json Response
 {
   "code": 0,
   "data": {
-    "content_similarity": 0.3,
-    "user_preference": 0.4,
-    "popularity": 0.2,
-    "diversity": 0.1
+    "userBehaviorWeights": {
+      "view_valid": 1,
+      "view_complete": 3,
+      "like": 5,
+      "favorite": 8,
+      "share": 10,
+      "pay": 20
+    },
+    "hotWeights": {
+      "like": 0.5,
+      "share": 0.3,
+      "favorite": 0.2
+    },
+    "hotWeightsSumValid": true
   },
   "msg": "获取推荐配置成功"
 }
 ```
 
-```json 401 未授权
-{
-  "code": 401,
-  "msg": "Token expired or invalid"
+</ResponseExample>
+
+## Configuration Types
+
+### User Behavior Weights
+
+用户行为权重用于根据用户不同的行为类型设置对应的得分权重。数值越大，该行为对推荐的影响越大。
+
+**配置建议**:
+- 建议按价值递增设置：观看 < 点赞 < 收藏 < 分享 < 付款
+- 付款行为价值最高，建议设置最高分数
+- 总分值为所有行为得分之和
+
+**默认权重预览**:
+- 有效观看: 1.0
+- 完播: 3.0
+- 点赞: 5.0
+- 收藏: 8.0
+- 分享: 10.0
+- 付款: 20.0
+- **总计**: 47.0
+
+### Hot Weights
+
+热度召回权重用于设置热度计算时各项指标的权重比例。
+
+<Warning>
+  所有权重之和必须等于 1.0（允许±0.0001误差），否则 `hotWeightsSumValid` 将返回 `false`。
+</Warning>
+
+**配置建议**:
+- 点赞通常是最常见的互动，建议权重最高
+- 根据业务目标调整比例
+- 前端建议添加实时验证和提示
+
+**默认权重验证**:
+- 点赞: 0.50 + 分享: 0.30 + 收藏: 0.20 = **1.00** ✅
+
+## Error Codes
+
+| 错误码 | 含义 | HTTP状态码 |
+|--------|------|-----------|
+| 0 | 成功 | 200 |
+| 50001 | 服务器内部错误 | 500 |
+
+## Example Usage
+
+<CodeGroup>
+
+```javascript JavaScript
+async function getRecommendConfig() {
+  const response = await fetch(
+    'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config'
+  );
+  const result = await response.json();
+
+  if (result.code === 0) {
+    console.log('用户行为权重:', result.data.userBehaviorWeights);
+    console.log('热度召回权重:', result.data.hotWeights);
+    console.log('权重总和是否有效:', result.data.hotWeightsSumValid);
+    return result.data;
+  } else {
+    throw new Error(result.msg);
+  }
 }
 ```
 
-</ResponseExample>
+```python Python
+import requests
 
-## 权重说明
+def get_recommend_config():
+    response = requests.get(
+        'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config'
+    )
+    result = response.json()
 
-推荐算法使用以下四个权重来计算推荐分数：
+    if result['code'] == 0:
+        print('用户行为权重:', result['data']['userBehaviorWeights'])
+        print('热度召回权重:', result['data']['hotWeights'])
+        print('权重总和是否有效:', result['data']['hotWeightsSumValid'])
+        return result['data']
+    else:
+        raise Exception(result['msg'])
+```
 
-### 1. 内容相似度 (content_similarity)
-- **作用**: 基于内容特征的相似性推荐
-- **适用场景**: 用户看了某类视频，推荐相似主题的内容
-- **调整建议**:
-  - 提高：增强"看了这个的人也看了..."效果
-  - 降低：减少重复类型内容推荐
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config
+```
 
-### 2. 用户偏好 (user_preference)
-- **作用**: 基于用户历史行为的个性化推荐
-- **适用场景**: 根据用户点赞、收藏、观看时长等行为推荐
-- **调整建议**:
-  - 提高：更精准的个性化推荐
-  - 降低：减少"信息茧房"效应
+</CodeGroup>
 
-### 3. 热度 (popularity)
-- **作用**: 基于内容受欢迎程度的推荐
-- **适用场景**: 推荐热门、流行的内容
-- **调整建议**:
-  - 提高：更多推荐热门内容
-  - 降低：给长尾内容更多曝光机会
-
-### 4. 多样性 (diversity)
-- **作用**: 增加推荐结果的多样性
-- **适用场景**: 避免推荐内容过于单一
-- **调整建议**:
-  - 提高：推荐更多不同类型的内容
-  - 降低：推荐更聚焦于特定类型
+## Notes
 
 <Info>
-  **权重平衡建议**：
-  - 所有权重之和建议为 1.0（100%）
-  - 典型配置：用户偏好 40%、内容相似度 30%、热度 20%、多样性 10%
-  - 可根据业务目标灵活调整
+  **配置生效时间**: 配置更新后立即生效，建议在低峰期调整配置。
 </Info>
 
-## 使用场景
-
-此接口通常用于：
-- 查看当前推荐策略配置
-- 对比不同配置的效果
-- 配置管理界面的数据展示
-- A/B 测试中的参数记录
+<Tip>
+  **权重调整建议**: 定期根据用户行为数据调整权重，监控推荐效果，迭代优化配置。
+</Tip>
