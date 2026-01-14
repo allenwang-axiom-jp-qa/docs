@@ -4,100 +4,64 @@ api: 'PUT /api/v1/site-svc-video-mgmt/recommend/config'
 description: '更新推荐算法配置（用户行为权重或热度召回权重）'
 ---
 
-## Overview
+## 接口概述
 
-更新推荐算法配置，支持更新两种独立的权重配置：
+更新推荐算法的权重配置，**每次只能更新一种配置类型**：
 
-- **用户行为权重 (user_behavior_weights)**: 设置不同用户行为的得分权重
-- **热度召回权重 (hot_weights)**: 设置热度计算的各项指标权重
+| configType 值 | 更新内容 | 校验规则 |
+|--------------|---------|---------|
+| `user_behavior_weights` | 用户行为权重 | 6个字段必填 |
+| `hot_weights` | 热度召回权重 | 3个字段必填，总和 = 1.0 |
 
 <Warning>
-  热度召回权重的所有值之和必须等于 1.0（允许±0.0001误差），否则更新将失败。
+  热度召回权重的所有值之和必须等于 **1.0**（允许 ±0.0001 误差），否则接口返回错误。
 </Warning>
 
 ## Request Body
 
 <ParamField body="configType" type="string" required>
-  配置类型，可选值:
-  - `user_behavior_weights`: 用户行为权重
-  - `hot_weights`: 热度召回权重
+  配置类型：`user_behavior_weights` 或 `hot_weights`
 </ParamField>
 
 <ParamField body="value" type="object" required>
-  配置值（JSON对象），根据 configType 不同而不同
+  配置值（JSON对象）
 </ParamField>
 
 <ParamField body="updatedBy" type="string" required>
   更新人标识
 </ParamField>
 
-## Value Schema
-
 ### User Behavior Weights
 
-当 `configType = "user_behavior_weights"` 时，value 对象必须包含以下字段：
+当 `configType = "user_behavior_weights"` 时，value 必须包含：
 
-<ParamField body="value.view_valid" type="int" required>
-  有效观看得分（观看超过30秒）
-</ParamField>
-
-<ParamField body="value.view_complete" type="int" required>
-  完播得分
-</ParamField>
-
-<ParamField body="value.like" type="int" required>
-  点赞得分
-</ParamField>
-
-<ParamField body="value.favorite" type="int" required>
-  收藏得分
-</ParamField>
-
-<ParamField body="value.share" type="int" required>
-  分享得分
-</ParamField>
-
-<ParamField body="value.pay" type="int" required>
-  付款得分
-</ParamField>
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| view_valid | int | 有效观看得分 |
+| view_complete | int | 完播得分 |
+| like | int | 点赞得分 |
+| favorite | int | 收藏得分 |
+| share | int | 分享得分 |
+| pay | int | 付款得分 |
 
 ### Hot Weights
 
-当 `configType = "hot_weights"` 时，value 对象必须包含以下字段（总和必须为1.0）：
+当 `configType = "hot_weights"` 时，value 必须包含（总和 = 1.0）：
 
-<ParamField body="value.like" type="float" required>
-  点赞权重（0-1之间的小数）
-</ParamField>
-
-<ParamField body="value.share" type="float" required>
-  分享权重（0-1之间的小数）
-</ParamField>
-
-<ParamField body="value.favorite" type="float" required>
-  收藏权重（0-1之间的小数）
-</ParamField>
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| like | float | 点赞权重 |
+| share | float | 分享权重 |
+| favorite | float | 收藏权重 |
 
 ## Response
 
 <ResponseField name="code" type="int" required>
-  业务状态码
-  - `0`: 成功
-  - `40001`: 参数验证失败
-  - `50001`: 服务器内部错误
+  业务状态码：`0` 成功，`40001` 参数错误，`50001` 服务器错误
 </ResponseField>
 
 <ResponseField name="data" type="object">
   更新后的配置数据
-
-  <Expandable title="data properties">
-    <ResponseField name="configType" type="string">
-      配置类型
-    </ResponseField>
-
-    <ResponseField name="value" type="object">
-      配置值
-    </ResponseField>
-  </Expandable>
 </ResponseField>
 
 <ResponseField name="msg" type="string" required>
@@ -106,7 +70,7 @@ description: '更新推荐算法配置（用户行为权重或热度召回权重
 
 <RequestExample>
 
-```json Update User Behavior Weights
+```json 用户行为权重
 {
   "configType": "user_behavior_weights",
   "value": {
@@ -121,7 +85,7 @@ description: '更新推荐算法配置（用户行为权重或热度召回权重
 }
 ```
 
-```json Update Hot Weights
+```json 热度召回权重
 {
   "configType": "hot_weights",
   "value": {
@@ -137,7 +101,7 @@ description: '更新推荐算法配置（用户行为权重或热度召回权重
 
 <ResponseExample>
 
-```json Success Response
+```json 成功响应
 {
   "code": 0,
   "data": {
@@ -155,21 +119,14 @@ description: '更新推荐算法配置（用户行为权重或热度召回权重
 }
 ```
 
-```json Error: Invalid Parameters
-{
-  "code": 40001,
-  "msg": "参数验证失败: Key: 'ReqUpdateRecommendWeights.ConfigType' Error:Field validation for 'ConfigType' failed on the 'required' tag"
-}
-```
-
-```json Error: Invalid Hot Weights Sum
+```json 热度权重总和错误
 {
   "code": 50001,
   "msg": "hot weights sum must equal 1.0"
 }
 ```
 
-```json Error: Missing Required Field
+```json 缺少必填字段
 {
   "code": 50001,
   "msg": "invalid user behavior weights: missing required field: view_valid"
@@ -178,218 +135,58 @@ description: '更新推荐算法配置（用户行为权重或热度召回权重
 
 </ResponseExample>
 
-## Validation Rules
-
-### User Behavior Weights Validation
-
-<Check>
-  **必填字段**: 所有6个字段都必须提供（view_valid, view_complete, like, favorite, share, pay）
-</Check>
-
-<Check>
-  **数值类型**: 所有字段必须是整数（int）
-</Check>
-
-<Check>
-  **建议范围**: 建议按价值递增设置，付款行为建议设置最高分数
-</Check>
-
-### Hot Weights Validation
-
-<Check>
-  **必填字段**: 所有3个字段都必须提供（like, share, favorite）
-</Check>
-
-<Check>
-  **数值类型**: 所有字段必须是浮点数（float）
-</Check>
-
-<Check>
-  **权重总和**: 所有权重之和必须等于 1.0（允许±0.0001误差）
-</Check>
-
-<Warning>
-  如果热度权重总和不等于1.0，API将返回错误 `hot weights sum must equal 1.0`
-</Warning>
-
 ## Error Codes
 
-| 错误码 | 含义 | HTTP状态码 | 说明 |
-|--------|------|-----------|------|
-| 0 | 成功 | 200 | 配置更新成功 |
-| 40001 | 参数验证失败 | 400 | 请求参数格式错误或缺少必填字段 |
-| 50001 | 服务器内部错误 | 500 | 权重验证失败或数据库错误 |
+| 错误码 | 含义 | HTTP状态码 |
+|--------|------|-----------|
+| 0 | 成功 | 200 |
+| 40001 | 参数验证失败 | 400 |
+| 50001 | 服务器内部错误 | 500 |
 
-## Example Usage
+## 代码示例
 
 <CodeGroup>
 
 ```javascript JavaScript
-// 更新用户行为权重
-async function updateUserBehaviorWeights() {
-  const response = await fetch(
-    'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config',
-    {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        configType: 'user_behavior_weights',
-        value: {
-          view_valid: 1,
-          view_complete: 3,
-          like: 5,
-          favorite: 8,
-          share: 10,
-          pay: 20
-        },
-        updatedBy: 'admin'
-      })
-    }
-  );
+async function updateConfig(configType, value, updatedBy) {
+  const response = await fetch('/api/v1/site-svc-video-mgmt/recommend/config', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ configType, value, updatedBy })
+  });
 
   const result = await response.json();
-  if (result.code === 0) {
-    return result.data;
-  } else {
+  if (result.code !== 0) {
     throw new Error(result.msg);
   }
+  return result.data;
 }
 
-// 更新热度召回权重（带前端验证）
-async function updateHotWeights(like, share, favorite) {
-  // 前端验证
+// 热度权重前端校验
+function validateHotWeights(like, share, favorite) {
   const sum = like + share + favorite;
-  if (Math.abs(sum - 1.0) > 0.0001) {
-    throw new Error(`权重总和必须为1.0，当前为: ${sum}`);
-  }
-
-  const response = await fetch(
-    'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config',
-    {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        configType: 'hot_weights',
-        value: { like, share, favorite },
-        updatedBy: 'admin'
-      })
-    }
-  );
-
-  const result = await response.json();
-  if (result.code === 0) {
-    return result.data;
-  } else {
-    throw new Error(result.msg);
-  }
+  return Math.abs(sum - 1.0) <= 0.0001;
 }
 ```
 
-```python Python
-import requests
-
-def update_user_behavior_weights():
-    response = requests.put(
-        'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config',
-        json={
-            'configType': 'user_behavior_weights',
-            'value': {
-                'view_valid': 1,
-                'view_complete': 3,
-                'like': 5,
-                'favorite': 8,
-                'share': 10,
-                'pay': 20
-            },
-            'updatedBy': 'admin'
-        }
-    )
-    result = response.json()
-
-    if result['code'] == 0:
-        return result['data']
-    else:
-        raise Exception(result['msg'])
-
-def update_hot_weights(like, share, favorite):
-    # 前端验证
-    total = like + share + favorite
-    if abs(total - 1.0) > 0.0001:
-        raise ValueError(f'权重总和必须为1.0，当前为: {total}')
-
-    response = requests.put(
-        'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config',
-        json={
-            'configType': 'hot_weights',
-            'value': {
-                'like': like,
-                'share': share,
-                'favorite': favorite
-            },
-            'updatedBy': 'admin'
-        }
-    )
-    result = response.json()
-
-    if result['code'] == 0:
-        return result['data']
-    else:
-        raise Exception(result['msg'])
-```
-
-```bash cURL (User Behavior)
-curl -X PUT https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config \
-  -H "Content-Type: application/json" \
-  -d '{
-    "configType": "user_behavior_weights",
-    "value": {
-      "view_valid": 1,
-      "view_complete": 3,
-      "like": 5,
-      "favorite": 8,
-      "share": 10,
-      "pay": 20
-    },
-    "updatedBy": "admin"
-  }'
-```
-
-```bash cURL (Hot Weights)
+```bash cURL
 curl -X PUT https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config \
   -H "Content-Type: application/json" \
   -d '{
     "configType": "hot_weights",
-    "value": {
-      "like": 0.5,
-      "share": 0.3,
-      "favorite": 0.2
-    },
+    "value": { "like": 0.5, "share": 0.3, "favorite": 0.2 },
     "updatedBy": "admin"
   }'
 ```
 
 </CodeGroup>
 
-## Best Practices
+## 注意事项
+
+<Note>
+  配置更新后**立即生效**，无需重启服务。
+</Note>
 
 <Tip>
-  **权重调整建议**
-  - 定期根据用户行为数据调整权重
-  - 监控推荐效果，迭代优化配置
-  - 建议在低峰期调整配置以减少影响
+  热度权重更新前，建议前端先校验总和是否为 1.0，避免无效请求。
 </Tip>
-
-<Info>
-  **配置生效**: 配置更新后立即生效，无需重启服务
-</Info>
-
-<Tip>
-  **前端集成**: 建议在前端添加实时验证，特别是热度权重的总和验证，提供更好的用户体验
-</Tip>
-
-<Warning>
-  **数据一致性**
-  - 使用事务确保配置更新的原子性
-  - 保留配置更新历史便于回滚
-  - 建议记录每次配置变更的操作人和时间
-</Warning>

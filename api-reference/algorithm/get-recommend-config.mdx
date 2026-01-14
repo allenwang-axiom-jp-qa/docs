@@ -4,16 +4,14 @@ api: 'GET /api/v1/site-svc-video-mgmt/recommend/config'
 description: '获取推荐算法配置，包括用户行为权重和热度召回权重'
 ---
 
-## Overview
+## 接口概述
 
-获取推荐算法配置，包括两种独立的权重配置：
+获取推荐算法的两套权重配置：
 
-- **用户行为权重 (User Behavior Weights)**: 根据用户不同的行为类型设置对应的得分权重
-- **热度召回权重 (Hot Weights)**: 设置热度计算时各项指标的权重比例
-
-<Note>
-  所有权重配置会实时生效，影响推荐算法的计算结果。
-</Note>
+| 权重类型 | 字段名 | 用途 |
+|---------|--------|------|
+| 用户行为权重 | `userBehaviorWeights` | 计算用户对视频的兴趣得分 |
+| 热度召回权重 | `hotWeights` | 计算视频的热度分数（总和 = 1.0） |
 
 ## Response
 
@@ -28,27 +26,22 @@ description: '获取推荐算法配置，包括用户行为权重和热度召回
     <ResponseField name="userBehaviorWeights" type="object">
       用户行为权重配置
 
-      <Expandable title="userBehaviorWeights properties">
+      <Expandable title="properties">
         <ResponseField name="view_valid" type="int">
           有效观看得分（观看超过30秒），默认值: 1
         </ResponseField>
-
         <ResponseField name="view_complete" type="int">
           完播得分，默认值: 3
         </ResponseField>
-
         <ResponseField name="like" type="int">
           点赞得分，默认值: 5
         </ResponseField>
-
         <ResponseField name="favorite" type="int">
           收藏得分，默认值: 8
         </ResponseField>
-
         <ResponseField name="share" type="int">
           分享得分，默认值: 10
         </ResponseField>
-
         <ResponseField name="pay" type="int">
           付款得分，默认值: 20
         </ResponseField>
@@ -56,25 +49,23 @@ description: '获取推荐算法配置，包括用户行为权重和热度召回
     </ResponseField>
 
     <ResponseField name="hotWeights" type="object">
-      热度召回权重配置（所有权重之和必须等于 1.0）
+      热度召回权重配置
 
-      <Expandable title="hotWeights properties">
+      <Expandable title="properties">
         <ResponseField name="like" type="float">
-          点赞权重，默认值: 0.5 (50%)
+          点赞权重，默认值: 0.5
         </ResponseField>
-
         <ResponseField name="share" type="float">
-          分享权重，默认值: 0.3 (30%)
+          分享权重，默认值: 0.3
         </ResponseField>
-
         <ResponseField name="favorite" type="float">
-          收藏权重，默认值: 0.2 (20%)
+          收藏权重，默认值: 0.2
         </ResponseField>
       </Expandable>
     </ResponseField>
 
     <ResponseField name="hotWeightsSumValid" type="boolean" required>
-      热度权重总和是否有效（是否等于1.0，允许±0.0001误差）
+      热度权重总和是否有效（是否等于1.0）
     </ResponseField>
   </Expandable>
 </ResponseField>
@@ -110,42 +101,6 @@ description: '获取推荐算法配置，包括用户行为权重和热度召回
 
 </ResponseExample>
 
-## Configuration Types
-
-### User Behavior Weights
-
-用户行为权重用于根据用户不同的行为类型设置对应的得分权重。数值越大，该行为对推荐的影响越大。
-
-**配置建议**:
-- 建议按价值递增设置：观看 < 点赞 < 收藏 < 分享 < 付款
-- 付款行为价值最高，建议设置最高分数
-- 总分值为所有行为得分之和
-
-**默认权重预览**:
-- 有效观看: 1.0
-- 完播: 3.0
-- 点赞: 5.0
-- 收藏: 8.0
-- 分享: 10.0
-- 付款: 20.0
-- **总计**: 47.0
-
-### Hot Weights
-
-热度召回权重用于设置热度计算时各项指标的权重比例。
-
-<Warning>
-  所有权重之和必须等于 1.0（允许±0.0001误差），否则 `hotWeightsSumValid` 将返回 `false`。
-</Warning>
-
-**配置建议**:
-- 点赞通常是最常见的互动，建议权重最高
-- 根据业务目标调整比例
-- 前端建议添加实时验证和提示
-
-**默认权重验证**:
-- 点赞: 0.50 + 分享: 0.30 + 收藏: 0.20 = **1.00** ✅
-
 ## Error Codes
 
 | 错误码 | 含义 | HTTP状态码 |
@@ -153,44 +108,21 @@ description: '获取推荐算法配置，包括用户行为权重和热度召回
 | 0 | 成功 | 200 |
 | 50001 | 服务器内部错误 | 500 |
 
-## Example Usage
+## 代码示例
 
 <CodeGroup>
 
 ```javascript JavaScript
 async function getRecommendConfig() {
-  const response = await fetch(
-    'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config'
-  );
+  const response = await fetch('/api/v1/site-svc-video-mgmt/recommend/config');
   const result = await response.json();
 
   if (result.code === 0) {
-    console.log('用户行为权重:', result.data.userBehaviorWeights);
-    console.log('热度召回权重:', result.data.hotWeights);
-    console.log('权重总和是否有效:', result.data.hotWeightsSumValid);
     return result.data;
   } else {
     throw new Error(result.msg);
   }
 }
-```
-
-```python Python
-import requests
-
-def get_recommend_config():
-    response = requests.get(
-        'https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config'
-    )
-    result = response.json()
-
-    if result['code'] == 0:
-        print('用户行为权重:', result['data']['userBehaviorWeights'])
-        print('热度召回权重:', result['data']['hotWeights'])
-        print('权重总和是否有效:', result['data']['hotWeightsSumValid'])
-        return result['data']
-    else:
-        raise Exception(result['msg'])
 ```
 
 ```bash cURL
@@ -199,12 +131,12 @@ curl https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/confi
 
 </CodeGroup>
 
-## Notes
+## 注意事项
 
-<Info>
-  **配置生效时间**: 配置更新后立即生效，建议在低峰期调整配置。
-</Info>
+<Note>
+  配置更新后**立即生效**，无需重启服务。
+</Note>
 
-<Tip>
-  **权重调整建议**: 定期根据用户行为数据调整权重，监控推荐效果，迭代优化配置。
-</Tip>
+<Warning>
+  当 `hotWeightsSumValid` 为 `false` 时，说明热度权重配置异常，需调用 PUT 接口修正。
+</Warning>
