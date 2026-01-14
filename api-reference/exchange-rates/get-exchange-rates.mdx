@@ -1,0 +1,179 @@
+---
+title: '获取币种列表'
+api: 'GET https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates'
+description: '获取所有币种列表，包含概览统计信息，支持按状态过滤'
+---
+
+获取币种与汇率列表，同时返回概览统计（总数、启用数、手动更新数、自动同步数）。
+
+## 请求头
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+</ParamField>
+
+## 查询参数
+
+<ParamField query="status" type="integer">
+  状态过滤：
+  - `0` - 仅停用币种
+  - `1` - 仅启用币种
+  - 不传 - 全部币种
+</ParamField>
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  响应数据
+
+  <Expandable title="展开详情">
+    <ResponseField name="overview" type="object">
+      概览统计
+
+      <Expandable title="统计字段">
+        <ResponseField name="total" type="integer">
+          币种总数
+        </ResponseField>
+        <ResponseField name="enabled" type="integer">
+          启用的币种数
+        </ResponseField>
+        <ResponseField name="manual" type="integer">
+          手动更新模式的币种数
+        </ResponseField>
+        <ResponseField name="auto_sync" type="integer">
+          自动同步模式的币种数
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+
+    <ResponseField name="list" type="array">
+      币种列表
+
+      <Expandable title="币种对象">
+        <ResponseField name="id" type="integer">
+          币种 ID
+        </ResponseField>
+        <ResponseField name="code" type="string">
+          币种代码（如 USD、USDT、CNY）
+        </ResponseField>
+        <ResponseField name="name" type="string">
+          币种名称（如"美元"、"泰达币"）
+        </ResponseField>
+        <ResponseField name="symbol" type="string">
+          货币符号（如 $、¥、₮）
+        </ResponseField>
+        <ResponseField name="currency_type" type="integer">
+          币种类型：0=法币，1=加密货币
+        </ResponseField>
+        <ResponseField name="exchange_rate" type="string">
+          对 CNY 的汇率（DECIMAL 字符串格式）
+        </ResponseField>
+        <ResponseField name="update_mode" type="integer">
+          更新模式：0=手动，1=自动同步
+        </ResponseField>
+        <ResponseField name="last_updated_at" type="string">
+          最后更新时间（ISO 8601 格式）
+        </ResponseField>
+        <ResponseField name="status" type="integer">
+          状态：0=停用，1=启用
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  响应消息
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+# 获取所有启用的币种
+curl "https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates?status=1" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+```javascript JavaScript
+// 获取所有币种
+const response = await fetch(
+  'https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates',
+  {
+    headers: {
+      'Authorization': 'Bearer YOUR_TOKEN'
+    }
+  }
+);
+const data = await response.json();
+
+// 处理币种列表
+data.data.list.forEach(currency => {
+  const rate = parseFloat(currency.exchange_rate);
+  console.log(`1 ${currency.code} = ¥${rate}`);
+});
+```
+
+```python Python
+import requests
+
+# 仅获取启用的币种
+response = requests.get(
+    'https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates',
+    headers={'Authorization': 'Bearer YOUR_TOKEN'},
+    params={'status': 1}
+)
+data = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 成功
+{
+  "code": 0,
+  "data": {
+    "overview": {
+      "total": 7,
+      "enabled": 6,
+      "manual": 6,
+      "auto_sync": 1
+    },
+    "list": [
+      {
+        "id": 1,
+        "code": "CNY",
+        "name": "人民币",
+        "symbol": "¥",
+        "currency_type": 0,
+        "exchange_rate": "1",
+        "update_mode": 0,
+        "last_updated_at": "2026-01-14T16:39:47+09:00",
+        "status": 1
+      },
+      {
+        "id": 10,
+        "code": "USDT",
+        "name": "泰达币",
+        "symbol": "₮",
+        "currency_type": 1,
+        "exchange_rate": "7.2",
+        "update_mode": 1,
+        "last_updated_at": "2026-01-14T17:11:45+09:00",
+        "status": 1
+      }
+    ]
+  },
+  "msg": "成功"
+}
+```
+
+</ResponseExample>
+
+<Info>
+  **CNY 为基准货币**：CNY（人民币）的汇率固定为 1，所有其他币种汇率均表示 1 单位该币种等于多少 CNY。
+</Info>

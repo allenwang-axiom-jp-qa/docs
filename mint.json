@@ -173,7 +173,13 @@
       "group": "币种与汇率管理",
       "pages": [
         "api-reference/exchange-rates/overview",
-        "api-reference/exchange-rates/currencies"
+        "api-reference/exchange-rates/get-exchange-rates",
+        "api-reference/exchange-rates/get-exchange-rate-by-id",
+        "api-reference/exchange-rates/create-exchange-rate",
+        "api-reference/exchange-rates/update-exchange-rate",
+        "api-reference/exchange-rates/delete-exchange-rate",
+        "api-reference/exchange-rates/update-exchange-rate-status",
+        "api-reference/exchange-rates/sync-exchange-rate"
       ]
     },
     {

@@ -1,0 +1,132 @@
+---
+title: '删除币种'
+api: 'DELETE https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates/{id}'
+description: '软删除指定币种，基准货币 CNY 不可删除'
+---
+
+软删除指定的币种。删除被业务使用的币种时会返回警告信息。
+
+## 请求头
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+</ParamField>
+
+## 路径参数
+
+<ParamField path="id" type="integer" required>
+  币种 ID
+</ParamField>
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功，7 表示业务错误
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  可能包含警告信息
+
+  <Expandable title="字段">
+    <ResponseField name="warning" type="string">
+      警告信息（当删除的币种被业务使用时返回）
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="msg" type="string">
+  响应消息
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates/14" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+```javascript JavaScript
+const currencyId = 14;
+const response = await fetch(
+  `https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates/${currencyId}`,
+  {
+    method: 'DELETE',
+    headers: {
+      'Authorization': 'Bearer YOUR_TOKEN'
+    }
+  }
+);
+const data = await response.json();
+
+// 检查警告信息
+if (data.data?.warning) {
+  console.warn('警告:', data.data.warning);
+}
+```
+
+```python Python
+import requests
+
+currency_id = 14
+response = requests.delete(
+    f'https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates/{currency_id}',
+    headers={'Authorization': 'Bearer YOUR_TOKEN'}
+)
+data = response.json()
+
+# 检查警告
+if data.get('data', {}).get('warning'):
+    print(f"警告: {data['data']['warning']}")
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 删除成功
+{
+  "code": 0,
+  "data": {},
+  "msg": "删除成功"
+}
+```
+
+```json 200 删除成功（带警告）
+{
+  "code": 0,
+  "data": {
+    "warning": "币种 USDT 当前被钻石套餐和会员订阅业务使用，操作可能影响相关功能"
+  },
+  "msg": "成功"
+}
+```
+
+```json 7 基准货币保护
+{
+  "code": 7,
+  "data": {},
+  "msg": "删除币种失败: 基准货币(CNY)不可删除"
+}
+```
+
+```json 7 币种不存在
+{
+  "code": 7,
+  "data": {},
+  "msg": "币种不存在"
+}
+```
+
+</ResponseExample>
+
+<Warning>
+  **基准货币保护**
+
+  CNY（人民币）是基准货币，不可删除。
+</Warning>
+
+<Info>
+  **业务使用警告**
+
+  当删除的币种被钻石套餐或会员订阅等业务使用时，系统会返回警告信息。删除操作仍会成功，但请注意可能影响相关功能。
+</Info>

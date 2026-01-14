@@ -1,175 +1,143 @@
 ---
-title: 'Exchange Rates Overview'
-description: 'Manage currencies and exchange rates for the platform'
+title: '币种与汇率管理概述'
+description: '管理平台支持的币种和汇率配置'
 ---
 
-## Introduction
+## 概述
 
-The Exchange Rates API provides comprehensive currency management functionality, supporting both fiat currencies and cryptocurrencies. All exchange rates are expressed relative to CNY (Chinese Yuan) as the base currency.
+币种与汇率管理API提供全面的多币种管理功能，支持法币和加密货币。所有汇率以人民币(CNY)为基准货币。
 
-## Key Features
+## 功能特性
 
-- **Multi-Currency Support**: Manage fiat currencies (USD, EUR, JPY, etc.) and cryptocurrencies (USDT, BTC, ETH)
-- **Rate Validation**: ±5% tolerance based on market rates to prevent input errors
-- **Base Currency Protection**: CNY as base currency (rate fixed at 1) cannot be modified or deleted
-- **Auto-Sync**: Optional automatic synchronization from external APIs
-- **Business Integration**: Warnings when modifying currencies used by diamond/subscription services
+- **多币种支持**: 支持法币(USD、EUR、JPY等)和加密货币(USDT、BTC、ETH)
+- **汇率校验**: 基于市场基准汇率的 ±5% 波动范围校验，防止输入错误
+- **基准货币保护**: CNY作为基准货币(汇率固定为1)，不可修改或删除
+- **自动同步**: 支持从外部API自动同步汇率
+- **业务集成警告**: 修改被钻石/会员业务使用的币种时给出警告
 
-## Database Table
+## 接口列表
 
-- `oms_exchange_rates` - Currency and exchange rate configurations
+| 方法 | 端点 | 描述 |
+|------|------|------|
+| GET | `/exchange-rates` | 获取币种列表(含概览统计) |
+| GET | `/exchange-rates/{id}` | 获取单个币种详情 |
+| POST | `/exchange-rates` | 创建新币种 |
+| PUT | `/exchange-rates/{id}` | 更新币种信息 |
+| DELETE | `/exchange-rates/{id}` | 删除币种 |
+| PATCH | `/exchange-rates/{id}/status` | 更新币种状态 |
+| POST | `/exchange-rates/{id}/sync` | 同步汇率 |
 
-## Supported Currencies
-
-### Cryptocurrencies
-
-| Code | Name | Base Rate (CNY) |
-|------|------|-----------------|
-| USDT | Tether | ~7.2 |
-| USDC | USD Coin | ~7.2 |
-| BTC | Bitcoin | ~680,000 |
-| ETH | Ethereum | ~26,000 |
-
-### Fiat Currencies
-
-| Code | Name | Base Rate (CNY) |
-|------|------|-----------------|
-| CNY | Chinese Yuan | 1 (Base) |
-| USD | US Dollar | ~7.2 |
-| EUR | Euro | ~7.8 |
-| GBP | British Pound | ~9.1 |
-| JPY | Japanese Yen | ~0.048 |
-| HKD | Hong Kong Dollar | ~0.92 |
-| TWD | Taiwan Dollar | ~0.22 |
-| KRW | Korean Won | ~0.0052 |
-| SGD | Singapore Dollar | ~5.4 |
-| THB | Thai Baht | ~0.21 |
-| MYR | Malaysian Ringgit | ~1.6 |
-| VND | Vietnamese Dong | ~0.0003 |
-| PHP | Philippine Peso | ~0.12 |
-| IDR | Indonesian Rupiah | ~0.00045 |
-| BRL | Brazilian Real | ~1.4 |
-
-## API Endpoints
-
-### Query Endpoints
-
-<CardGroup cols={2}>
-  <Card
-    title="List Currencies"
-    icon="list"
-    href="/api-reference/exchange-rates/currencies#list-currencies"
-  >
-    Get all currencies with overview statistics
-  </Card>
-  <Card
-    title="Get Currency"
-    icon="file"
-    href="/api-reference/exchange-rates/currencies#get-currency"
-  >
-    Get single currency details by ID
-  </Card>
-</CardGroup>
-
-### Management Endpoints
-
-<CardGroup cols={3}>
-  <Card
-    title="Create Currency"
-    icon="plus"
-    href="/api-reference/exchange-rates/currencies#create-currency"
-  >
-    Add new currency
-  </Card>
-  <Card
-    title="Update Currency"
-    icon="pen"
-    href="/api-reference/exchange-rates/currencies#update-currency"
-  >
-    Update currency configuration
-  </Card>
-  <Card
-    title="Delete Currency"
-    icon="trash"
-    href="/api-reference/exchange-rates/currencies#delete-currency"
-  >
-    Remove currency (soft delete)
-  </Card>
-</CardGroup>
-
-### Status & Sync
-
-<CardGroup cols={2}>
-  <Card
-    title="Update Status"
-    icon="toggle-on"
-    href="/api-reference/exchange-rates/currencies#update-status"
-  >
-    Enable/disable currency
-  </Card>
-  <Card
-    title="Sync Rate"
-    icon="sync"
-    href="/api-reference/exchange-rates/currencies#sync-rate"
-  >
-    Sync rate from external API
-  </Card>
-</CardGroup>
-
-## Currency Types
-
-| Value | Type | Description |
-|-------|------|-------------|
-| 0 | Fiat | Traditional currencies (USD, EUR, etc.) |
-| 1 | Crypto | Cryptocurrencies (USDT, BTC, etc.) |
-
-## Update Modes
-
-| Value | Mode | Description |
-|-------|------|-------------|
-| 0 | Manual | Rate updated manually by admin |
-| 1 | Auto-Sync | Rate synced from external API |
-
-## Currency Status
-
-| Value | Status | Description |
-|-------|--------|-------------|
-| 0 | Disabled | Currency not available for use |
-| 1 | Enabled | Currency active and available |
-
-## Rate Validation
-
-All rate inputs are validated against a ±5% tolerance from base market rates:
+## Base URL
 
 ```
-Allowed Range = Base Rate × (1 ± 5%)
+https://dev-admin.beauty-666.com/api/v1/oms
+```
 
-Example for USDT (Base: 7.2):
-- Minimum: 7.2 × 0.95 = 6.84
-- Maximum: 7.2 × 1.05 = 7.56
+## 数据模型
+
+### Currency Object
+
+| 字段 | 类型 | 描述 |
+|------|------|------|
+| id | integer | 币种ID |
+| code | string | 币种代码 (如 USD, USDT) |
+| name | string | 币种名称 |
+| symbol | string | 货币符号 (如 $, ¥) |
+| currency_type | integer | 币种类型: 0=法币, 1=加密货币 |
+| exchange_rate | string | 对CNY汇率 |
+| update_mode | integer | 更新模式: 0=手动, 1=自动同步 |
+| last_updated_at | string | 最后更新时间 |
+| status | integer | 状态: 0=禁用, 1=启用 |
+
+## 支持的币种
+
+### 加密货币
+
+| 代码 | 名称 | 基准汇率 (CNY) |
+|------|------|----------------|
+| USDT | 泰达币 | ~7.2 |
+| USDC | USD Coin | ~7.2 |
+| BTC | 比特币 | ~680,000 |
+| ETH | 以太坊 | ~26,000 |
+
+### 法币
+
+| 代码 | 名称 | 基准汇率 (CNY) |
+|------|------|----------------|
+| CNY | 人民币 | 1 (基准) |
+| USD | 美元 | ~7.2 |
+| EUR | 欧元 | ~7.8 |
+| GBP | 英镑 | ~9.1 |
+| JPY | 日元 | ~0.048 |
+| HKD | 港币 | ~0.92 |
+| TWD | 台币 | ~0.22 |
+| KRW | 韩元 | ~0.0052 |
+| SGD | 新加坡元 | ~5.4 |
+| THB | 泰铢 | ~0.21 |
+| MYR | 马来西亚林吉特 | ~1.6 |
+| VND | 越南盾 | ~0.0003 |
+| PHP | 菲律宾比索 | ~0.12 |
+| IDR | 印尼盾 | ~0.00045 |
+| BRL | 巴西雷亚尔 | ~1.4 |
+
+## 快速开始
+
+### 1. 获取所有启用的币种
+
+```bash
+curl "https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates?status=1" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### 2. 创建新币种
+
+```bash
+curl -X POST "https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "AUD",
+    "name": "澳元",
+    "symbol": "A$",
+    "currency_type": 0,
+    "exchange_rate": "4.8",
+    "update_mode": 0,
+    "status": 1
+  }'
+```
+
+### 3. 同步USDT汇率
+
+```bash
+curl -X POST "https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates/10/sync" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+## 汇率校验规则
+
+所有汇率输入都会基于市场基准汇率进行 ±5% 范围校验：
+
+```
+允许范围 = 基准汇率 × (1 ± 5%)
+
+示例 - USDT (基准: 7.2):
+- 最小值: 7.2 × 0.95 = 6.84
+- 最大值: 7.2 × 1.05 = 7.56
 ```
 
 <Warning>
-  Rates outside the ±5% tolerance will be **rejected** to prevent accidental input errors.
+  超出 ±5% 范围的汇率将被**拒绝**，以防止意外输入错误。
 </Warning>
 
-## Base Currency Protection
+## 基准货币保护
 
-CNY is the base currency and has special protections:
+CNY 作为基准货币有特殊保护：
 
-- Rate is fixed at 1 and cannot be modified
-- Cannot be deleted
-- Cannot be disabled
-- Does not require sync
+- 汇率固定为 1，不可修改
+- 不可删除
+- 不可禁用
+- 无需同步
 
-## Version History
-
-### v1.1 (2026-01-14)
-- Enhanced rate validation with ±5% tolerance (blocking mode)
-- Added BRL (Brazilian Real) support
-- Moved to independent exchange rates module
-
-### v1.0 (2026-01-12)
-- Initial release with multi-currency support
-- CRUD operations for currencies
-- Status management
+<Note>
+  币种代码在系统中必须唯一，创建时会自动转换为大写。
+</Note>
