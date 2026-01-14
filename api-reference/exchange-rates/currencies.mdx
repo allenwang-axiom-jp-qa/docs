@@ -1,0 +1,533 @@
+---
+title: 'Currency Management'
+description: 'CRUD operations for currencies and exchange rates'
+---
+
+## List Currencies
+
+<RequestExample>
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+```bash With Status Filter
+curl "https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates?status=1" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": {
+    "overview": {
+      "total": 7,
+      "enabled": 6,
+      "manual": 6,
+      "auto_sync": 1
+    },
+    "list": [
+      {
+        "id": 1,
+        "code": "CNY",
+        "name": "人民币",
+        "symbol": "¥",
+        "currency_type": 0,
+        "exchange_rate": "1",
+        "update_mode": 0,
+        "last_updated_at": "2026-01-14T16:39:47+09:00",
+        "status": 1
+      },
+      {
+        "id": 2,
+        "code": "USDT",
+        "name": "泰达币",
+        "symbol": "₮",
+        "currency_type": 1,
+        "exchange_rate": "7.2",
+        "update_mode": 1,
+        "last_updated_at": "2026-01-14T17:11:45+09:00",
+        "status": 1
+      }
+    ]
+  },
+  "msg": "成功"
+}
+```
+</ResponseExample>
+
+Get all currencies with overview statistics.
+
+**Endpoint**: `GET /api/v1/oms/exchange-rates`
+
+### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| status | int | No | Filter by status: 0=Disabled, 1=Enabled |
+
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| overview.total | int | Total currency count |
+| overview.enabled | int | Enabled currencies count |
+| overview.manual | int | Manual update mode count |
+| overview.auto_sync | int | Auto-sync mode count |
+| list | array | Currency list |
+
+---
+
+## Create Currency
+
+<RequestExample>
+```bash cURL
+curl -X POST https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "USD",
+    "name": "美元",
+    "symbol": "$",
+    "currency_type": 0,
+    "exchange_rate": "7.25",
+    "update_mode": 0
+  }'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Success
+{
+  "code": 0,
+  "data": {
+    "id": 15,
+    "code": "USD",
+    "name": "美元",
+    "symbol": "$",
+    "currency_type": 0,
+    "exchange_rate": "7.25",
+    "update_mode": 0,
+    "last_updated_at": "2026-01-14T19:39:26+09:00",
+    "status": 1
+  },
+  "msg": "创建成功"
+}
+```
+
+```json Rate Out of Range
+{
+  "code": 7,
+  "data": {},
+  "msg": "汇率 10 超出币种 USD 正常范围(6.840000 ~ 7.560000)，基准汇率为 7.2，允许波动 ±5%"
+}
+```
+
+```json Duplicate Code
+{
+  "code": 7,
+  "data": {},
+  "msg": "创建币种失败: 币种代码已存在"
+}
+```
+</ResponseExample>
+
+Create a new currency.
+
+**Endpoint**: `POST /api/v1/oms/exchange-rates`
+
+### Request Body
+
+| Field | Type | Required | Validation | Description |
+|-------|------|----------|------------|-------------|
+| code | string | Yes | 2-10 chars, uppercase | Currency code (e.g., USD, USDT) |
+| name | string | Yes | 1-50 chars | Display name |
+| symbol | string | Yes | 1-5 chars | Currency symbol (e.g., $, ¥) |
+| currency_type | int | Yes | 0 or 1 | 0=Fiat, 1=Crypto |
+| exchange_rate | string | Yes | > 0, ±5% of base | Rate to CNY |
+| update_mode | int | Yes | 0 or 1 | 0=Manual, 1=Auto-sync |
+
+<Warning>
+  The exchange rate must be within ±5% of the base market rate. Rates outside this range will be rejected.
+</Warning>
+
+---
+
+## Get Currency by ID
+
+<RequestExample>
+```bash cURL
+curl https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates/10 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "code": 0,
+  "data": {
+    "id": 10,
+    "code": "USDT",
+    "name": "泰达币",
+    "symbol": "₮",
+    "currency_type": 1,
+    "exchange_rate": "7.3",
+    "update_mode": 1,
+    "last_updated_at": "2026-01-14T19:39:46+09:00",
+    "status": 1
+  },
+  "msg": "成功"
+}
+```
+</ResponseExample>
+
+Get a single currency by ID.
+
+**Endpoint**: `GET /api/v1/oms/exchange-rates/:id`
+
+---
+
+## Update Currency
+
+<RequestExample>
+```bash cURL
+curl -X PUT https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates/10 \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "exchange_rate": "7.3",
+    "name": "泰达币 (USDT)"
+  }'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Success
+{
+  "code": 0,
+  "data": {
+    "id": 10,
+    "code": "USDT",
+    "name": "泰达币 (USDT)",
+    "symbol": "₮",
+    "currency_type": 1,
+    "exchange_rate": "7.3",
+    "update_mode": 1,
+    "last_updated_at": "2026-01-14T19:39:46+09:00",
+    "status": 1
+  },
+  "msg": "更新成功"
+}
+```
+
+```json Rate Out of Range
+{
+  "code": 7,
+  "data": {},
+  "msg": "汇率 8 超出币种 USDT 正常范围(6.840000 ~ 7.560000)，基准汇率为 7.2，允许波动 ±5%"
+}
+```
+
+```json Base Currency Protected
+{
+  "code": 7,
+  "data": {},
+  "msg": "更新币种失败: 基准货币(CNY)汇率不可修改"
+}
+```
+</ResponseExample>
+
+Update currency configuration. All fields are optional - only provided fields will be updated.
+
+**Endpoint**: `PUT /api/v1/oms/exchange-rates/:id`
+
+### Request Body (All Optional)
+
+| Field | Type | Validation | Description |
+|-------|------|------------|-------------|
+| name | string | 1-50 chars | Display name |
+| symbol | string | 1-5 chars | Currency symbol |
+| currency_type | int | 0 or 1 | Currency type |
+| exchange_rate | string | > 0, ±5% of base | Rate to CNY |
+| update_mode | int | 0 or 1 | Update mode |
+| status | int | 0 or 1 | Status |
+
+<Info>
+  The currency code cannot be changed after creation.
+</Info>
+
+---
+
+## Delete Currency
+
+<RequestExample>
+```bash cURL
+curl -X DELETE https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates/14 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Success
+{
+  "code": 0,
+  "data": {},
+  "msg": "删除成功"
+}
+```
+
+```json Base Currency Protected
+{
+  "code": 7,
+  "data": {},
+  "msg": "删除币种失败: 基准货币(CNY)不可删除"
+}
+```
+
+```json In Use Warning
+{
+  "code": 0,
+  "data": {
+    "warning": "币种 USDT 当前被钻石套餐和会员订阅业务使用，操作可能影响相关功能"
+  },
+  "msg": "成功"
+}
+```
+</ResponseExample>
+
+Soft delete a currency.
+
+**Endpoint**: `DELETE /api/v1/oms/exchange-rates/:id`
+
+<Warning>
+  CNY (base currency) cannot be deleted. Deleting currencies in use by business services will show a warning.
+</Warning>
+
+---
+
+## Update Status
+
+<RequestExample>
+```bash cURL
+curl -X PUT https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates/10/status \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "status": 0
+  }'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Success
+{
+  "code": 0,
+  "data": {},
+  "msg": "更新成功"
+}
+```
+
+```json With Warning
+{
+  "code": 0,
+  "data": {
+    "warning": "币种 USDT 当前被钻石套餐和会员订阅业务使用，操作可能影响相关功能"
+  },
+  "msg": "成功"
+}
+```
+
+```json Base Currency Protected
+{
+  "code": 7,
+  "data": {},
+  "msg": "更新状态失败: 基准货币(CNY)不可停用"
+}
+```
+</ResponseExample>
+
+Enable or disable a currency.
+
+**Endpoint**: `PUT /api/v1/oms/exchange-rates/:id/status`
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| status | int | Yes | 0=Disable, 1=Enable |
+
+---
+
+## Sync Exchange Rate
+
+<RequestExample>
+```bash cURL
+curl -X POST https://dev-admin.beauty-666.com/api/v1/oms/exchange-rates/10/sync \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Success
+{
+  "code": 0,
+  "data": {
+    "id": 10,
+    "code": "USDT",
+    "name": "泰达币",
+    "symbol": "₮",
+    "currency_type": 1,
+    "exchange_rate": "7.18",
+    "update_mode": 1,
+    "last_updated_at": "2026-01-14T19:45:00+09:00",
+    "status": 1
+  },
+  "msg": "同步成功"
+}
+```
+
+```json Sync Not Supported
+{
+  "code": 7,
+  "data": {},
+  "msg": "同步汇率失败: 暂不支持该加密货币自动同步"
+}
+```
+
+```json Base Currency
+{
+  "code": 7,
+  "data": {},
+  "msg": "同步汇率失败: 基准货币(CNY)无需同步"
+}
+```
+</ResponseExample>
+
+Manually trigger exchange rate sync from external API.
+
+**Endpoint**: `POST /api/v1/oms/exchange-rates/:id/sync`
+
+### Sync Sources
+
+| Currency Type | API Source |
+|---------------|------------|
+| Crypto (USDT) | CoinGecko API |
+| Fiat | ExchangeRate-API (planned) |
+
+<Info>
+  Currently only USDT sync is fully implemented. Other currencies will return "暂不支持" error.
+</Info>
+
+---
+
+## Frontend Integration
+
+### API Service
+
+```typescript
+// api/exchangeRates.ts
+import request from '@/utils/request'
+
+export const exchangeRateApi = {
+  // Get all currencies
+  list: (status?: number) =>
+    request.get('/exchange-rates', { params: { status } }),
+
+  // Get single currency
+  get: (id: number) =>
+    request.get(`/exchange-rates/${id}`),
+
+  // Create currency
+  create: (data: CreateCurrencyDto) =>
+    request.post('/exchange-rates', data),
+
+  // Update currency
+  update: (id: number, data: UpdateCurrencyDto) =>
+    request.put(`/exchange-rates/${id}`, data),
+
+  // Delete currency
+  delete: (id: number) =>
+    request.delete(`/exchange-rates/${id}`),
+
+  // Update status
+  updateStatus: (id: number, status: number) =>
+    request.put(`/exchange-rates/${id}/status`, { status }),
+
+  // Sync rate
+  sync: (id: number) =>
+    request.post(`/exchange-rates/${id}/sync`)
+}
+```
+
+### Handle Rate Validation Errors
+
+```typescript
+const handleCreateCurrency = async (data: CreateCurrencyDto) => {
+  try {
+    await exchangeRateApi.create(data)
+    message.success('创建成功')
+  } catch (error: any) {
+    if (error.message?.includes('超出') && error.message?.includes('范围')) {
+      // Rate validation error - show detailed message
+      Modal.error({
+        title: '汇率超出允许范围',
+        content: error.message
+      })
+    } else {
+      message.error(error.message || '创建失败')
+    }
+  }
+}
+```
+
+### Convert Rate to Display
+
+```typescript
+// Format exchange rate for display
+const formatRate = (rate: string, code: string) => {
+  const numRate = parseFloat(rate)
+
+  // High-value currencies (BTC, ETH)
+  if (numRate > 1000) {
+    return `¥${numRate.toLocaleString('zh-CN', { maximumFractionDigits: 0 })}`
+  }
+
+  // Low-value currencies (VND, IDR)
+  if (numRate < 0.01) {
+    return `¥${numRate.toFixed(6)}`
+  }
+
+  // Normal currencies
+  return `¥${numRate.toFixed(4)}`
+}
+
+// Usage: 1 USDT = ¥7.2000
+```
+
+## Error Codes
+
+| Code | Description |
+|------|-------------|
+| 0 | Success |
+| 7 | Business error (validation failed, not found, etc.) |
+| 500 | Internal server error |
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Validate Before Submit" icon="check">
+    Show rate range hint to users before form submission
+  </Card>
+  <Card title="Handle Warnings" icon="triangle-exclamation">
+    Display warnings when modifying currencies used by business services
+  </Card>
+  <Card title="Confirm Deletions" icon="trash">
+    Always confirm before deleting currencies
+  </Card>
+  <Card title="Auto-Sync Schedule" icon="clock">
+    Set up cron jobs for currencies with auto_sync enabled
+  </Card>
+</CardGroup>

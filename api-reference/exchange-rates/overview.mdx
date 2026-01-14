@@ -1,0 +1,175 @@
+---
+title: 'Exchange Rates Overview'
+description: 'Manage currencies and exchange rates for the platform'
+---
+
+## Introduction
+
+The Exchange Rates API provides comprehensive currency management functionality, supporting both fiat currencies and cryptocurrencies. All exchange rates are expressed relative to CNY (Chinese Yuan) as the base currency.
+
+## Key Features
+
+- **Multi-Currency Support**: Manage fiat currencies (USD, EUR, JPY, etc.) and cryptocurrencies (USDT, BTC, ETH)
+- **Rate Validation**: ±5% tolerance based on market rates to prevent input errors
+- **Base Currency Protection**: CNY as base currency (rate fixed at 1) cannot be modified or deleted
+- **Auto-Sync**: Optional automatic synchronization from external APIs
+- **Business Integration**: Warnings when modifying currencies used by diamond/subscription services
+
+## Database Table
+
+- `oms_exchange_rates` - Currency and exchange rate configurations
+
+## Supported Currencies
+
+### Cryptocurrencies
+
+| Code | Name | Base Rate (CNY) |
+|------|------|-----------------|
+| USDT | Tether | ~7.2 |
+| USDC | USD Coin | ~7.2 |
+| BTC | Bitcoin | ~680,000 |
+| ETH | Ethereum | ~26,000 |
+
+### Fiat Currencies
+
+| Code | Name | Base Rate (CNY) |
+|------|------|-----------------|
+| CNY | Chinese Yuan | 1 (Base) |
+| USD | US Dollar | ~7.2 |
+| EUR | Euro | ~7.8 |
+| GBP | British Pound | ~9.1 |
+| JPY | Japanese Yen | ~0.048 |
+| HKD | Hong Kong Dollar | ~0.92 |
+| TWD | Taiwan Dollar | ~0.22 |
+| KRW | Korean Won | ~0.0052 |
+| SGD | Singapore Dollar | ~5.4 |
+| THB | Thai Baht | ~0.21 |
+| MYR | Malaysian Ringgit | ~1.6 |
+| VND | Vietnamese Dong | ~0.0003 |
+| PHP | Philippine Peso | ~0.12 |
+| IDR | Indonesian Rupiah | ~0.00045 |
+| BRL | Brazilian Real | ~1.4 |
+
+## API Endpoints
+
+### Query Endpoints
+
+<CardGroup cols={2}>
+  <Card
+    title="List Currencies"
+    icon="list"
+    href="/api-reference/exchange-rates/currencies#list-currencies"
+  >
+    Get all currencies with overview statistics
+  </Card>
+  <Card
+    title="Get Currency"
+    icon="file"
+    href="/api-reference/exchange-rates/currencies#get-currency"
+  >
+    Get single currency details by ID
+  </Card>
+</CardGroup>
+
+### Management Endpoints
+
+<CardGroup cols={3}>
+  <Card
+    title="Create Currency"
+    icon="plus"
+    href="/api-reference/exchange-rates/currencies#create-currency"
+  >
+    Add new currency
+  </Card>
+  <Card
+    title="Update Currency"
+    icon="pen"
+    href="/api-reference/exchange-rates/currencies#update-currency"
+  >
+    Update currency configuration
+  </Card>
+  <Card
+    title="Delete Currency"
+    icon="trash"
+    href="/api-reference/exchange-rates/currencies#delete-currency"
+  >
+    Remove currency (soft delete)
+  </Card>
+</CardGroup>
+
+### Status & Sync
+
+<CardGroup cols={2}>
+  <Card
+    title="Update Status"
+    icon="toggle-on"
+    href="/api-reference/exchange-rates/currencies#update-status"
+  >
+    Enable/disable currency
+  </Card>
+  <Card
+    title="Sync Rate"
+    icon="sync"
+    href="/api-reference/exchange-rates/currencies#sync-rate"
+  >
+    Sync rate from external API
+  </Card>
+</CardGroup>
+
+## Currency Types
+
+| Value | Type | Description |
+|-------|------|-------------|
+| 0 | Fiat | Traditional currencies (USD, EUR, etc.) |
+| 1 | Crypto | Cryptocurrencies (USDT, BTC, etc.) |
+
+## Update Modes
+
+| Value | Mode | Description |
+|-------|------|-------------|
+| 0 | Manual | Rate updated manually by admin |
+| 1 | Auto-Sync | Rate synced from external API |
+
+## Currency Status
+
+| Value | Status | Description |
+|-------|--------|-------------|
+| 0 | Disabled | Currency not available for use |
+| 1 | Enabled | Currency active and available |
+
+## Rate Validation
+
+All rate inputs are validated against a ±5% tolerance from base market rates:
+
+```
+Allowed Range = Base Rate × (1 ± 5%)
+
+Example for USDT (Base: 7.2):
+- Minimum: 7.2 × 0.95 = 6.84
+- Maximum: 7.2 × 1.05 = 7.56
+```
+
+<Warning>
+  Rates outside the ±5% tolerance will be **rejected** to prevent accidental input errors.
+</Warning>
+
+## Base Currency Protection
+
+CNY is the base currency and has special protections:
+
+- Rate is fixed at 1 and cannot be modified
+- Cannot be deleted
+- Cannot be disabled
+- Does not require sync
+
+## Version History
+
+### v1.1 (2026-01-14)
+- Enhanced rate validation with ±5% tolerance (blocking mode)
+- Added BRL (Brazilian Real) support
+- Moved to independent exchange rates module
+
+### v1.0 (2026-01-12)
+- Initial release with multi-currency support
+- CRUD operations for currencies
+- Status management

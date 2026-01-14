@@ -170,6 +170,13 @@
       ]
     },
     {
+      "group": "币种与汇率管理",
+      "pages": [
+        "api-reference/exchange-rates/overview",
+        "api-reference/exchange-rates/currencies"
+      ]
+    },
+    {
       "group": "首页模块管理（自动生成）",
       "pages": [
         "api-reference/homepage-modules/get-admgmt-homepage-overview",
