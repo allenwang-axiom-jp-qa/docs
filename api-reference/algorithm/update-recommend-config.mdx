@@ -17,6 +17,16 @@ description: '更新推荐算法配置（用户行为权重或热度召回权重
   热度召回权重的所有值之和必须等于 **1.0**（允许 ±0.0001 误差），否则接口返回错误。
 </Warning>
 
+## 认证
+
+<ParamField header="x-Token" type="string" required>
+  JWT 认证令牌（用于识别更新人）
+</ParamField>
+
+<Note>
+  更新人信息从 JWT 令牌中自动获取，无需在请求体中传递。
+</Note>
+
 ## Request Body
 
 <ParamField body="configType" type="string" required>
@@ -24,11 +34,7 @@ description: '更新推荐算法配置（用户行为权重或热度召回权重
 </ParamField>
 
 <ParamField body="value" type="object" required>
-  配置值（JSON对象）
-</ParamField>
-
-<ParamField body="updatedBy" type="string" required>
-  更新人标识
+  配置值（JSON对象，支持小数）
 </ParamField>
 
 ### User Behavior Weights
@@ -37,12 +43,12 @@ description: '更新推荐算法配置（用户行为权重或热度召回权重
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| view_valid | int | 有效观看得分 |
-| view_complete | int | 完播得分 |
-| like | int | 点赞得分 |
-| favorite | int | 收藏得分 |
-| share | int | 分享得分 |
-| pay | int | 付款得分 |
+| view_valid | number | 有效观看得分 |
+| view_complete | number | 完播得分 |
+| like | number | 点赞得分 |
+| favorite | number | 收藏得分 |
+| share | number | 分享得分 |
+| pay | number | 付款得分 |
 
 ### Hot Weights
 
@@ -50,9 +56,9 @@ description: '更新推荐算法配置（用户行为权重或热度召回权重
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| like | float | 点赞权重 |
-| share | float | 分享权重 |
-| favorite | float | 收藏权重 |
+| like | number | 点赞权重 |
+| share | number | 分享权重 |
+| favorite | number | 收藏权重 |
 
 ## Response
 
@@ -80,8 +86,7 @@ description: '更新推荐算法配置（用户行为权重或热度召回权重
     "favorite": 8,
     "share": 10,
     "pay": 20
-  },
-  "updatedBy": "admin"
+  }
 }
 ```
 
@@ -92,8 +97,7 @@ description: '更新推荐算法配置（用户行为权重或热度召回权重
     "like": 0.5,
     "share": 0.3,
     "favorite": 0.2
-  },
-  "updatedBy": "admin"
+  }
 }
 ```
 
@@ -140,6 +144,9 @@ description: '更新推荐算法配置（用户行为权重或热度召回权重
 | 错误码 | 含义 | HTTP状态码 |
 |--------|------|-----------|
 | 0 | 成功 | 200 |
+| TOKEN_NOT_FOUND | 未提供认证令牌 | 401 |
+| TOKEN_EXPIRED | 认证令牌已过期 | 401 |
+| INVALID_TOKEN | 认证令牌无效 | 401 |
 | 40001 | 参数验证失败 | 400 |
 | 50001 | 服务器内部错误 | 500 |
 
@@ -148,11 +155,14 @@ description: '更新推荐算法配置（用户行为权重或热度召回权重
 <CodeGroup>
 
 ```javascript JavaScript
-async function updateConfig(configType, value, updatedBy) {
+async function updateConfig(configType, value) {
   const response = await fetch('/api/v1/site-svc-video-mgmt/recommend/config', {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ configType, value, updatedBy })
+    headers: {
+      'Content-Type': 'application/json',
+      'x-Token': 'YOUR_JWT_TOKEN'
+    },
+    body: JSON.stringify({ configType, value })
   });
 
   const result = await response.json();
@@ -172,10 +182,10 @@ function validateHotWeights(like, share, favorite) {
 ```bash cURL
 curl -X PUT https://dev-admin.beauty-666.com/api/v1/site-svc-video-mgmt/recommend/config \
   -H "Content-Type: application/json" \
+  -H "x-Token: YOUR_JWT_TOKEN" \
   -d '{
     "configType": "hot_weights",
-    "value": { "like": 0.5, "share": 0.3, "favorite": 0.2 },
-    "updatedBy": "admin"
+    "value": { "like": 0.5, "share": 0.3, "favorite": 0.2 }
   }'
 ```
 
