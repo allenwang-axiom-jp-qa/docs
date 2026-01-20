@@ -58,7 +58,7 @@
       ]
     },
     {
-      "group": "用户端 API",
+      "group": "客户端 API",
       "pages": [
         "api-reference/client-api/overview",
         "api-reference/client-api/cms-client",

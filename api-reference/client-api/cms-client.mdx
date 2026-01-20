@@ -1,28 +1,69 @@
 ---
 title: 'CMS 客户端 API'
-description: '用户基础功能接口，包括首页、视频、用户资料等'
-openapi: client-api/cms-client-openapi.json
+description: '用户基础功能接口，包括首页配置、视频列表、用户资料等'
 ---
 
-# CMS 网站客户端 API
+# CMS 客户端 API
 
-提供用户端基础功能的 API 接口。
+提供客户端基础功能的 API 接口。
 
 ## 功能模块
 
 ### 首页模块
-- 获取首页配置
-- 获取推荐内容
-- 获取轮播图
+
+| 接口 | Method | Path | 说明 |
+|------|--------|------|------|
+| 获取首页配置 | GET | `/api/v1/client/homepage/config` | 获取首页模块配置 |
+| 获取推荐内容 | GET | `/api/v1/client/homepage/recommend` | 获取推荐视频列表 |
+| 获取轮播图 | GET | `/api/v1/client/homepage/banners` | 获取首页轮播图 |
 
 ### 视频模块
-- 视频列表查询
-- 视频详情获取
-- 视频播放相关
+
+| 接口 | Method | Path | 说明 |
+|------|--------|------|------|
+| 视频列表查询 | GET | `/api/v1/client/videos` | 分页获取视频列表 |
+| 视频详情获取 | GET | `/api/v1/client/videos/{id}` | 获取视频详细信息 |
+| 视频播放地址 | GET | `/api/v1/client/videos/{id}/play` | 获取视频播放 URL |
 
 ### 用户模块
-- 用户资料查询
-- 用户设置更新
+
+| 接口 | Method | Path | 说明 |
+|------|--------|------|------|
+| 获取用户资料 | GET | `/api/v1/client/user/profile` | 获取当前用户资料 |
+| 更新用户设置 | PUT | `/api/v1/client/user/settings` | 更新用户偏好设置 |
+
+## 请求示例
+
+### 获取视频列表
+
+```bash
+curl -X GET "https://dev-client.beauty-666.com/api/v1/client/videos?page=1&page_size=20" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+### 响应示例
+
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "total": 100,
+    "page": 1,
+    "page_size": 20,
+    "videos": [
+      {
+        "id": 1,
+        "title": "视频标题",
+        "cover_url": "https://example.com/cover.jpg",
+        "duration": 3600,
+        "view_count": 1000
+      }
+    ]
+  }
+}
+```
 
 <Note>
 所有接口均需要携带有效的 JWT Token 进行认证。

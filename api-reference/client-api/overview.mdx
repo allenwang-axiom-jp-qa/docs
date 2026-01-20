@@ -1,23 +1,23 @@
 ---
-title: '用户端 API 概览'
-description: '用户端服务 API 文档 - 包含客户端、认证、搜索、社交、购买、支付等功能'
+title: '客户端 API 概览'
+description: '客户端服务 API 文档，包含基础功能、认证、搜索、社交、购买、支付等模块'
 ---
 
-# 用户端 API
+# 客户端 API
 
-用户端 API 是面向终端用户的服务接口，提供完整的用户体验功能。
+客户端 API 是面向终端用户的服务接口，提供完整的用户体验功能。
 
 ## 服务模块
 
 <CardGroup cols={2}>
   <Card title="CMS 客户端 API" icon="mobile" href="/api-reference/client-api/cms-client">
-    用户基础功能，包括首页、视频列表、用户资料等
+    用户基础功能，包括首页配置、视频列表、用户资料等
   </Card>
   <Card title="2FA 认证 API" icon="shield-check" href="/api-reference/client-api/2fa">
-    双因素认证相关接口，支持 Google Authenticator
+    双因素认证接口，支持 Google Authenticator (TOTP)
   </Card>
   <Card title="影片搜索 API" icon="magnifying-glass" href="/api-reference/client-api/search">
-    视频搜索服务，支持关键词搜索和筛选
+    视频搜索服务，支持关键词搜索和多维度筛选
   </Card>
   <Card title="社交互动 API" icon="comments" href="/api-reference/client-api/social">
     评论、点赞、收藏等社交互动功能
@@ -29,21 +29,32 @@ description: '用户端服务 API 文档 - 包含客户端、认证、搜索、�
     第三方支付集成，支持多种支付渠道
   </Card>
   <Card title="广告影片 API" icon="video" href="/api-reference/client-api/advideo">
-    广告影片服务接口
+    广告影片服务，包括贴片广告、插播广告等
   </Card>
 </CardGroup>
 
 ## 认证方式
 
-所有用户端 API 都需要通过 JWT Token 进行认证：
+所有客户端 API 都需要通过 JWT Token 进行认证。
+
+### 请求头格式
 
 ```bash
-curl -X GET "https://api.example.com/api/v1/client/..." \
+curl -X GET "https://dev-client.beauty-666.com/api/v1/client/..." \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json"
 ```
 
-## 基础响应格式
+### 参数说明
+
+| Header | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| Authorization | string | 是 | Bearer Token，格式：`Bearer {access_token}` |
+| Content-Type | string | 是 | 固定值：`application/json` |
+
+## 响应格式
+
+### 成功响应
 
 ```json
 {
@@ -55,17 +66,30 @@ curl -X GET "https://api.example.com/api/v1/client/..." \
 }
 ```
 
-### 错误码说明
+### 错误响应
 
-| 错误码 | 说明 |
-|--------|------|
-| 0 | 成功 |
-| 401 | 未授权 |
-| 403 | 禁止访问 |
-| 404 | 资源不存在 |
-| 500 | 服务器内部错误 |
+```json
+{
+  "code": 400,
+  "msg": "error message",
+  "data": null
+}
+```
+
+## 错误码说明
+
+| 错误码 | HTTP Status | 说明 |
+|--------|-------------|------|
+| 0 | 200 | 请求成功 |
+| 400 | 400 | 请求参数错误 |
+| 401 | 401 | 未授权，Token 无效或已过期 |
+| 403 | 403 | 禁止访问，权限不足 |
+| 404 | 404 | 资源不存在 |
+| 500 | 500 | 服务器内部错误 |
 
 ## 开发环境
 
-- **API 地址**: `https://dev-client.beauty-666.com`
-- **文档地址**: `https://axiom-b5511498.mintlify.app`
+| 环境 | 地址 |
+|------|------|
+| API 服务 | `https://dev-client.beauty-666.com` |
+| 文档站点 | `https://axiom-b5511498.mintlify.app` |

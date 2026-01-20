@@ -1,24 +1,115 @@
 ---
 title: '广告影片 API'
-description: '广告影片服务接口'
-openapi: client-api/advideo-openapi.json
+description: '广告影片服务，包括贴片广告、插播广告等'
 ---
 
-# 广告影片服务 API
+# 广告影片 API
 
 提供广告影片相关功能的 API 接口。
 
-## 功能说明
+## 接口列表
 
-### 广告类型
-- 贴片广告
-- 插播广告
-- 角标广告
+| 接口 | Method | Path | 说明 |
+|------|--------|------|------|
+| 获取广告列表 | GET | `/api/v1/advideo/list` | 获取当前可用广告 |
+| 记录广告曝光 | POST | `/api/v1/advideo/impression` | 上报广告曝光 |
+| 记录广告点击 | POST | `/api/v1/advideo/click` | 上报广告点击 |
 
-### 接口功能
-- 获取广告列表
-- 记录广告曝光
-- 记录广告点击
+## 广告类型
+
+| 类型 | 说明 |
+|------|------|
+| pre_roll | 贴片广告（播放前） |
+| mid_roll | 插播广告（播放中） |
+| corner | 角标广告 |
+
+## 获取广告列表
+
+### 请求示例
+
+```bash
+curl -X GET "https://dev-client.beauty-666.com/api/v1/advideo/list?position=pre_roll&video_id=123" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+### 请求参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| position | string | 是 | 广告位置：pre_roll/mid_roll/corner |
+| video_id | integer | 否 | 视频 ID（用于个性化推荐） |
+
+### 响应示例
+
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "ads": [
+      {
+        "id": 1,
+        "title": "广告标题",
+        "type": "pre_roll",
+        "duration": 15,
+        "video_url": "https://example.com/ad.mp4",
+        "cover_url": "https://example.com/cover.jpg",
+        "click_url": "https://example.com/landing",
+        "skip_after": 5
+      }
+    ]
+  }
+}
+```
+
+### 响应参数说明
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| id | integer | 广告 ID |
+| title | string | 广告标题 |
+| type | string | 广告类型 |
+| duration | integer | 广告时长（秒） |
+| video_url | string | 广告视频地址 |
+| cover_url | string | 广告封面地址 |
+| click_url | string | 点击跳转地址 |
+| skip_after | integer | 可跳过时间（秒） |
+
+## 记录广告曝光
+
+### 请求示例
+
+```bash
+curl -X POST "https://dev-client.beauty-666.com/api/v1/advideo/impression" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"ad_id": 1, "video_id": 123}'
+```
+
+### 请求参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| ad_id | integer | 是 | 广告 ID |
+| video_id | integer | 否 | 关联视频 ID |
+
+## 记录广告点击
+
+### 请求示例
+
+```bash
+curl -X POST "https://dev-client.beauty-666.com/api/v1/advideo/click" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"ad_id": 1, "video_id": 123}'
+```
+
+### 请求参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| ad_id | integer | 是 | 广告 ID |
+| video_id | integer | 否 | 关联视频 ID |
 
 <Note>
 广告接口会根据用户画像和观看历史返回个性化广告内容。

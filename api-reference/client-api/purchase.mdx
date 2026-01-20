@@ -1,49 +1,96 @@
 ---
 title: '影音购买 API'
 description: '会员方案、钻石充值、影片购买等消费功能'
-openapi: client-api/purchase-openapi.json
 ---
 
-# 影音购买服务 API
+# 影音购买 API
 
 提供消费相关功能的 API 接口。
 
-## 功能模块
+## 会员相关
 
-### 1. 会员相关
+### 接口列表
 
-| 接口 | 说明 |
-|------|------|
-| 获取会员方案列表 | 获取所有会员方案（月度/季度/年度） |
-| 查询会员状态 | 查询当前用户的会员状态和有效期 |
+| 接口 | Method | Path | 说明 |
+|------|--------|------|------|
+| 获取会员方案列表 | GET | `/api/v1/purchase/membership/plans` | 获取所有会员方案 |
+| 查询会员状态 | GET | `/api/v1/purchase/membership/status` | 查询用户会员状态 |
 
-### 2. 钻石充值
+### 会员方案类型
 
-| 接口 | 说明 |
-|------|------|
-| 获取钻石方案列表 | 获取各档位的钻石充值方案 |
+| product_id | 类型 | 说明 |
+|------------|------|------|
+| 1 | 月度会员 | 30 天有效期 |
+| 2 | 季度会员 | 90 天有效期 |
+| 3 | 半年会员 | 180 天有效期 |
+| 4 | 年度会员 | 365 天有效期 |
 
-### 3. 影片购买
+## 钻石充值
 
-| 接口 | 说明 |
-|------|------|
-| 创建购买订单 | 使用钻石购买影片 |
-| 查询已购列表 | 获取用户已购买的影片列表 |
+### 接口列表
+
+| 接口 | Method | Path | 说明 |
+|------|--------|------|------|
+| 获取钻石方案列表 | GET | `/api/v1/purchase/diamond/packages` | 获取各档位钻石方案 |
+
+## 影片购买
+
+### 接口列表
+
+| 接口 | Method | Path | 说明 |
+|------|--------|------|------|
+| 创建购买订单 | POST | `/api/v1/purchase/video` | 使用钻石购买影片 |
+| 查询已购列表 | GET | `/api/v1/purchase/video/purchased` | 获取已购影片列表 |
+
+### 购买影片请求参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| video_id | integer | 是 | 视频 ID |
+
+### 购买影片响应示例
+
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "order_id": "V20250120120000abc",
+    "video_id": 123,
+    "diamond_cost": 100,
+    "remaining_diamond": 900
+  }
+}
+```
 
 <Warning>
 影片购买仅支持 **钻石支付** 方式。
 </Warning>
 
-### 4. 订单查询
+## 订单查询
 
-| 接口 | 说明 |
-|------|------|
-| 查询订单详情 | 根据订单号查询订单详情 |
-| 查询订单列表 | 支持按分类、状态、日期范围筛选 |
+### 接口列表
 
-## 订单状态说明
+| 接口 | Method | Path | 说明 |
+|------|--------|------|------|
+| 查询订单详情 | GET | `/api/v1/purchase/order/{order_no}` | 根据订单号查询 |
+| 查询订单列表 | GET | `/api/v1/purchase/orders` | 分页查询订单 |
+
+### 订单列表请求参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| category | string | 否 | 订单分类 |
+| status | integer | 否 | 订单状态 |
+| start_date | string | 否 | 开始日期 (YYYY-MM-DD) |
+| end_date | string | 否 | 结束日期 (YYYY-MM-DD) |
+| page | integer | 否 | 页码，默认 1 |
+| page_size | integer | 否 | 每页数量，默认 20 |
+
+## 状态码说明
 
 ### 订单状态 (order_status)
+
 | 值 | 说明 |
 |----|------|
 | 0 | 待支付 |
@@ -52,6 +99,7 @@ openapi: client-api/purchase-openapi.json
 | 3 | 已退款 |
 
 ### 支付状态 (payment_status)
+
 | 值 | 说明 |
 |----|------|
 | 0 | 待支付 |
@@ -60,10 +108,10 @@ openapi: client-api/purchase-openapi.json
 | 3 | 支付失败 |
 | 4 | 已退款 |
 
-## 订单分类说明
+## 订单分类
 
 | 分类 | 说明 |
 |------|------|
-| CONSUMPTION | 消费纪录（会员购买 + 钻石购买影片） |
-| DIAMOND_RECHARGE | 钻石充值纪录 |
-| DEPOSIT_WITHDRAW | 充提纪录（存款 + 取款） |
+| CONSUMPTION | 消费记录（会员购买 + 钻石购买影片） |
+| DIAMOND_RECHARGE | 钻石充值记录 |
+| DEPOSIT_WITHDRAW | 充提记录（存款 + 取款） |

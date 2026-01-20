@@ -1,41 +1,102 @@
 ---
 title: '社交互动 API'
 description: '评论、点赞、收藏等社交互动功能'
-openapi: client-api/social-openapi.json
 ---
 
-# 社交互动服务 API
+# 社交互动 API
 
 提供社交互动功能的 API 接口。
 
-## 功能模块
+## 评论功能
 
-### 1. 评论功能
+### 接口列表
 
-| 接口 | 说明 |
-|------|------|
-| 发表评论 | 发表顶层评论 |
-| 发表回复 | 发表嵌套评论（回复其他评论） |
-| 获取评论列表 | 获取影片的顶层评论列表 |
-| 获取回复列表 | 获取某条评论的回复列表 |
-| 删除评论 | 删除自己发表的评论 |
+| 接口 | Method | Path | 说明 |
+|------|--------|------|------|
+| 发表评论 | POST | `/api/v1/social/comment` | 发表顶层评论或回复 |
+| 获取评论列表 | GET | `/api/v1/social/comments/{video_id}` | 获取视频的顶层评论 |
+| 获取回复列表 | GET | `/api/v1/social/replies/{comment_id}` | 获取评论的回复 |
+| 删除评论 | DELETE | `/api/v1/social/comment/{comment_id}` | 删除自己的评论 |
 
-### 2. 点赞功能
+### 发表评论请求参数
 
-| 接口 | 说明 |
-|------|------|
-| 影片点赞/取消 | Toggle 切换点赞状态 |
-| 评论点赞/取消 | Toggle 切换评论点赞状态 |
-| 批量检查点赞状态 | 批量查询用户是否已点赞 |
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| video_id | integer | 是 | 视频 ID |
+| content | string | 是 | 评论内容（1-500 字符） |
+| parent_id | integer | 否 | 父评论 ID（回复时必填） |
 
-### 3. 收藏功能
+### 评论响应示例
 
-| 接口 | 说明 |
-|------|------|
-| 收藏/取消收藏 | Toggle 切换收藏状态 |
-| 获取收藏列表 | 获取用户的收藏影片列表 |
-| 批量检查收藏状态 | 批量查询用户是否已收藏 |
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "id": 123,
+    "video_id": 1,
+    "user_id": 38,
+    "parent_id": 0,
+    "root_id": 0,
+    "content": "这是一条评论",
+    "like_count": 0,
+    "reply_count": 0,
+    "user_nickname": "用户昵称",
+    "user_avatar": "https://example.com/avatar.jpg",
+    "created_time": 1766524274,
+    "is_liked": false
+  }
+}
+```
+
+## 点赞功能
+
+### 接口列表
+
+| 接口 | Method | Path | 说明 |
+|------|--------|------|------|
+| 视频点赞/取消 | POST | `/api/v1/social/like/video/{video_id}` | Toggle 切换点赞状态 |
+| 评论点赞/取消 | POST | `/api/v1/social/like/comment/{comment_id}` | Toggle 切换点赞状态 |
+| 批量检查点赞 | GET | `/api/v1/social/like/check?video_ids=1,2,3` | 批量查询点赞状态 |
+
+### 点赞响应示例
+
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "is_liked": true,
+    "like_count": 100
+  }
+}
+```
+
+## 收藏功能
+
+### 接口列表
+
+| 接口 | Method | Path | 说明 |
+|------|--------|------|------|
+| 收藏/取消收藏 | POST | `/api/v1/social/favorite/{video_id}` | Toggle 切换收藏状态 |
+| 获取收藏列表 | GET | `/api/v1/social/favorite/list` | 获取用户的收藏列表 |
+| 批量检查收藏 | GET | `/api/v1/social/favorite/check?video_ids=1,2,3` | 批量查询收藏状态 |
+
+### 收藏响应示例
+
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "is_favorited": true,
+    "favorite_count": 50
+  }
+}
+```
 
 <Note>
-点赞和收藏接口采用 Toggle 模式，同一接口可切换状态。
+点赞和收藏接口采用 **Toggle** 模式：
+- 未点赞/收藏 → 点赞/收藏
+- 已点赞/收藏 → 取消点赞/收藏
 </Note>
