@@ -1,0 +1,501 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "影音購買服務 API",
+    "description": "影音購買服務 API 測試集合 - 包含會員查詢、鑽石方案、影片購買、訂單查詢和支付相關接口",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://dev-client.beauty-666.com",
+      "description": "开发环境"
+    }
+  ],
+  "tags": [
+    {
+      "name": "1. 會員相關",
+      "description": "會員相關接口，包含獲取方案列表和查詢會員狀態"
+    },
+    {
+      "name": "2. 鑽石充值相關",
+      "description": "鑽石充值相關接口，包含獲取充值方案列表"
+    },
+    {
+      "name": "3. 影片購買相關",
+      "description": "影片購買相關接口\n\n注意：影片購買只支持鑽石支付方式"
+    },
+    {
+      "name": "4. 訂單查詢相關",
+      "description": "訂單查詢相關的接口，包含查詢單個訂單和訂單列表"
+    }
+  ],
+  "paths": {
+    "/api/v1/client/purchase/membership/plans": {
+      "get": {
+        "summary": "1.1 獲取會員方案列表",
+        "description": "獲取所有會員方案列表，包含月度、季度、年度會員的價格和優惠信息",
+        "tags": [
+          "1. 會員相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "plans": [
+                    {
+                      "type": "MONTHLY",
+                      "name": "月度會員",
+                      "price": 29.99,
+                      "currency": "CNY",
+                      "duration_days": 30,
+                      "discount_info": {
+                        "original_price": 39.99,
+                        "discount_rate": 0.25
+                      }
+                    },
+                    {
+                      "type": "QUARTERLY",
+                      "name": "季度會員",
+                      "price": 79.99,
+                      "currency": "CNY",
+                      "duration_days": 90,
+                      "discount_info": {
+                        "original_price": 119.97,
+                        "discount_rate": 0.33
+                      }
+                    },
+                    {
+                      "type": "YEARLY",
+                      "name": "年度會員",
+                      "price": 299.99,
+                      "currency": "CNY",
+                      "duration_days": 365,
+                      "discount_info": {
+                        "original_price": 479.88,
+                        "discount_rate": 0.37
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/purchase/membership/status": {
+      "get": {
+        "summary": "1.2 查詢會員狀態",
+        "description": "查詢當前用戶的會員狀態，包含會員類型、有效期、剩餘天數等信息",
+        "tags": [
+          "1. 會員相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "is_member": false,
+                  "membership_type": "",
+                  "valid_from": "",
+                  "valid_to": "",
+                  "days_remaining": 0
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/purchase/diamond/plans": {
+      "get": {
+        "summary": "2.1 獲取鑽石充值方案列表",
+        "description": "獲取鑽石充值方案列表，包含各檔位的鑽石數量、價格和優惠信息",
+        "tags": [
+          "2. 鑽石充值相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "plans": [
+                    {
+                      "diamond_amount": 100,
+                      "price": 10.0,
+                      "currency": "CNY",
+                      "bonus_diamond": 0
+                    },
+                    {
+                      "diamond_amount": 500,
+                      "price": 50.0,
+                      "currency": "CNY",
+                      "bonus_diamond": 50
+                    },
+                    {
+                      "diamond_amount": 1000,
+                      "price": 100.0,
+                      "currency": "CNY",
+                      "bonus_diamond": 150
+                    }
+                  ],
+                  "is_first_charge": true
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/purchase/content/order": {
+      "post": {
+        "summary": "3.1 創建影片購買訂單（鑽石支付）",
+        "description": "使用鑽石購買影片\n\n注意：此接口只支持 DIAMOND 支付方式\n\n流程說明：\n1. 系統會檢查用戶鑽石餘額是否足夠\n2. 如果餘額足夠，直接扣除鑽石並完成訂單\n3. 訂單狀態直接變為已完成 (order_status: 1, payment_status: 2)\n4. 響應中會返回扣款後的鑽石餘額 (diamond_balance_after)\n\n錯誤碼：\n- UNSUPPORTED_PAYMENT_METHOD: 不支持的支付方式（只支持 DIAMOND）\n- INSUFFICIENT_DIAMOND: 鑽石餘額不足\n- DIAMOND_CONSUME_FAILED: 鑽石扣款失敗\n- VIDEO_ALREADY_PURCHASED: 影片已購買\n- VIDEO_NOT_FOUND: 影片不存在",
+        "tags": [
+          "3. 影片購買相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "order_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                  "ticket": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                  "video_id": 1,
+                  "video_title": "測試影片 1",
+                  "price": 9.99,
+                  "currency": "DIAMOND",
+                  "payment_method": "DIAMOND",
+                  "order_status": 1,
+                  "payment_status": 2,
+                  "diamond_balance_after": "90.01"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "3.1 創建影片購買訂單 - 餘額不足",
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": "UNSUPPORTED_PAYMENT_METHOD",
+                  "message": "only DIAMOND payment method is supported for video purchase"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "video_id": {
+                    "type": "string"
+                  },
+                  "payment_method": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/purchase/content/purchased": {
+      "get": {
+        "summary": "3.2 查詢用戶已購影片列表",
+        "description": "查詢當前用戶已購買的所有影片列表，支持分頁",
+        "tags": [
+          "3. 影片購買相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "total": 2,
+                  "page": 1,
+                  "page_size": 20,
+                  "videos": [
+                    {
+                      "video_id": 1,
+                      "video_title": "測試影片 1",
+                      "purchased_at": "2025-01-07 10:30:00"
+                    },
+                    {
+                      "video_id": 2,
+                      "video_title": "測試影片 2",
+                      "purchased_at": "2025-01-06 15:20:00"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁碼，默認 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每頁數量，默認 20，最大 100",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/purchase/order/{order_id}": {
+      "get": {
+        "summary": "4.1 查詢訂單詳情",
+        "description": "根據訂單號查詢訂單詳情\n\n訂單類型：\n- MEMBERSHIP: 會員訂單\n- VIDEO_CONTENT: 影片訂單\n\n訂單狀態 (order_status)：\n- 0: 待支付\n- 1: 已完成\n- 2: 已取消\n- 3: 已退款\n\n支付狀態 (payment_status)：\n- 0: 待支付\n- 1: 支付中\n- 2: 已支付\n- 3: 支付失敗\n- 4: 已退款",
+        "tags": [
+          "4. 訂單查詢相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "order_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                  "ticket": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                  "order_type": "VIDEO_CONTENT",
+                  "price": 9.99,
+                  "currency": "DIAMOND",
+                  "payment_method": "DIAMOND",
+                  "payment_order_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                  "payment_status": 2,
+                  "payment_time": "2025-01-07 10:30:00",
+                  "order_status": 1,
+                  "created_at": "2025-01-07 10:30:00",
+                  "updated_at": "2025-01-07 10:30:00",
+                  "video_id": 1,
+                  "video_title": "測試影片 1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/purchase/orders": {
+      "get": {
+        "summary": "4.2 查詢訂單列表",
+        "description": "查詢用戶的訂單列表，支持按分類、狀態、日期範圍篩選\n\n分類 (category)：\n- CONSUMPTION: 消費紀錄（包含會員資格購買 + 鑽石購買影片）\n- DIAMOND_RECHARGE: 鑽石充值紀錄\n- DEPOSIT_WITHDRAW: 充提紀錄（存款 + 取款）\n- 空值: 返回所有類型\n\n帳單類別子篩選 (order_type)：根據 category 動態變化\n- category=CONSUMPTION: VIDEO_CONTENT（鑽石購買）、MEMBERSHIP（會員購買）\n- category=DEPOSIT_WITHDRAW: DEPOSIT（存款）、WITHDRAW（取款）\n- category=DIAMOND_RECHARGE: 無子類別\n\n時間範圍 (days)：\n- 7: 最近7天\n- 14: 最近14天\n- 30: 最近30天\n- 優先於 start_date/end_date 參數\n\n響應說明：\n- filters 欄位包含可用的篩選選項\n  - order_types: 訂單類型選項（根據 category 動態返回）\n  - order_status: 訂單狀態選項\n  - date_ranges: 時間範圍選項（包含計算好的 start_date/end_date）\n\n注意：DEPOSIT_WITHDRAW 類別目前回傳空內容，待後續實作",
+        "tags": [
+          "4. 訂單查詢相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "total": 2,
+                  "page": 1,
+                  "page_size": 20,
+                  "orders": [
+                    {
+                      "ticket": "VC20260115120000001",
+                      "order_type": "VIDEO_CONTENT",
+                      "title": "測試影片 1",
+                      "amount": 9.99,
+                      "currency": "DIAMOND",
+                      "order_status": 1,
+                      "payment_status": 2,
+                      "created_at": "2026-01-15 10:30:00"
+                    },
+                    {
+                      "ticket": "XC20260114150000001",
+                      "order_type": "MEMBERSHIP",
+                      "title": "月度會員",
+                      "amount": 29.99,
+                      "currency": "CNY",
+                      "order_status": 1,
+                      "payment_status": 2,
+                      "created_at": "2026-01-14 15:20:00"
+                    }
+                  ],
+                  "filters": {
+                    "order_types": [
+                      {
+                        "value": "",
+                        "label": "全部類別"
+                      },
+                      {
+                        "value": "VIDEO_CONTENT",
+                        "label": "鑽石購買"
+                      },
+                      {
+                        "value": "MEMBERSHIP",
+                        "label": "會員購買"
+                      }
+                    ],
+                    "order_status": [
+                      {
+                        "value": "",
+                        "label": "全部狀態"
+                      },
+                      {
+                        "value": "0",
+                        "label": "待支付"
+                      },
+                      {
+                        "value": "1",
+                        "label": "已完成"
+                      },
+                      {
+                        "value": "2",
+                        "label": "已取消"
+                      },
+                      {
+                        "value": "3",
+                        "label": "已退款"
+                      }
+                    ],
+                    "date_ranges": [
+                      {
+                        "days": 7,
+                        "label": "最近7天",
+                        "start_date": "2026-01-09",
+                        "end_date": "2026-01-15"
+                      },
+                      {
+                        "days": 14,
+                        "label": "最近14天",
+                        "start_date": "2026-01-02",
+                        "end_date": "2026-01-15"
+                      },
+                      {
+                        "days": 30,
+                        "label": "最近30天",
+                        "start_date": "2025-12-17",
+                        "end_date": "2026-01-15"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁碼，默認 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每頁數量，默認 20，最大 100",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "分類：CONSUMPTION（消費訂單）、DIAMOND_RECHARGE（鑽石充值）、DEPOSIT_WITHDRAW（充提紀錄）",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "BaseResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "状态码，0=成功"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

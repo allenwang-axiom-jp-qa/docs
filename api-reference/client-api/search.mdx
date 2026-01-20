@@ -1,0 +1,35 @@
+---
+title: '影片搜索 API'
+description: '视频搜索服务，支持关键词搜索和多维度筛选'
+openapi: client-api/search-openapi.json
+---
+
+# 影片搜索服务 API
+
+提供视频搜索和筛选功能的 API 接口。
+
+## 功能模块
+
+### 搜索功能
+- 关键词搜索
+- 标签搜索
+- 分类搜索
+
+### 筛选功能
+- 按发布时间筛选
+- 按热度筛选
+- 按时长筛选
+- 按清晰度筛选
+
+### 排序方式
+- 最新发布
+- 最多观看
+- 最多点赞
+- 最多收藏
+
+## 搜索示例
+
+```bash
+curl -X GET "https://api.example.com/api/v1/search/videos?keyword=test&page=1&page_size=20" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```

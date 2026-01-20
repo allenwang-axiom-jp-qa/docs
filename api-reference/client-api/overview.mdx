@@ -1,0 +1,71 @@
+---
+title: '用户端 API 概览'
+description: '用户端服务 API 文档 - 包含客户端、认证、搜索、社交、购买、支付等功能'
+---
+
+# 用户端 API
+
+用户端 API 是面向终端用户的服务接口，提供完整的用户体验功能。
+
+## 服务模块
+
+<CardGroup cols={2}>
+  <Card title="CMS 客户端 API" icon="mobile" href="/api-reference/client-api/cms-client">
+    用户基础功能，包括首页、视频列表、用户资料等
+  </Card>
+  <Card title="2FA 认证 API" icon="shield-check" href="/api-reference/client-api/2fa">
+    双因素认证相关接口，支持 Google Authenticator
+  </Card>
+  <Card title="影片搜索 API" icon="magnifying-glass" href="/api-reference/client-api/search">
+    视频搜索服务，支持关键词搜索和筛选
+  </Card>
+  <Card title="社交互动 API" icon="comments" href="/api-reference/client-api/social">
+    评论、点赞、收藏等社交互动功能
+  </Card>
+  <Card title="影音购买 API" icon="cart-shopping" href="/api-reference/client-api/purchase">
+    会员方案、钻石充值、影片购买等消费功能
+  </Card>
+  <Card title="支付服务 API" icon="credit-card" href="/api-reference/client-api/payment">
+    第三方支付集成，支持多种支付渠道
+  </Card>
+  <Card title="广告影片 API" icon="video" href="/api-reference/client-api/advideo">
+    广告影片服务接口
+  </Card>
+</CardGroup>
+
+## 认证方式
+
+所有用户端 API 都需要通过 JWT Token 进行认证：
+
+```bash
+curl -X GET "https://api.example.com/api/v1/client/..." \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+## 基础响应格式
+
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    // 响应数据
+  }
+}
+```
+
+### 错误码说明
+
+| 错误码 | 说明 |
+|--------|------|
+| 0 | 成功 |
+| 401 | 未授权 |
+| 403 | 禁止访问 |
+| 404 | 资源不存在 |
+| 500 | 服务器内部错误 |
+
+## 开发环境
+
+- **API 地址**: `https://dev-client.beauty-666.com`
+- **文档地址**: `https://axiom-b5511498.mintlify.app`

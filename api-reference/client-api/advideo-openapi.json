@@ -1,0 +1,101 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "廣告影片服務 API",
+    "description": "廣告影片服務 API 測試集合 - 包含影片播放進度追蹤、廣告觸發相關接口\n\n**Base URL**: `/api/v1/advideo`\n\n**服務說明**:\n- 功能：影片播放時間追蹤 + 廣告觸發（前端每 5 秒回報進度，累積達閾值後觸發廣告）\n\n**認證說明**:\n- 目前所有接口不需要 Bearer Token（使用 user_id 參數識別用戶）\n\n**注意**:\n- 短視頻列表接口已移至 client 服務: GET /api/v1/client/shortvideo",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://dev-client.beauty-666.com",
+      "description": "开发环境"
+    }
+  ],
+  "tags": [
+    {
+      "name": "1. 影片播放進度追蹤",
+      "description": "影片播放進度追蹤相關接口\n\n**業務流程**：\n1. 用戶開始觀看影片\n2. 前端每 5 秒調用 progress API 回報觀看時間\n3. 服務端使用 Redis 累積用戶觀看時間（TTL 24 小時）\n4. 當累積時間達到閾值（預設 600 秒）時，返回廣告影片\n5. 觸發廣告後重置累積時間"
+    }
+  ],
+  "paths": {
+    "/api/v1/advideo/progress": {
+      "post": {
+        "summary": "1.1 回報播放進度",
+        "description": "回報用戶觀看影片的進度\n\n**調用時機**：前端每 5 秒調用一次\n\n**Request Body**:\n- user_id: 用戶 ID（必填）\n- video_id: 影片 ID（必填）\n- watched_sec: 本次觀看秒數（必填，最小值 1）\n- product: 產品代碼（必填）\n\n**Response**:\n- trigger_ad: 是否觸發廣告\n- ad_video_url: 廣告影片 URL（觸發時返回）\n- ad_id: 廣告 ID（觸發時返回）\n- ad_name: 廣告名稱（觸發時返回）\n- ad_thumbnail_url: 廣告縮圖 URL（觸發時返回）\n- ad_link_url: 廣告連結 URL（觸發時返回）\n- ad_duration: 廣告時長（觸發時返回）\n- accumulated_sec: 當前累積觀看秒數\n\n**閾值說明**：\n- 預設閾值為 600 秒（10 分鐘）\n- 達到閾值後觸發廣告並重置計時器",
+        "tags": [
+          "1. 影片播放進度追蹤"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": {
+                    "trigger_ad": false,
+                    "accumulated_sec": 5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "integer"
+                  },
+                  "video_id": {
+                    "type": "string"
+                  },
+                  "watched_sec": {
+                    "type": "integer"
+                  },
+                  "product": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "BaseResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "状态码，0=成功"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

@@ -58,6 +58,19 @@
       ]
     },
     {
+      "group": "用户端 API",
+      "pages": [
+        "api-reference/client-api/overview",
+        "api-reference/client-api/cms-client",
+        "api-reference/client-api/2fa",
+        "api-reference/client-api/search",
+        "api-reference/client-api/social",
+        "api-reference/client-api/purchase",
+        "api-reference/client-api/payment",
+        "api-reference/client-api/advideo"
+      ]
+    },
+    {
       "group": "Homepage API",
       "pages": [
         "api-reference/homepage/overview",
@@ -225,6 +238,9 @@
   "footerSocials": {
     "github": "https://github.com/axiom888/cms-site-svc-oms"
   },
+  "openapi": [
+    "api-reference/client-api/client-api-openapi.json"
+  ],
   "api": {
     "baseUrl": "https://dev-admin.beauty-666.com",
     "auth": {

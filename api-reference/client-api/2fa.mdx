@@ -1,0 +1,25 @@
+---
+title: '2FA 认证 API'
+description: '双因素认证相关接口，支持 Google Authenticator'
+openapi: client-api/2fa-openapi.json
+---
+
+# 客户端 2FA 认证 API
+
+提供双因素认证功能的 API 接口。
+
+## 功能说明
+
+### 支持的认证方式
+- Google Authenticator (TOTP)
+
+### 使用流程
+
+1. **获取 2FA 密钥** - 用户首次开启 2FA 时调用
+2. **绑定 2FA** - 验证用户输入的验证码并完成绑定
+3. **验证 2FA** - 登录时验证 2FA 验证码
+4. **解绑 2FA** - 关闭 2FA 功能
+
+<Warning>
+2FA 密钥仅在绑定时显示一次，请提醒用户妥善保管。
+</Warning>
