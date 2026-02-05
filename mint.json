@@ -27,15 +27,15 @@
   },
   "tabs": [
     {
-      "name": "OMS API",
+      "name": "CMS API",
       "url": "api-reference"
     },
     {
-      "name": "Client API",
+      "name": "客户端 API",
       "url": "client-api"
     },
     {
-      "name": "Deployment",
+      "name": "部署指南",
       "url": "deployment"
     }
   ],
@@ -56,26 +56,13 @@
       ]
     },
     {
-      "group": "OMS API Reference",
+      "group": "CMS API 总览",
       "pages": [
         "api-reference/overview"
       ]
     },
     {
-      "group": "客户端 API",
-      "pages": [
-        "api-reference/client-api/overview",
-        "api-reference/client-api/cms-client",
-        "api-reference/client-api/2fa",
-        "api-reference/client-api/search",
-        "api-reference/client-api/social",
-        "api-reference/client-api/purchase",
-        "api-reference/client-api/payment",
-        "api-reference/client-api/advideo"
-      ]
-    },
-    {
-      "group": "Homepage API",
+      "group": "首页模块 API",
       "pages": [
         "api-reference/homepage/overview",
         {
@@ -225,14 +212,14 @@
       ]
     },
     {
-      "group": "推荐算法",
+      "group": "推荐算法配置",
       "pages": [
         "api-reference/algorithm/get-recommend-config",
         "api-reference/algorithm/update-recommend-config"
       ]
     },
     {
-      "group": "Client API 总览",
+      "group": "客户端 API 总览",
       "pages": [
         "api-reference/client-api/overview"
       ]
@@ -457,7 +444,7 @@
       ]
     },
     {
-      "group": "Deployment",
+      "group": "部署与运维",
       "pages": [
         "deployment/setup",
         "deployment/ci-cd"
