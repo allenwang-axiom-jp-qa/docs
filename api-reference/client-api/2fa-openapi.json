@@ -1,0 +1,203 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "客戶端 2FA 認證 API",
+    "description": "CMS 網站客戶端 2FA/MFA 認證服務 API 測試集合\n\n## 使用說明\n\n1. 先執行「登入」取得 access_token\n2. 執行「設置 TOTP」取得 QR Code 和密鑰\n3. 使用 Google Authenticator 掃描 QR Code\n4. 執行「激活 TOTP」輸入驗證碼完成綁定\n5. 使用「驗證 MFA」測試驗證功能",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://dev-client.beauty-666.com",
+      "description": "开发环境"
+    }
+  ],
+  "tags": [],
+  "paths": {
+    "/api/v1/client/login": {
+      "post": {
+        "summary": "1. 登入（取得 Token）",
+        "description": "登入取得 access_token，用於後續 API 調用",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/profile": {
+      "get": {
+        "summary": "2. 獲取個人資訊（檢查 2FA 狀態）",
+        "description": "獲取個人資訊，檢查 has_2fa 欄位確認 2FA 狀態",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/my/mfa/totp/setup": {
+      "post": {
+        "summary": "3. 設置 TOTP（獲取 QR Code）",
+        "description": "設置 TOTP，需要輸入用戶密碼驗證身份\n\n返回：\n- totp_url: QR Code URL（可用於生成二維碼）\n- totp_secret: TOTP 密鑰（可手動輸入到驗證器）\n- totp_label: 標籤",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/my/mfa/totp/activate": {
+      "put": {
+        "summary": "4. 激活 TOTP",
+        "description": "激活 TOTP\n\n使用 Google Authenticator 或其他驗證器應用掃描步驟 3 返回的 QR Code，然後輸入 6 位數驗證碼\n\n注意：需要先設置環境變數 {{totp_code}} 或直接在 body 中填入驗證碼",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/my/mfa/validate": {
+      "post": {
+        "summary": "5. 驗證 MFA",
+        "description": "驗證 MFA 驗證碼\n\n用於測試 TOTP 驗證是否正常工作，或在敏感操作前進行驗證\n\n返回：\n- valid: true/false 表示驗證碼是否有效",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "BaseResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "状态码，0=成功"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2911 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "用户端 API",
+    "description": "CMS 用户端服务 API - 包含客户端、认证、搜索、社交、购买、支付等功能",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://dev-client.beauty-666.com",
+      "description": "开发环境"
+    }
+  ],
+  "tags": [
+    {
+      "name": "1. 公開接口",
+      "description": ""
+    },
+    {
+      "name": "2. 自助註冊",
+      "description": ""
+    },
+    {
+      "name": "3. 已認證用戶接口",
+      "description": ""
+    },
+    {
+      "name": "4. 資金密碼",
+      "description": ""
+    },
+    {
+      "name": "5. 驗證碼接口（dev不可用）",
+      "description": ""
+    },
+    {
+      "name": "6. 影片相關",
+      "description": ""
+    },
+    {
+      "name": "7. 短影片相關",
+      "description": ""
+    },
+    {
+      "name": "1. 影片播放進度追蹤",
+      "description": "影片播放進度追蹤相關接口\n\n**業務流程**：\n1. 用戶開始觀看影片\n2. 前端每 5 秒調用 progress API 回報觀看時間\n3. 服務端使用 Redis 累積用戶觀看時間（TTL 24 小時）\n4. 當累積時間達到閾值（預設 600 秒）時，返回廣告影片\n5. 觸發廣告後重置累積時間"
+    },
+    {
+      "name": "1. 影片搜索",
+      "description": "影片搜索相關接口"
+    },
+    {
+      "name": "2. 標籤相關",
+      "description": "標籤相關接口"
+    },
+    {
+      "name": "3. 熱門搜索",
+      "description": "熱門搜索相關接口"
+    },
+    {
+      "name": "4. 搜索歷史",
+      "description": "搜索歷史相關接口（需要登入）"
+    },
+    {
+      "name": "5. 播放影片",
+      "description": ""
+    },
+    {
+      "name": "1. 會員相關",
+      "description": "會員相關接口，包含獲取方案列表和查詢會員狀態"
+    },
+    {
+      "name": "2. 鑽石充值相關",
+      "description": "鑽石充值相關接口，包含獲取充值方案列表"
+    },
+    {
+      "name": "3. 影片購買相關",
+      "description": "影片購買相關接口\n\n注意：影片購買只支持鑽石支付方式"
+    },
+    {
+      "name": "4. 訂單查詢相關",
+      "description": "訂單查詢相關的接口，包含查詢單個訂單和訂單列表"
+    },
+    {
+      "name": "1. 評論相關",
+      "description": "評論相關的所有接口，包含發表評論、回覆、列表查詢、刪除"
+    },
+    {
+      "name": "2. 按讚相關",
+      "description": "按讚相關的所有接口，包含影片按讚、評論按讚和批量檢查"
+    },
+    {
+      "name": "3. 收藏相關",
+      "description": "收藏相關的所有接口，包含收藏影片、收藏列表查詢和批量檢查"
+    },
+    {
+      "name": "1. 鑽石充值 (Diamond)",
+      "description": ""
+    },
+    {
+      "name": "2. 會員購買 (Membership)",
+      "description": ""
+    },
+    {
+      "name": "3. 訂單查詢",
+      "description": ""
+    },
+    {
+      "name": "4. 回調測試 (Callback)",
+      "description": ""
+    },
+    {
+      "name": "5. 錯誤測試",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/api/v1/client/login": {
+      "post": {
+        "summary": "1. 登入（取得 Token）",
+        "description": "登入取得 access_token，用於後續 API 調用",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/refresh_token": {
+      "post": {
+        "summary": "刷新令牌",
+        "description": "",
+        "tags": [
+          "1. 公開接口"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiL2dFWi80RURBUUVKVlhObGNsUnZhMlZ1QWYrQ0FBRVNBUU5WU1VRQkJnQUJCMUJ5YjJSMVkzUUJEQUFCQjBGalkyOTFiblFCREFBQkMwZGhiV1ZCWTJOdmRXNTBBUXdBQVFWRVpYQjBhQUVFQUFFSVZYTmxjbFI1Y0dVQkJBQUJDMEZqWTI5MWJuUlVlWEJsQVFRQUFRdEJaRzFwYmxWelpYSkpSQUVHQUFFTVJtRjBhR1Z5VlhObGNrbEVBUVlBQVF0R2FYSnpkRlZ6WlhKSlJBRUdBQUVQVW1WaGJFMXZibVY1VlhObGNrbEVBUVlBQVJCSmJuUnliMlIxWTJWeVZYTmxja2xFQVFZQUFRWlNiMnhsU1VRQkJnQUJCa2x6UTJGemFBRUNBQUVIVTJWeWRtbGpaUUVNQUFFSVVHeGhkR1p2Y20wQkJBQUJERkpsWjJsemRHVnlSbkp2YlFFRUFBRU1SR2x6WTI5MWJuUkdjbTl0QVFZQUFBQk0vNElCSmdFRlVqZzRPRGdCQzJSaGJtRnNYM2h6YVhSbEFRMDBNblkxZWpGak1tMHhaRFZtQVFnQkJnRUNBUUlCRndFU0FSSUJIQUVFQWdwamJYTXRZMnhwWlc1MEFRSUJBZ0VCQUE9PSIsImlzcyI6IlI4ODg4IiwiZXhwIjoxNzY2NTQ4MjQwLCJpYXQiOjE3NjY1NDY0NDB9.VUgZlM3ZxhotKMCxmqy_SKTCtcvl_qmExGkhZG9TGyIW0VMyKoDNS9gTT1jFZZWxZJCZm_sNWG6wDn6i9BFvrx9nVKO_xz6Nkv0ep2cXpYlj6ppcPpFZ3LVl1hhNZ_8pvWfYgzRnw82SyJ_JHb1kc9HTLJboRjdgs-IyQDWpL72FUVgyIeD3fGnOAS3crdhGto5f1icRVTcG_7JeDHd_ppRaWzk9A5XnTvIwpuiyq-4IfBdM6Grd4CdMBXRg2p7MOOpxD-Xtri0Wk9w3_PJReILX-mOUIyeeSgx4zrwRA5_l4-5Jg1kRVhaLRPpaSxWkHZk9DUjmKRbMUlluBzecZw",
+                  "refresh_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiL2dFWi80RURBUUVKVlhObGNsUnZhMlZ1QWYrQ0FBRVNBUU5WU1VRQkJnQUJCMUJ5YjJSMVkzUUJEQUFCQjBGalkyOTFiblFCREFBQkMwZGhiV1ZCWTJOdmRXNTBBUXdBQVFWRVpYQjBhQUVFQUFFSVZYTmxjbFI1Y0dVQkJBQUJDMEZqWTI5MWJuUlVlWEJsQVFRQUFRdEJaRzFwYmxWelpYSkpSQUVHQUFFTVJtRjBhR1Z5VlhObGNrbEVBUVlBQVF0R2FYSnpkRlZ6WlhKSlJBRUdBQUVQVW1WaGJFMXZibVY1VlhObGNrbEVBUVlBQVJCSmJuUnliMlIxWTJWeVZYTmxja2xFQVFZQUFRWlNiMnhsU1VRQkJnQUJCa2x6UTJGemFBRUNBQUVIVTJWeWRtbGpaUUVNQUFFSVVHeGhkR1p2Y20wQkJBQUJERkpsWjJsemRHVnlSbkp2YlFFRUFBRU1SR2x6WTI5MWJuUkdjbTl0QVFZQUFBQk0vNElCSmdFRlVqZzRPRGdCQzJSaGJtRnNYM2h6YVhSbEFRMDBNblkxZWpGak1tMHhaRFZtQVFnQkJnRUNBUUlCRndFU0FSSUJIQUVFQWdwamJYTXRZMnhwWlc1MEFRSUJBZ0VCQUE9PSIsImlzcyI6IlI4ODg4IiwiZXhwIjoxNzY2NTUwMDQwLCJpYXQiOjE3NjY1NDY0NDB9.YRwHPNa4QgCcsV0x5xW69SjmYvTVEA-EWbs9P6ekVUnKfB5QP-vVZRUWyJc_lPO6dRZAAQQ9MkpeWMqxs1JdxuJbCGbOUtAddPvzP3qAlfP4s1DHSoQIlD763DZxuUt2CYItlpiXzwFmPWOH24lkWCoEKrKuiSltzdgIuJWhBmfFgH9o32efSuc2m6rT2XCErge1Q-gJNpi_40b8Y3GZyWy_-YHMrnGH8prMq0sVkZ-zZCaEcgp2GNZBEauSVcxJRA-6i8QYTWmbUVJTqpvpUd29mvgQAhDteu4pKmGiRa617-bwL0mlltAB6oxD3SFLfpCRYiaRrouObYmoonj0fg",
+                  "expire_time": 1766548240
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/self/info": {
+      "get": {
+        "summary": "獲取自助註冊資訊",
+        "description": "",
+        "tags": [
+          "2. 自助註冊"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "online_customer_service": "https://web-rel.chatrevo.ai/customer_support/019a47bf-0ae0-717f-9eb3-e1d0c35d7693?platform=AGS_CREDIT&back=iframe_close",
+                  "app_download_url": "https://cms-download-ui-r8888.ags-dev.cc",
+                  "client_url": "https://cms-client-ui-r8888.ags-dev.cc"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/self/suggest": {
+      "get": {
+        "summary": "生成帳號密碼",
+        "description": "",
+        "tags": [
+          "2. 自助註冊"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "account": "user_sinno6",
+                  "password": "wLI2UIsd"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/self/register": {
+      "post": {
+        "summary": "自助註冊",
+        "description": "",
+        "tags": [
+          "2. 自助註冊"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "product": "R8888",
+                  "account": "danal_xsite2"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "account": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/profile": {
+      "get": {
+        "summary": "2. 獲取個人資訊（檢查 2FA 狀態）",
+        "description": "獲取個人資訊，檢查 has_2fa 欄位確認 2FA 狀態",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/balance": {
+      "get": {
+        "summary": "獲取餘額",
+        "description": "",
+        "tags": [
+          "3. 已認證用戶接口"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "balance": 0
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/change_password": {
+      "put": {
+        "summary": "重設密碼（尚未定案）",
+        "description": "",
+        "tags": [
+          "3. 已認證用戶接口"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/change_nickname": {
+      "put": {
+        "summary": "修改暱稱",
+        "description": "",
+        "tags": [
+          "3. 已認證用戶接口"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nickname": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/withdrawal/set": {
+      "post": {
+        "summary": "設置資金密碼（首次）",
+        "description": "",
+        "tags": [
+          "4. 資金密碼"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/withdrawal/update": {
+      "post": {
+        "summary": "更新資金密碼",
+        "description": "",
+        "tags": [
+          "4. 資金密碼"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "old_password": {
+                    "type": "string"
+                  },
+                  "new_password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/withdrawal/check-password": {
+      "post": {
+        "summary": "驗證資金密碼",
+        "description": "",
+        "tags": [
+          "4. 資金密碼"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/withdrawal/reset-password/phone/code": {
+      "post": {
+        "summary": "重置資金密碼-發送手機驗證碼",
+        "description": "",
+        "tags": [
+          "4. 資金密碼"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/withdrawal/reset-password/email/code": {
+      "post": {
+        "summary": "重置資金密碼-發送郵箱驗證碼",
+        "description": "",
+        "tags": [
+          "4. 資金密碼"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/withdrawal/reset-password/confirm": {
+      "post": {
+        "summary": "重置資金密碼-確認",
+        "description": "",
+        "tags": [
+          "4. 資金密碼"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/verify/phone/code": {
+      "post": {
+        "summary": "獲取手機驗證碼（未完成）",
+        "description": "",
+        "tags": [
+          "5. 驗證碼接口（dev不可用）"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "country_code": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/verify/phone/confirm": {
+      "post": {
+        "summary": "確認手機驗證碼（未完成）",
+        "description": "",
+        "tags": [
+          "5. 驗證碼接口（dev不可用）"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/verify/email/code": {
+      "post": {
+        "summary": "獲取郵箱驗證碼",
+        "description": "",
+        "tags": [
+          "5. 驗證碼接口（dev不可用）"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "request_id": "3bbf035d-8afc-4034-b30a-92bb1afaa7dc",
+                  "expired_at": 1766546867
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/verify/email/confirm": {
+      "post": {
+        "summary": "確認郵箱驗證碼",
+        "description": "",
+        "tags": [
+          "5. 驗證碼接口（dev不可用）"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/video/{video_id}": {
+      "get": {
+        "summary": "獲取影片詳情",
+        "description": "獲取影片詳情（包含購買狀態）\n\n支援遊客訪問（不需要 token），會根據用戶狀態返回不同的觀看權限\n\n觀看邏輯：\n1. 免費影片 (is_free=true)：所有人都可以觀看\n2. VIP 專享 (is_vip=true)：VIP 會員可以觀看\n3. 付費影片：已購買的用戶可以觀看",
+        "tags": [
+          "6. 影片相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "video_id": 1,
+                  "video_number": "VID001",
+                  "title": "測試影片",
+                  "description": "這是一個測試影片",
+                  "cover_image": "https://example.com/cover.jpg",
+                  "hls_playlist": "https://example.com/video/playlist.m3u8",
+                  "duration_seconds": 300,
+                  "resolution": "1920x1080",
+                  "codec": "h264",
+                  "bitrate_kbps": 5000,
+                  "category_id": 1,
+                  "category_name": "測試分類",
+                  "video_type": 2,
+                  "is_free": false,
+                  "is_vip": false,
+                  "price": 10.0,
+                  "trial_seconds": 30,
+                  "view_count": 1000,
+                  "like_count": 50,
+                  "favorite_count": 20,
+                  "comment_count": 10,
+                  "is_recommend": true,
+                  "recommend_weight": 0.8,
+                  "is_purchased": true,
+                  "is_liked": false,
+                  "is_favorited": false,
+                  "created_at": "2025-01-01 00:00:00",
+                  "updated_at": "2025-01-01 00:00:00",
+                  "can_watch": true,
+                  "tags": [
+                    {
+                      "id": 1,
+                      "name": "熱門"
+                    }
+                  ],
+                  "ad_config": {
+                    "vip_skip_ads": true,
+                    "pre_rolls": [],
+                    "mid_rolls": [],
+                    "post_rolls": []
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/video/{video_id}/progress": {
+      "get": {
+        "summary": "獲取影片觀看進度",
+        "description": "獲取單個影片的觀看進度，用於「繼續觀看」功能",
+        "tags": [
+          "6. 影片相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "video_id": 1,
+                  "video_duration": 300,
+                  "watch_duration": 150,
+                  "watch_progress": 50.0,
+                  "last_watch_time": "2025-01-01 12:00:00"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/video/history": {
+      "post": {
+        "summary": "更新觀看歷史",
+        "description": "用戶觀看影片時調用，更新觀看時長、進度和最後觀看時間",
+        "tags": [
+          "6. 影片相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "success"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "integer"
+                  },
+                  "video_id": {
+                    "type": "integer"
+                  },
+                  "video_duration": {
+                    "type": "integer"
+                  },
+                  "watch_duration": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "獲取觀看歷史列表",
+        "description": "分頁查詢用戶的觀看歷史，按最後觀看時間倒序",
+        "tags": [
+          "6. 影片相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "total": 5,
+                  "page": 1,
+                  "page_size": 20,
+                  "items": [
+                    {
+                      "video_id": 1,
+                      "video_title": "測試影片",
+                      "video_cover_path": "https://example.com/cover.jpg",
+                      "video_duration": 300,
+                      "watch_duration": 150,
+                      "watch_progress": 50.0,
+                      "last_watch_time": "2025-01-01 12:00:00"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁碼，默認 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每頁數量，默認 20，最大 100",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "summary": "清空所有觀看歷史",
+        "description": "清空用戶所有觀看歷史",
+        "tags": [
+          "6. 影片相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "success"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/video/history/{video_id}": {
+      "delete": {
+        "summary": "刪除單條觀看歷史",
+        "description": "刪除指定影片的觀看歷史",
+        "tags": [
+          "6. 影片相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "success"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/shortvideo": {
+      "get": {
+        "summary": "獲取短影片列表",
+        "description": "獲取短影片列表（含原生廣告）\n\n支援遊客訪問（不需要 token），會根據用戶狀態返回不同的廣告配置\n\n返回內容包含：\n- 短影片列表（type: video）\n- 原生廣告（type: ad）\n- 廣告配置（ad_config）",
+        "tags": [
+          "7. 短影片相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "total": 100,
+                  "page": 1,
+                  "page_size": 10,
+                  "items": [
+                    {
+                      "type": "video",
+                      "id": "1",
+                      "title": "測試短影片",
+                      "url": "https://example.com/video/short1.mp4",
+                      "thumbnail_url": "https://example.com/thumb/short1.jpg",
+                      "duration": 30,
+                      "tags": [
+                        {
+                          "id": 1,
+                          "name": "熱門"
+                        }
+                      ],
+                      "is_liked": false,
+                      "is_favorited": false,
+                      "like_count": 100,
+                      "favorite_count": 50,
+                      "comment_count": 10
+                    },
+                    {
+                      "type": "ad",
+                      "id": "ad_001",
+                      "title": "廣告標題",
+                      "url": "https://example.com/ad/video.mp4",
+                      "thumbnail_url": "https://example.com/ad/thumb.jpg",
+                      "duration": 15,
+                      "tags": [],
+                      "is_liked": false,
+                      "is_favorited": false,
+                      "like_count": 0,
+                      "favorite_count": 0,
+                      "comment_count": 0,
+                      "ad_info": {
+                        "advertiser_nickname": "廣告主",
+                        "advertiser_avatar": "https://example.com/avatar.jpg",
+                        "advertiser_intro": "廣告主介紹",
+                        "action_button": "立即查看",
+                        "jump_link": "https://example.com/landing",
+                        "mock_likes": 999
+                      }
+                    }
+                  ],
+                  "ad_config": {
+                    "enabled": true,
+                    "first_position": 3,
+                    "interval_count": 5,
+                    "style_type": "native"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁碼，默認 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每頁數量，默認 10，最大 50",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/my/mfa/totp/setup": {
+      "post": {
+        "summary": "3. 設置 TOTP（獲取 QR Code）",
+        "description": "設置 TOTP，需要輸入用戶密碼驗證身份\n\n返回：\n- totp_url: QR Code URL（可用於生成二維碼）\n- totp_secret: TOTP 密鑰（可手動輸入到驗證器）\n- totp_label: 標籤",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/my/mfa/totp/activate": {
+      "put": {
+        "summary": "4. 激活 TOTP",
+        "description": "激活 TOTP\n\n使用 Google Authenticator 或其他驗證器應用掃描步驟 3 返回的 QR Code，然後輸入 6 位數驗證碼\n\n注意：需要先設置環境變數 {{totp_code}} 或直接在 body 中填入驗證碼",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/my/mfa/validate": {
+      "post": {
+        "summary": "5. 驗證 MFA",
+        "description": "驗證 MFA 驗證碼\n\n用於測試 TOTP 驗證是否正常工作，或在敏感操作前進行驗證\n\n返回：\n- valid: true/false 表示驗證碼是否有效",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/advideo/progress": {
+      "post": {
+        "summary": "1.1 回報播放進度",
+        "description": "回報用戶觀看影片的進度\n\n**調用時機**：前端每 5 秒調用一次\n\n**Request Body**:\n- user_id: 用戶 ID（必填）\n- video_id: 影片 ID（必填）\n- watched_sec: 本次觀看秒數（必填，最小值 1）\n- product: 產品代碼（必填）\n\n**Response**:\n- trigger_ad: 是否觸發廣告\n- ad_video_url: 廣告影片 URL（觸發時返回）\n- ad_id: 廣告 ID（觸發時返回）\n- ad_name: 廣告名稱（觸發時返回）\n- ad_thumbnail_url: 廣告縮圖 URL（觸發時返回）\n- ad_link_url: 廣告連結 URL（觸發時返回）\n- ad_duration: 廣告時長（觸發時返回）\n- accumulated_sec: 當前累積觀看秒數\n\n**閾值說明**：\n- 預設閾值為 600 秒（10 分鐘）\n- 達到閾值後觸發廣告並重置計時器",
+        "tags": [
+          "1. 影片播放進度追蹤"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": {
+                    "trigger_ad": false,
+                    "accumulated_sec": 5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "integer"
+                  },
+                  "video_id": {
+                    "type": "string"
+                  },
+                  "watched_sec": {
+                    "type": "integer"
+                  },
+                  "product": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search/videos": {
+      "get": {
+        "summary": "1.1 關鍵字搜索影片",
+        "description": "根據關鍵字搜索影片（模糊搜索影片標題和標籤）\n\n認證：可選（登入後會記錄搜索歷史）\n\n排序方式：\n- latest: 按創建時間降序\n- popular: 按播放量降序\n- recommended: 按推薦權重降序\n\n返回：\n- videos: 影片列表\n- total: 總數\n- page: 當前頁\n- page_size: 每頁數量\n- has_more: 是否有更多",
+        "tags": [
+          "1. 影片搜索"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "videos": [
+                    {
+                      "video_id": 1,
+                      "title": "星際冒險",
+                      "description": "一段驚心動魄的宇宙探險之旅",
+                      "cover_path": "/covers/video_001.jpg",
+                      "duration_seconds": 7200,
+                      "category": "5",
+                      "video_type": 2,
+                      "is_free": false,
+                      "is_vip": true,
+                      "price": "99.00",
+                      "view_count": 158000,
+                      "like_count": 12500,
+                      "favorite_count": 8900,
+                      "comment_count": 2300,
+                      "tags": [
+                        "熱門",
+                        "高畫質"
+                      ],
+                      "created_time": "2025-12-17 10:45:34"
+                    }
+                  ],
+                  "total": 1,
+                  "page": 1,
+                  "page_size": 20,
+                  "has_more": false
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "description": "搜索關鍵字（必填）- 模糊搜索標題和標籤",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁碼，默認 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每頁數量，默認 20，最大 50",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "description": "排序方式：latest（最新）、popular（熱門）、recommended（推薦）",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/search/videos/tags": {
+      "get": {
+        "summary": "1.2 根據多個標籤搜索影片（AND條件）",
+        "description": "根據多個標籤 ID 搜索影片（AND 條件）\n\n認證：可選\n\nQuery 參數：\n- tag_ids: 標籤 ID 列表，逗號分隔，如 \"1,2,3\"\n\n重要說明：\n- 使用 AND 條件\n- 只返回同時擁有所有指定標籤的影片\n- 例如 tag_ids=1,2,3 會返回同時有標籤 1、2、3 的影片\n\n返回：\n- videos: 影片列表\n- total: 總數\n- page: 當前頁\n- page_size: 每頁數量\n- has_more: 是否有更多",
+        "tags": [
+          "1. 影片搜索"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "videos": [
+                    {
+                      "video_id": 7,
+                      "title": "搞笑短片集",
+                      "description": "精選最爆笑的短片合集",
+                      "cover_path": "/covers/video_007.jpg",
+                      "duration_seconds": 600,
+                      "category": "2",
+                      "video_type": 1,
+                      "is_free": true,
+                      "is_vip": false,
+                      "price": "0.00",
+                      "view_count": 312000,
+                      "like_count": 28000,
+                      "favorite_count": 12000,
+                      "comment_count": 8900,
+                      "tags": [
+                        "熱門",
+                        "新上架"
+                      ],
+                      "created_time": "2025-12-17 10:45:34"
+                    }
+                  ],
+                  "total": 1,
+                  "page": 1,
+                  "page_size": 20,
+                  "has_more": false
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tag_ids",
+            "in": "query",
+            "description": "標籤 ID，逗號分隔（必填）- 使用 AND 條件，返回同時擁有所有標籤的影片",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁碼，默認 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每頁數量，默認 20，最大 50",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "description": "排序方式：latest、popular、recommended",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/search/tags": {
+      "get": {
+        "summary": "2.1 獲取標籤列表",
+        "description": "獲取標籤列表（按影片數量降序排列）\n\n認證：不需要\n\n返回：\n- tags: 標籤列表\n  - tag_id: 標籤 ID\n  - name: 標籤名稱\n  - video_count: 該標籤下的影片數量",
+        "tags": [
+          "2. 標籤相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "tags": [
+                    {
+                      "tag_id": 1,
+                      "name": "熱門",
+                      "video_count": 7
+                    },
+                    {
+                      "tag_id": 5,
+                      "name": "高畫質",
+                      "video_count": 5
+                    },
+                    {
+                      "tag_id": 2,
+                      "name": "新上架",
+                      "video_count": 3
+                    },
+                    {
+                      "tag_id": 4,
+                      "name": "獨家",
+                      "video_count": 3
+                    },
+                    {
+                      "tag_id": 3,
+                      "name": "經典",
+                      "video_count": 2
+                    },
+                    {
+                      "tag_id": 6,
+                      "name": "字幕",
+                      "video_count": 1
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "返回數量，默認 50，最大 100",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/search/hot": {
+      "get": {
+        "summary": "3.1 獲取熱門搜索詞",
+        "description": "獲取熱門搜索詞列表（按搜索次數降序排列）\n\n認證：不需要\n\n返回：\n- keywords: 熱門搜索詞列表\n  - keyword: 搜索關鍵字\n  - search_count: 搜索次數",
+        "tags": [
+          "3. 熱門搜索"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "keywords": [
+                    {
+                      "keyword": "復仇者聯盟",
+                      "search_count": 2
+                    },
+                    {
+                      "keyword": "冒險",
+                      "search_count": 2
+                    },
+                    {
+                      "keyword": "星際",
+                      "search_count": 1
+                    },
+                    {
+                      "keyword": "復仇",
+                      "search_count": 1
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "返回數量，默認 10，最大 50",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/search/history": {
+      "get": {
+        "summary": "4.1 獲取用戶搜索歷史",
+        "description": "獲取當前用戶的搜索歷史\n\n認證：需要\n\n返回：\n- keywords: 搜索歷史關鍵字列表（最多 10 條，按時間降序排列）",
+        "tags": [
+          "4. 搜索歷史"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "keywords": [
+                    "星際",
+                    "冒險",
+                    "復仇"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "4.3 清空所有搜索歷史",
+        "description": "清空當前用戶的所有搜索歷史\n\n認證：需要\n\n說明：不傳 keyword 參數則清空全部，使用軟刪除方式",
+        "tags": [
+          "4. 搜索歷史"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/search/videos/{video_id}": {
+      "get": {
+        "summary": "1.1 單個影片詳情",
+        "description": "根據關鍵字搜索影片（模糊搜索影片標題和標籤）\n\n認證：可選（登入後會記錄搜索歷史）\n\n排序方式：\n- latest: 按創建時間降序\n- popular: 按播放量降序\n- recommended: 按推薦權重降序\n\n返回：\n- videos: 影片列表\n- total: 總數\n- page: 當前頁\n- page_size: 每頁數量\n- has_more: 是否有更多",
+        "tags": [
+          "5. 播放影片"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "videos": [
+                    {
+                      "video_id": 1,
+                      "title": "星際冒險",
+                      "description": "一段驚心動魄的宇宙探險之旅",
+                      "cover_path": "/covers/video_001.jpg",
+                      "duration_seconds": 7200,
+                      "category": "5",
+                      "video_type": 2,
+                      "is_free": false,
+                      "is_vip": true,
+                      "price": "99.00",
+                      "view_count": 158000,
+                      "like_count": 12500,
+                      "favorite_count": 8900,
+                      "comment_count": 2300,
+                      "tags": [
+                        "熱門",
+                        "高畫質"
+                      ],
+                      "created_time": "2025-12-17 10:45:34"
+                    }
+                  ],
+                  "total": 1,
+                  "page": 1,
+                  "page_size": 20,
+                  "has_more": false
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/purchase/membership/plans": {
+      "get": {
+        "summary": "1.1 獲取會員方案列表",
+        "description": "獲取所有會員方案列表，包含月度、季度、年度會員的價格和優惠信息",
+        "tags": [
+          "1. 會員相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "plans": [
+                    {
+                      "type": "MONTHLY",
+                      "name": "月度會員",
+                      "price": 29.99,
+                      "currency": "CNY",
+                      "duration_days": 30,
+                      "discount_info": {
+                        "original_price": 39.99,
+                        "discount_rate": 0.25
+                      }
+                    },
+                    {
+                      "type": "QUARTERLY",
+                      "name": "季度會員",
+                      "price": 79.99,
+                      "currency": "CNY",
+                      "duration_days": 90,
+                      "discount_info": {
+                        "original_price": 119.97,
+                        "discount_rate": 0.33
+                      }
+                    },
+                    {
+                      "type": "YEARLY",
+                      "name": "年度會員",
+                      "price": 299.99,
+                      "currency": "CNY",
+                      "duration_days": 365,
+                      "discount_info": {
+                        "original_price": 479.88,
+                        "discount_rate": 0.37
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/purchase/membership/status": {
+      "get": {
+        "summary": "1.2 查詢會員狀態",
+        "description": "查詢當前用戶的會員狀態，包含會員類型、有效期、剩餘天數等信息",
+        "tags": [
+          "1. 會員相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "is_member": false,
+                  "membership_type": "",
+                  "valid_from": "",
+                  "valid_to": "",
+                  "days_remaining": 0
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/purchase/diamond/plans": {
+      "get": {
+        "summary": "2.1 獲取鑽石充值方案列表",
+        "description": "獲取鑽石充值方案列表，包含各檔位的鑽石數量、價格和優惠信息",
+        "tags": [
+          "2. 鑽石充值相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "plans": [
+                    {
+                      "diamond_amount": 100,
+                      "price": 10.0,
+                      "currency": "CNY",
+                      "bonus_diamond": 0
+                    },
+                    {
+                      "diamond_amount": 500,
+                      "price": 50.0,
+                      "currency": "CNY",
+                      "bonus_diamond": 50
+                    },
+                    {
+                      "diamond_amount": 1000,
+                      "price": 100.0,
+                      "currency": "CNY",
+                      "bonus_diamond": 150
+                    }
+                  ],
+                  "is_first_charge": true
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/purchase/content/order": {
+      "post": {
+        "summary": "3.1 創建影片購買訂單（鑽石支付）",
+        "description": "使用鑽石購買影片\n\n注意：此接口只支持 DIAMOND 支付方式\n\n流程說明：\n1. 系統會檢查用戶鑽石餘額是否足夠\n2. 如果餘額足夠，直接扣除鑽石並完成訂單\n3. 訂單狀態直接變為已完成 (order_status: 1, payment_status: 2)\n4. 響應中會返回扣款後的鑽石餘額 (diamond_balance_after)\n\n錯誤碼：\n- UNSUPPORTED_PAYMENT_METHOD: 不支持的支付方式（只支持 DIAMOND）\n- INSUFFICIENT_DIAMOND: 鑽石餘額不足\n- DIAMOND_CONSUME_FAILED: 鑽石扣款失敗\n- VIDEO_ALREADY_PURCHASED: 影片已購買\n- VIDEO_NOT_FOUND: 影片不存在",
+        "tags": [
+          "3. 影片購買相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "order_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                  "ticket": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                  "video_id": 1,
+                  "video_title": "測試影片 1",
+                  "price": 9.99,
+                  "currency": "DIAMOND",
+                  "payment_method": "DIAMOND",
+                  "order_status": 1,
+                  "payment_status": 2,
+                  "diamond_balance_after": "90.01"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "3.1 創建影片購買訂單 - 餘額不足",
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": "UNSUPPORTED_PAYMENT_METHOD",
+                  "message": "only DIAMOND payment method is supported for video purchase"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "video_id": {
+                    "type": "string"
+                  },
+                  "payment_method": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/purchase/content/purchased": {
+      "get": {
+        "summary": "3.2 查詢用戶已購影片列表",
+        "description": "查詢當前用戶已購買的所有影片列表，支持分頁",
+        "tags": [
+          "3. 影片購買相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "total": 2,
+                  "page": 1,
+                  "page_size": 20,
+                  "videos": [
+                    {
+                      "video_id": 1,
+                      "video_title": "測試影片 1",
+                      "purchased_at": "2025-01-07 10:30:00"
+                    },
+                    {
+                      "video_id": 2,
+                      "video_title": "測試影片 2",
+                      "purchased_at": "2025-01-06 15:20:00"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁碼，默認 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每頁數量，默認 20，最大 100",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/purchase/order/{order_id}": {
+      "get": {
+        "summary": "4.1 查詢訂單詳情",
+        "description": "根據訂單號查詢訂單詳情\n\n訂單類型：\n- MEMBERSHIP: 會員訂單\n- VIDEO_CONTENT: 影片訂單\n\n訂單狀態 (order_status)：\n- 0: 待支付\n- 1: 已完成\n- 2: 已取消\n- 3: 已退款\n\n支付狀態 (payment_status)：\n- 0: 待支付\n- 1: 支付中\n- 2: 已支付\n- 3: 支付失敗\n- 4: 已退款",
+        "tags": [
+          "4. 訂單查詢相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "order_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                  "ticket": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                  "order_type": "VIDEO_CONTENT",
+                  "price": 9.99,
+                  "currency": "DIAMOND",
+                  "payment_method": "DIAMOND",
+                  "payment_order_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                  "payment_status": 2,
+                  "payment_time": "2025-01-07 10:30:00",
+                  "order_status": 1,
+                  "created_at": "2025-01-07 10:30:00",
+                  "updated_at": "2025-01-07 10:30:00",
+                  "video_id": 1,
+                  "video_title": "測試影片 1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/purchase/orders": {
+      "get": {
+        "summary": "4.2 查詢訂單列表",
+        "description": "查詢用戶的訂單列表，支持按分類、狀態、日期範圍篩選\n\n分類 (category)：\n- CONSUMPTION: 消費紀錄（包含會員資格購買 + 鑽石購買影片）\n- DIAMOND_RECHARGE: 鑽石充值紀錄\n- DEPOSIT_WITHDRAW: 充提紀錄（存款 + 取款）\n- 空值: 返回所有類型\n\n帳單類別子篩選 (order_type)：根據 category 動態變化\n- category=CONSUMPTION: VIDEO_CONTENT（鑽石購買）、MEMBERSHIP（會員購買）\n- category=DEPOSIT_WITHDRAW: DEPOSIT（存款）、WITHDRAW（取款）\n- category=DIAMOND_RECHARGE: 無子類別\n\n時間範圍 (days)：\n- 7: 最近7天\n- 14: 最近14天\n- 30: 最近30天\n- 優先於 start_date/end_date 參數\n\n響應說明：\n- filters 欄位包含可用的篩選選項\n  - order_types: 訂單類型選項（根據 category 動態返回）\n  - order_status: 訂單狀態選項\n  - date_ranges: 時間範圍選項（包含計算好的 start_date/end_date）\n\n注意：DEPOSIT_WITHDRAW 類別目前回傳空內容，待後續實作",
+        "tags": [
+          "4. 訂單查詢相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "total": 2,
+                  "page": 1,
+                  "page_size": 20,
+                  "orders": [
+                    {
+                      "ticket": "VC20260115120000001",
+                      "order_type": "VIDEO_CONTENT",
+                      "title": "測試影片 1",
+                      "amount": 9.99,
+                      "currency": "DIAMOND",
+                      "order_status": 1,
+                      "payment_status": 2,
+                      "created_at": "2026-01-15 10:30:00"
+                    },
+                    {
+                      "ticket": "XC20260114150000001",
+                      "order_type": "MEMBERSHIP",
+                      "title": "月度會員",
+                      "amount": 29.99,
+                      "currency": "CNY",
+                      "order_status": 1,
+                      "payment_status": 2,
+                      "created_at": "2026-01-14 15:20:00"
+                    }
+                  ],
+                  "filters": {
+                    "order_types": [
+                      {
+                        "value": "",
+                        "label": "全部類別"
+                      },
+                      {
+                        "value": "VIDEO_CONTENT",
+                        "label": "鑽石購買"
+                      },
+                      {
+                        "value": "MEMBERSHIP",
+                        "label": "會員購買"
+                      }
+                    ],
+                    "order_status": [
+                      {
+                        "value": "",
+                        "label": "全部狀態"
+                      },
+                      {
+                        "value": "0",
+                        "label": "待支付"
+                      },
+                      {
+                        "value": "1",
+                        "label": "已完成"
+                      },
+                      {
+                        "value": "2",
+                        "label": "已取消"
+                      },
+                      {
+                        "value": "3",
+                        "label": "已退款"
+                      }
+                    ],
+                    "date_ranges": [
+                      {
+                        "days": 7,
+                        "label": "最近7天",
+                        "start_date": "2026-01-09",
+                        "end_date": "2026-01-15"
+                      },
+                      {
+                        "days": 14,
+                        "label": "最近14天",
+                        "start_date": "2026-01-02",
+                        "end_date": "2026-01-15"
+                      },
+                      {
+                        "days": 30,
+                        "label": "最近30天",
+                        "start_date": "2025-12-17",
+                        "end_date": "2026-01-15"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁碼，默認 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每頁數量，默認 20，最大 100",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "分類：CONSUMPTION（消費訂單）、DIAMOND_RECHARGE（鑽石充值）、DEPOSIT_WITHDRAW（充提紀錄）",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/social/comment": {
+      "post": {
+        "summary": "1.2 發表回覆（巢狀評論）",
+        "description": "發表回覆評論（巢狀評論）\n\n參數說明：\n- video_id: 影片 ID（必填）\n- parent_id: 父評論 ID（必填，用於指定回覆哪條評論）\n- content: 評論內容（必填，1-500 字元）\n\n說明：\n- parent_id: 直接回覆的評論 ID\n- root_id: 由系統自動計算，為討論串的根評論 ID",
+        "tags": [
+          "1. 評論相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 9,
+                  "video_id": 1,
+                  "user_id": 38,
+                  "parent_id": 4,
+                  "root_id": 4,
+                  "content": "這是一個回覆評論，同意樓上說的！",
+                  "like_count": 0,
+                  "reply_count": 0,
+                  "user_nickname": "",
+                  "user_avatar": "",
+                  "created_time": 0,
+                  "is_liked": false
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "video_id": {
+                    "type": "string"
+                  },
+                  "parent_id": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/social/comments/{video_id}": {
+      "get": {
+        "summary": "1.3 獲取影片評論列表",
+        "description": "獲取影片的頂層評論列表\n\n排序方式：\n- time: 按時間倒序\n- hot: 按熱度（按讚數）倒序\n\n返回：\n- comments: 評論列表\n- total: 總數\n- has_more: 是否有更多",
+        "tags": [
+          "1. 評論相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "comments": [
+                    {
+                      "id": 8,
+                      "video_id": 1,
+                      "user_id": 38,
+                      "parent_id": 0,
+                      "root_id": 0,
+                      "content": "這是一個測試評論，影片很精彩！",
+                      "like_count": 0,
+                      "reply_count": 0,
+                      "user_nickname": "",
+                      "user_avatar": "",
+                      "created_time": 1766524274,
+                      "is_liked": false
+                    },
+                    {
+                      "id": 4,
+                      "video_id": 1,
+                      "user_id": 38,
+                      "parent_id": 0,
+                      "root_id": 0,
+                      "content": "這是一個測試評論，影片很精彩！",
+                      "like_count": 1,
+                      "reply_count": 2,
+                      "user_nickname": "",
+                      "user_avatar": "",
+                      "created_time": 1766078620,
+                      "is_liked": false
+                    },
+                    {
+                      "id": 3,
+                      "video_id": 1,
+                      "user_id": 38,
+                      "parent_id": 0,
+                      "root_id": 0,
+                      "content": "這是一個測試評論，影片很精彩！",
+                      "like_count": 0,
+                      "reply_count": 0,
+                      "user_nickname": "",
+                      "user_avatar": "",
+                      "created_time": 1766022366,
+                      "is_liked": false
+                    },
+                    {
+                      "id": 2,
+                      "video_id": 1,
+                      "user_id": 38,
+                      "parent_id": 0,
+                      "root_id": 0,
+                      "content": "這是一個測試評論，影片很精彩！",
+                      "like_count": 0,
+                      "reply_count": 0,
+                      "user_nickname": "",
+                      "user_avatar": "",
+                      "created_time": 1766022363,
+                      "is_liked": false
+                    },
+                    {
+                      "id": 1,
+                      "video_id": 1,
+                      "user_id": 38,
+                      "parent_id": 0,
+                      "root_id": 0,
+                      "content": "這是一個測試評論，影片很精彩！",
+                      "like_count": 0,
+                      "reply_count": 0,
+                      "user_nickname": "",
+                      "user_avatar": "",
+                      "created_time": 1766021899,
+                      "is_liked": false
+                    }
+                  ],
+                  "total": 5,
+                  "has_more": false
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁碼，默認 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每頁數量，默認 20",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "description": "排序方式：time（時間排序）或 hot（熱度排序）",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/social/replies/{comment_id}": {
+      "get": {
+        "summary": "1.4 獲取評論回覆列表",
+        "description": "獲取某條評論的回覆列表（二級及以下評論）\n\n返回：\n- comments: 回覆列表\n- total: 總數\n- has_more: 是否有更多",
+        "tags": [
+          "1. 評論相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "comments": [
+                    {
+                      "id": 5,
+                      "video_id": 1,
+                      "user_id": 38,
+                      "parent_id": 4,
+                      "root_id": 4,
+                      "content": "這是一個回覆評論，同意樓上說的！",
+                      "like_count": 0,
+                      "reply_count": 0,
+                      "user_nickname": "",
+                      "user_avatar": "",
+                      "created_time": 1766078654,
+                      "is_liked": false
+                    },
+                    {
+                      "id": 9,
+                      "video_id": 1,
+                      "user_id": 38,
+                      "parent_id": 4,
+                      "root_id": 4,
+                      "content": "這是一個回覆評論，同意樓上說的！",
+                      "like_count": 0,
+                      "reply_count": 0,
+                      "user_nickname": "",
+                      "user_avatar": "",
+                      "created_time": 1766524280,
+                      "is_liked": false
+                    }
+                  ],
+                  "total": 2,
+                  "has_more": false
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁碼，默認 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每頁數量，默認 20",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/social/comment/{comment_id}": {
+      "delete": {
+        "summary": "1.5 刪除評論",
+        "description": "刪除自己發表的評論\n\n注意：\n- 只能刪除自己發表的評論\n- 刪除為軟刪除（標記狀態為已刪除）",
+        "tags": [
+          "1. 評論相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/social/like/video/{video_id}": {
+      "post": {
+        "summary": "2.1 影片按讚/取消",
+        "description": "切換影片按讚狀態（Toggle）\n\n說明：\n- 未按讚 -> 按讚\n- 已按讚 -> 取消按讚\n\n返回：\n- is_liked: 當前按讚狀態\n- like_count: 影片按讚總數",
+        "tags": [
+          "2. 按讚相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "is_liked": true,
+                  "like_count": 0
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/social/like/comment/{comment_id}": {
+      "post": {
+        "summary": "2.2 評論按讚/取消",
+        "description": "切換評論按讚狀態（Toggle）\n\n說明：\n- 未按讚 -> 按讚\n- 已按讚 -> 取消按讚\n\n返回：\n- is_liked: 當前按讚狀態\n- like_count: 評論按讚總數",
+        "tags": [
+          "2. 按讚相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "is_liked": true,
+                  "like_count": 1
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/social/like/check": {
+      "get": {
+        "summary": "2.3 批量檢查影片按讚狀態",
+        "description": "批量檢查當前用戶是否已對指定影片按讚\n\n參數說明：\n- video_ids: 影片 ID 列表，逗號分隔（必填）\n\n返回：\n- liked_map: 按讚狀態 Map\n  - key: 影片 ID\n  - value: true/false（是否已按讚）\n\n範例響應：\n{\n  \"liked_map\": {\n    \"1\": true,\n    \"2\": false,\n    \"3\": true\n  }\n}",
+        "tags": [
+          "2. 按讚相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "liked_map": {
+                    "1": true,
+                    "2": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "video_ids",
+            "in": "query",
+            "description": "影片 ID 列表，逗號分隔",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/social/favorite/{video_id}": {
+      "post": {
+        "summary": "3.1 收藏/取消收藏影片",
+        "description": "切換影片收藏狀態（Toggle）\n\n說明：\n- 未收藏 -> 收藏\n- 已收藏 -> 取消收藏\n\n返回：\n- is_favorited: 當前收藏狀態\n- favorite_count: 影片收藏總數",
+        "tags": [
+          "3. 收藏相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "is_favorited": true,
+                  "favorite_count": 1
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/social/favorite/list": {
+      "get": {
+        "summary": "3.2 獲取用戶收藏列表",
+        "description": "獲取當前用戶的收藏影片列表\n\n返回：\n- videos: 收藏的影片列表\n  - video_id: 影片 ID\n  - title: 影片標題\n  - cover_path: 封面路徑\n  - duration: 時長（秒）\n  - favorited_time: 收藏時間\n- total: 總數\n- has_more: 是否有更多",
+        "tags": [
+          "3. 收藏相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "videos": [
+                    {
+                      "video_id": 2,
+                      "title": "",
+                      "cover_path": "",
+                      "duration": 0,
+                      "favorited_time": 1766079099
+                    },
+                    {
+                      "video_id": 1,
+                      "title": "",
+                      "cover_path": "",
+                      "duration": 0,
+                      "favorited_time": 1766022320
+                    }
+                  ],
+                  "total": 2,
+                  "has_more": false
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁碼，默認 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每頁數量，默認 20",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/social/favorite/check": {
+      "get": {
+        "summary": "3.3 批量檢查影片收藏狀態",
+        "description": "批量檢查當前用戶是否已收藏指定影片\n\n參數說明：\n- video_ids: 影片 ID 列表，逗號分隔（必填）\n\n返回：\n- favorited_map: 收藏狀態 Map\n  - key: 影片 ID\n  - value: true/false（是否已收藏）\n\n範例響應：\n{\n  \"favorited_map\": {\n    \"1\": true,\n    \"2\": false,\n    \"3\": true\n  }\n}",
+        "tags": [
+          "3. 收藏相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "favorited_map": {
+                    "1": true,
+                    "2": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "video_ids",
+            "in": "query",
+            "description": "影片 ID 列表，逗號分隔",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/purchase/deposit": {
+      "post": {
+        "summary": "無效的 product_type",
+        "description": "測試使用無效的 product_type",
+        "tags": [
+          "5. 錯誤測試"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "payment_provider": {
+                    "type": "string"
+                  },
+                  "channel_code": {
+                    "type": "string"
+                  },
+                  "payer_name": {
+                    "type": "string"
+                  },
+                  "product_type": {
+                    "type": "string"
+                  },
+                  "product_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/purchase/deposit/query": {
+      "get": {
+        "summary": "查詢 - 訂單不存在",
+        "description": "測試查詢不存在的訂單",
+        "tags": [
+          "3. 訂單查詢"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "out_order_no",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/fgpay/callback/deposit/notify": {
+      "post": {
+        "summary": "模擬充值成功回調",
+        "description": "模擬第三方支付成功回調 (直接打到 fgpay 服務)\n\n環境變數需求:\n- mch_id: 商戶ID\n- merchant_key: 商戶密鑰\n- deposit_order_no: 充值訂單號\n- fgpay_base_url: fgpay 服務地址\n\npay_status:\n- 1: 未支付\n- 2: 已支付\n- 3: 超時\n- 4: 下單失敗",
+        "tags": [
+          "4. 回調測試 (Callback)"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "BaseResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "状态码，0=成功"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

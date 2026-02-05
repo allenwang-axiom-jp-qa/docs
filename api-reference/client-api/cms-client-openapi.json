@@ -1,0 +1,1218 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "CMS 網站客戶端 API",
+    "description": "CMS 網站客戶端服務 API 測試集合",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://dev-client.beauty-666.com",
+      "description": "开发环境"
+    }
+  ],
+  "tags": [
+    {
+      "name": "1. 公開接口",
+      "description": ""
+    },
+    {
+      "name": "2. 自助註冊",
+      "description": ""
+    },
+    {
+      "name": "3. 已認證用戶接口",
+      "description": ""
+    },
+    {
+      "name": "4. 資金密碼",
+      "description": ""
+    },
+    {
+      "name": "5. 驗證碼接口（dev不可用）",
+      "description": ""
+    },
+    {
+      "name": "6. 影片相關",
+      "description": ""
+    },
+    {
+      "name": "7. 短影片相關",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/api/v1/client/login": {
+      "post": {
+        "summary": "登入",
+        "description": "",
+        "tags": [
+          "1. 公開接口"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "user_id": 38,
+                  "product": "R8888",
+                  "account": "danal_xsite",
+                  "balance": 0,
+                  "currency": "RMB",
+                  "user_type": 3,
+                  "account_type": 1,
+                  "is_cash": false,
+                  "register_from": 1,
+                  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiL2dFWi80RURBUUVKVlhObGNsUnZhMlZ1QWYrQ0FBRVNBUU5WU1VRQkJnQUJCMUJ5YjJSMVkzUUJEQUFCQjBGalkyOTFiblFCREFBQkMwZGhiV1ZCWTJOdmRXNTBBUXdBQVFWRVpYQjBhQUVFQUFFSVZYTmxjbFI1Y0dVQkJBQUJDMEZqWTI5MWJuUlVlWEJsQVFRQUFRdEJaRzFwYmxWelpYSkpSQUVHQUFFTVJtRjBhR1Z5VlhObGNrbEVBUVlBQVF0R2FYSnpkRlZ6WlhKSlJBRUdBQUVQVW1WaGJFMXZibVY1VlhObGNrbEVBUVlBQVJCSmJuUnliMlIxWTJWeVZYTmxja2xFQVFZQUFRWlNiMnhsU1VRQkJnQUJCa2x6UTJGemFBRUNBQUVIVTJWeWRtbGpaUUVNQUFFSVVHeGhkR1p2Y20wQkJBQUJERkpsWjJsemRHVnlSbkp2YlFFRUFBRU1SR2x6WTI5MWJuUkdjbTl0QVFZQUFBQk0vNElCSmdFRlVqZzRPRGdCQzJSaGJtRnNYM2h6YVhSbEFRMDBNblkxZWpGak1tMHhaRFZtQVFnQkJnRUNBUUlCRndFU0FSSUJIQUVFQWdwamJYTXRZMnhwWlc1MEFRSUJBZ0VCQUE9PSIsImlzcyI6IlI4ODg4IiwiZXhwIjoxNzY2NTQ4MTI4LCJpYXQiOjE3NjY1NDYzMjh9.kx_aHJeop_HjBHMJankeqNUrW0Nj1mc1GLWuKQHJuIwaV79MlJXJkfOQk_8Nhox16eVwcwiICTk4392YTqER3O-aZdgxOjPZ8qySnxzv6b4bhLNHaYj5UU7Kn3T4rtxavpDjR5AG-IeR3CV679UYEAw_d1jgE-1rL4gj-IKlR-WrDOwmTJlJHsw-BQgL9yN81RwXntZUJCF-5IiF7x2FT9zzcKccpnIEkvxlm9eHVD3PlAieg-KRxYVh3-u5R6AhKL_RiIfTcTzTthboSoPV9O4Eo05PvSoGbIb-e_EqjKZ8r_iRzhr3de2E2fyHXXuhgiQyLKSjUwTiNE1rGCrdsA",
+                  "refresh_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiL2dFWi80RURBUUVKVlhObGNsUnZhMlZ1QWYrQ0FBRVNBUU5WU1VRQkJnQUJCMUJ5YjJSMVkzUUJEQUFCQjBGalkyOTFiblFCREFBQkMwZGhiV1ZCWTJOdmRXNTBBUXdBQVFWRVpYQjBhQUVFQUFFSVZYTmxjbFI1Y0dVQkJBQUJDMEZqWTI5MWJuUlVlWEJsQVFRQUFRdEJaRzFwYmxWelpYSkpSQUVHQUFFTVJtRjBhR1Z5VlhObGNrbEVBUVlBQVF0R2FYSnpkRlZ6WlhKSlJBRUdBQUVQVW1WaGJFMXZibVY1VlhObGNrbEVBUVlBQVJCSmJuUnliMlIxWTJWeVZYTmxja2xFQVFZQUFRWlNiMnhsU1VRQkJnQUJCa2x6UTJGemFBRUNBQUVIVTJWeWRtbGpaUUVNQUFFSVVHeGhkR1p2Y20wQkJBQUJERkpsWjJsemRHVnlSbkp2YlFFRUFBRU1SR2x6WTI5MWJuUkdjbTl0QVFZQUFBQk0vNElCSmdFRlVqZzRPRGdCQzJSaGJtRnNYM2h6YVhSbEFRMDBNblkxZWpGak1tMHhaRFZtQVFnQkJnRUNBUUlCRndFU0FSSUJIQUVFQWdwamJYTXRZMnhwWlc1MEFRSUJBZ0VCQUE9PSIsImlzcyI6IlI4ODg4IiwiZXhwIjoxNzY2NTQ5OTI4LCJpYXQiOjE3NjY1NDYzMjh9.F2iVNKdCI_EpHd2BABDwqnlhyra9Cf-ahq0b-tcH_INKtGZPZe6BLe3XsWMZUcRH0HdF1jW0_6zpyx6aexZ4oVyERQMNS5vWfwnCrVIBxFYzWY8nC-UvfzAN33dZcd26v7zVTUQ9Ri2hhqW0ds2JXsv27m4BX7Dde6rfIn6d_PxI4vcSHbdgTk-kuP9dlljgv8EIIwgYYguYzpEHki9AGMazjG8iAOYmR2vSXtWlcsofG38mOqMDfzAGBOWmtrZXZUw3Vrs40D5S7kHLzA2RN-oXGXjsLi182cgSHiXe9rwEapCJUa0CVs2NetTL2nngqVyxf5ZD8UQ6I8vYbcfVIQ",
+                  "expire_time": 1766548128,
+                  "online_customer_service": "https://web-rel.chatrevo.ai/customer_support/019a47bf-0ae0-717f-9eb3-e1d0c35d7693?platform=AGS_CREDIT&back=iframe_close",
+                  "game_provider_name": {
+                    "CP": {
+                      "en-us": "REVOX Lottery",
+                      "ko-kr": "REVOX Lottery",
+                      "zh-cn": "玖娱彩票"
+                    },
+                    "DBLIVE": {
+                      "en-us": "REVOX Live",
+                      "ko-kr": "REVOX Live",
+                      "zh-cn": "DB 真人"
+                    },
+                    "DBSPORT": {
+                      "en-us": "REVOX Sports",
+                      "ko-kr": "REVOX Sports",
+                      "zh-cn": "玖娱体育"
+                    },
+                    "DT": {
+                      "en-us": "REVOX Casino Live",
+                      "ko-kr": "REVOX Casino Live",
+                      "zh-cn": "玖娱賭場視訊"
+                    },
+                    "RSG": {
+                      "en-us": "REVOX Slot",
+                      "ko-kr": "REVOX Slot",
+                      "zh-cn": "玖娱電子"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/refresh_token": {
+      "post": {
+        "summary": "刷新令牌",
+        "description": "",
+        "tags": [
+          "1. 公開接口"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiL2dFWi80RURBUUVKVlhObGNsUnZhMlZ1QWYrQ0FBRVNBUU5WU1VRQkJnQUJCMUJ5YjJSMVkzUUJEQUFCQjBGalkyOTFiblFCREFBQkMwZGhiV1ZCWTJOdmRXNTBBUXdBQVFWRVpYQjBhQUVFQUFFSVZYTmxjbFI1Y0dVQkJBQUJDMEZqWTI5MWJuUlVlWEJsQVFRQUFRdEJaRzFwYmxWelpYSkpSQUVHQUFFTVJtRjBhR1Z5VlhObGNrbEVBUVlBQVF0R2FYSnpkRlZ6WlhKSlJBRUdBQUVQVW1WaGJFMXZibVY1VlhObGNrbEVBUVlBQVJCSmJuUnliMlIxWTJWeVZYTmxja2xFQVFZQUFRWlNiMnhsU1VRQkJnQUJCa2x6UTJGemFBRUNBQUVIVTJWeWRtbGpaUUVNQUFFSVVHeGhkR1p2Y20wQkJBQUJERkpsWjJsemRHVnlSbkp2YlFFRUFBRU1SR2x6WTI5MWJuUkdjbTl0QVFZQUFBQk0vNElCSmdFRlVqZzRPRGdCQzJSaGJtRnNYM2h6YVhSbEFRMDBNblkxZWpGak1tMHhaRFZtQVFnQkJnRUNBUUlCRndFU0FSSUJIQUVFQWdwamJYTXRZMnhwWlc1MEFRSUJBZ0VCQUE9PSIsImlzcyI6IlI4ODg4IiwiZXhwIjoxNzY2NTQ4MjQwLCJpYXQiOjE3NjY1NDY0NDB9.VUgZlM3ZxhotKMCxmqy_SKTCtcvl_qmExGkhZG9TGyIW0VMyKoDNS9gTT1jFZZWxZJCZm_sNWG6wDn6i9BFvrx9nVKO_xz6Nkv0ep2cXpYlj6ppcPpFZ3LVl1hhNZ_8pvWfYgzRnw82SyJ_JHb1kc9HTLJboRjdgs-IyQDWpL72FUVgyIeD3fGnOAS3crdhGto5f1icRVTcG_7JeDHd_ppRaWzk9A5XnTvIwpuiyq-4IfBdM6Grd4CdMBXRg2p7MOOpxD-Xtri0Wk9w3_PJReILX-mOUIyeeSgx4zrwRA5_l4-5Jg1kRVhaLRPpaSxWkHZk9DUjmKRbMUlluBzecZw",
+                  "refresh_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiL2dFWi80RURBUUVKVlhObGNsUnZhMlZ1QWYrQ0FBRVNBUU5WU1VRQkJnQUJCMUJ5YjJSMVkzUUJEQUFCQjBGalkyOTFiblFCREFBQkMwZGhiV1ZCWTJOdmRXNTBBUXdBQVFWRVpYQjBhQUVFQUFFSVZYTmxjbFI1Y0dVQkJBQUJDMEZqWTI5MWJuUlVlWEJsQVFRQUFRdEJaRzFwYmxWelpYSkpSQUVHQUFFTVJtRjBhR1Z5VlhObGNrbEVBUVlBQVF0R2FYSnpkRlZ6WlhKSlJBRUdBQUVQVW1WaGJFMXZibVY1VlhObGNrbEVBUVlBQVJCSmJuUnliMlIxWTJWeVZYTmxja2xFQVFZQUFRWlNiMnhsU1VRQkJnQUJCa2x6UTJGemFBRUNBQUVIVTJWeWRtbGpaUUVNQUFFSVVHeGhkR1p2Y20wQkJBQUJERkpsWjJsemRHVnlSbkp2YlFFRUFBRU1SR2x6WTI5MWJuUkdjbTl0QVFZQUFBQk0vNElCSmdFRlVqZzRPRGdCQzJSaGJtRnNYM2h6YVhSbEFRMDBNblkxZWpGak1tMHhaRFZtQVFnQkJnRUNBUUlCRndFU0FSSUJIQUVFQWdwamJYTXRZMnhwWlc1MEFRSUJBZ0VCQUE9PSIsImlzcyI6IlI4ODg4IiwiZXhwIjoxNzY2NTUwMDQwLCJpYXQiOjE3NjY1NDY0NDB9.YRwHPNa4QgCcsV0x5xW69SjmYvTVEA-EWbs9P6ekVUnKfB5QP-vVZRUWyJc_lPO6dRZAAQQ9MkpeWMqxs1JdxuJbCGbOUtAddPvzP3qAlfP4s1DHSoQIlD763DZxuUt2CYItlpiXzwFmPWOH24lkWCoEKrKuiSltzdgIuJWhBmfFgH9o32efSuc2m6rT2XCErge1Q-gJNpi_40b8Y3GZyWy_-YHMrnGH8prMq0sVkZ-zZCaEcgp2GNZBEauSVcxJRA-6i8QYTWmbUVJTqpvpUd29mvgQAhDteu4pKmGiRa617-bwL0mlltAB6oxD3SFLfpCRYiaRrouObYmoonj0fg",
+                  "expire_time": 1766548240
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/self/info": {
+      "get": {
+        "summary": "獲取自助註冊資訊",
+        "description": "",
+        "tags": [
+          "2. 自助註冊"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "online_customer_service": "https://web-rel.chatrevo.ai/customer_support/019a47bf-0ae0-717f-9eb3-e1d0c35d7693?platform=AGS_CREDIT&back=iframe_close",
+                  "app_download_url": "https://cms-download-ui-r8888.ags-dev.cc",
+                  "client_url": "https://cms-client-ui-r8888.ags-dev.cc"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/self/suggest": {
+      "get": {
+        "summary": "生成帳號密碼",
+        "description": "",
+        "tags": [
+          "2. 自助註冊"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "account": "user_sinno6",
+                  "password": "wLI2UIsd"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/self/register": {
+      "post": {
+        "summary": "自助註冊",
+        "description": "",
+        "tags": [
+          "2. 自助註冊"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "product": "R8888",
+                  "account": "danal_xsite2"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "account": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/profile": {
+      "get": {
+        "summary": "獲取個人資料",
+        "description": "",
+        "tags": [
+          "3. 已認證用戶接口"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "user_id": 38,
+                  "product": "R8888",
+                  "account": "danal_xsite",
+                  "nickname": "danal",
+                  "balance": 0,
+                  "currency": "RMB",
+                  "user_type": 3,
+                  "account_type": 1,
+                  "is_cash": false,
+                  "register_from": 1,
+                  "follow_count": 0,
+                  "fans_count": 0,
+                  "like_count": 3,
+                  "favorite_count": 1,
+                  "agent_team_count": 0,
+                  "online_customer_service": "https://web-rel.chatrevo.ai/customer_support/019a47bf-0ae0-717f-9eb3-e1d0c35d7693?platform=AGS_CREDIT&back=iframe_close"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/balance": {
+      "get": {
+        "summary": "獲取餘額",
+        "description": "",
+        "tags": [
+          "3. 已認證用戶接口"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "balance": 0
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/change_password": {
+      "put": {
+        "summary": "重設密碼（尚未定案）",
+        "description": "",
+        "tags": [
+          "3. 已認證用戶接口"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/change_nickname": {
+      "put": {
+        "summary": "修改暱稱",
+        "description": "",
+        "tags": [
+          "3. 已認證用戶接口"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nickname": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/withdrawal/set": {
+      "post": {
+        "summary": "設置資金密碼（首次）",
+        "description": "",
+        "tags": [
+          "4. 資金密碼"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/withdrawal/update": {
+      "post": {
+        "summary": "更新資金密碼",
+        "description": "",
+        "tags": [
+          "4. 資金密碼"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "old_password": {
+                    "type": "string"
+                  },
+                  "new_password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/withdrawal/check-password": {
+      "post": {
+        "summary": "驗證資金密碼",
+        "description": "",
+        "tags": [
+          "4. 資金密碼"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/withdrawal/reset-password/phone/code": {
+      "post": {
+        "summary": "重置資金密碼-發送手機驗證碼",
+        "description": "",
+        "tags": [
+          "4. 資金密碼"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/withdrawal/reset-password/email/code": {
+      "post": {
+        "summary": "重置資金密碼-發送郵箱驗證碼",
+        "description": "",
+        "tags": [
+          "4. 資金密碼"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/withdrawal/reset-password/confirm": {
+      "post": {
+        "summary": "重置資金密碼-確認",
+        "description": "",
+        "tags": [
+          "4. 資金密碼"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/verify/phone/code": {
+      "post": {
+        "summary": "獲取手機驗證碼（未完成）",
+        "description": "",
+        "tags": [
+          "5. 驗證碼接口（dev不可用）"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "country_code": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/verify/phone/confirm": {
+      "post": {
+        "summary": "確認手機驗證碼（未完成）",
+        "description": "",
+        "tags": [
+          "5. 驗證碼接口（dev不可用）"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/verify/email/code": {
+      "post": {
+        "summary": "獲取郵箱驗證碼",
+        "description": "",
+        "tags": [
+          "5. 驗證碼接口（dev不可用）"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "request_id": "3bbf035d-8afc-4034-b30a-92bb1afaa7dc",
+                  "expired_at": 1766546867
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/verify/email/confirm": {
+      "post": {
+        "summary": "確認郵箱驗證碼",
+        "description": "",
+        "tags": [
+          "5. 驗證碼接口（dev不可用）"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client/video/{video_id}": {
+      "get": {
+        "summary": "獲取影片詳情",
+        "description": "獲取影片詳情（包含購買狀態）\n\n支援遊客訪問（不需要 token），會根據用戶狀態返回不同的觀看權限\n\n觀看邏輯：\n1. 免費影片 (is_free=true)：所有人都可以觀看\n2. VIP 專享 (is_vip=true)：VIP 會員可以觀看\n3. 付費影片：已購買的用戶可以觀看",
+        "tags": [
+          "6. 影片相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "video_id": 1,
+                  "video_number": "VID001",
+                  "title": "測試影片",
+                  "description": "這是一個測試影片",
+                  "cover_image": "https://example.com/cover.jpg",
+                  "hls_playlist": "https://example.com/video/playlist.m3u8",
+                  "duration_seconds": 300,
+                  "resolution": "1920x1080",
+                  "codec": "h264",
+                  "bitrate_kbps": 5000,
+                  "category_id": 1,
+                  "category_name": "測試分類",
+                  "video_type": 2,
+                  "is_free": false,
+                  "is_vip": false,
+                  "price": 10.0,
+                  "trial_seconds": 30,
+                  "view_count": 1000,
+                  "like_count": 50,
+                  "favorite_count": 20,
+                  "comment_count": 10,
+                  "is_recommend": true,
+                  "recommend_weight": 0.8,
+                  "is_purchased": true,
+                  "is_liked": false,
+                  "is_favorited": false,
+                  "created_at": "2025-01-01 00:00:00",
+                  "updated_at": "2025-01-01 00:00:00",
+                  "can_watch": true,
+                  "tags": [
+                    {
+                      "id": 1,
+                      "name": "熱門"
+                    }
+                  ],
+                  "ad_config": {
+                    "vip_skip_ads": true,
+                    "pre_rolls": [],
+                    "mid_rolls": [],
+                    "post_rolls": []
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/video/{video_id}/progress": {
+      "get": {
+        "summary": "獲取影片觀看進度",
+        "description": "獲取單個影片的觀看進度，用於「繼續觀看」功能",
+        "tags": [
+          "6. 影片相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "video_id": 1,
+                  "video_duration": 300,
+                  "watch_duration": 150,
+                  "watch_progress": 50.0,
+                  "last_watch_time": "2025-01-01 12:00:00"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/video/history": {
+      "post": {
+        "summary": "更新觀看歷史",
+        "description": "用戶觀看影片時調用，更新觀看時長、進度和最後觀看時間",
+        "tags": [
+          "6. 影片相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "success"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "integer"
+                  },
+                  "video_id": {
+                    "type": "integer"
+                  },
+                  "video_duration": {
+                    "type": "integer"
+                  },
+                  "watch_duration": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "獲取觀看歷史列表",
+        "description": "分頁查詢用戶的觀看歷史，按最後觀看時間倒序",
+        "tags": [
+          "6. 影片相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "total": 5,
+                  "page": 1,
+                  "page_size": 20,
+                  "items": [
+                    {
+                      "video_id": 1,
+                      "video_title": "測試影片",
+                      "video_cover_path": "https://example.com/cover.jpg",
+                      "video_duration": 300,
+                      "watch_duration": 150,
+                      "watch_progress": 50.0,
+                      "last_watch_time": "2025-01-01 12:00:00"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁碼，默認 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每頁數量，默認 20，最大 100",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "summary": "清空所有觀看歷史",
+        "description": "清空用戶所有觀看歷史",
+        "tags": [
+          "6. 影片相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "success"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/video/history/{video_id}": {
+      "delete": {
+        "summary": "刪除單條觀看歷史",
+        "description": "刪除指定影片的觀看歷史",
+        "tags": [
+          "6. 影片相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "success"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client/shortvideo": {
+      "get": {
+        "summary": "獲取短影片列表",
+        "description": "獲取短影片列表（含原生廣告）\n\n支援遊客訪問（不需要 token），會根據用戶狀態返回不同的廣告配置\n\n返回內容包含：\n- 短影片列表（type: video）\n- 原生廣告（type: ad）\n- 廣告配置（ad_config）",
+        "tags": [
+          "7. 短影片相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "total": 100,
+                  "page": 1,
+                  "page_size": 10,
+                  "items": [
+                    {
+                      "type": "video",
+                      "id": "1",
+                      "title": "測試短影片",
+                      "url": "https://example.com/video/short1.mp4",
+                      "thumbnail_url": "https://example.com/thumb/short1.jpg",
+                      "duration": 30,
+                      "tags": [
+                        {
+                          "id": 1,
+                          "name": "熱門"
+                        }
+                      ],
+                      "is_liked": false,
+                      "is_favorited": false,
+                      "like_count": 100,
+                      "favorite_count": 50,
+                      "comment_count": 10
+                    },
+                    {
+                      "type": "ad",
+                      "id": "ad_001",
+                      "title": "廣告標題",
+                      "url": "https://example.com/ad/video.mp4",
+                      "thumbnail_url": "https://example.com/ad/thumb.jpg",
+                      "duration": 15,
+                      "tags": [],
+                      "is_liked": false,
+                      "is_favorited": false,
+                      "like_count": 0,
+                      "favorite_count": 0,
+                      "comment_count": 0,
+                      "ad_info": {
+                        "advertiser_nickname": "廣告主",
+                        "advertiser_avatar": "https://example.com/avatar.jpg",
+                        "advertiser_intro": "廣告主介紹",
+                        "action_button": "立即查看",
+                        "jump_link": "https://example.com/landing",
+                        "mock_likes": 999
+                      }
+                    }
+                  ],
+                  "ad_config": {
+                    "enabled": true,
+                    "first_position": 3,
+                    "interval_count": 5,
+                    "style_type": "native"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁碼，默認 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每頁數量，默認 10，最大 50",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "BaseResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "状态码，0=成功"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

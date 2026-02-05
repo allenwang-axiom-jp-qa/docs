@@ -1,0 +1,472 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "影片搜索服務 API",
+    "description": "影片搜索服務 API 測試集合 - 包含關鍵字搜索、標籤瀏覽、熱門搜索、搜索歷史相關接口\n\n**Base URL**: `/api/v1/search`\n\n**認證說明**:\n- 搜索影片、獲取標籤、熱門搜索：不需要登入\n- 搜索歷史相關：需要登入（Bearer Token）",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://dev-client.beauty-666.com",
+      "description": "开发环境"
+    }
+  ],
+  "tags": [
+    {
+      "name": "1. 影片搜索",
+      "description": "影片搜索相關接口"
+    },
+    {
+      "name": "2. 標籤相關",
+      "description": "標籤相關接口"
+    },
+    {
+      "name": "3. 熱門搜索",
+      "description": "熱門搜索相關接口"
+    },
+    {
+      "name": "4. 搜索歷史",
+      "description": "搜索歷史相關接口（需要登入）"
+    },
+    {
+      "name": "5. 播放影片",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/api/v1/search/videos": {
+      "get": {
+        "summary": "1.1 關鍵字搜索影片",
+        "description": "根據關鍵字搜索影片（模糊搜索影片標題和標籤）\n\n認證：可選（登入後會記錄搜索歷史）\n\n排序方式：\n- latest: 按創建時間降序\n- popular: 按播放量降序\n- recommended: 按推薦權重降序\n\n返回：\n- videos: 影片列表\n- total: 總數\n- page: 當前頁\n- page_size: 每頁數量\n- has_more: 是否有更多",
+        "tags": [
+          "1. 影片搜索"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "videos": [
+                    {
+                      "video_id": 1,
+                      "title": "星際冒險",
+                      "description": "一段驚心動魄的宇宙探險之旅",
+                      "cover_path": "/covers/video_001.jpg",
+                      "duration_seconds": 7200,
+                      "category": "5",
+                      "video_type": 2,
+                      "is_free": false,
+                      "is_vip": true,
+                      "price": "99.00",
+                      "view_count": 158000,
+                      "like_count": 12500,
+                      "favorite_count": 8900,
+                      "comment_count": 2300,
+                      "tags": [
+                        "熱門",
+                        "高畫質"
+                      ],
+                      "created_time": "2025-12-17 10:45:34"
+                    }
+                  ],
+                  "total": 1,
+                  "page": 1,
+                  "page_size": 20,
+                  "has_more": false
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "description": "搜索關鍵字（必填）- 模糊搜索標題和標籤",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁碼，默認 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每頁數量，默認 20，最大 50",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "description": "排序方式：latest（最新）、popular（熱門）、recommended（推薦）",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/search/videos/tags": {
+      "get": {
+        "summary": "1.2 根據多個標籤搜索影片（AND條件）",
+        "description": "根據多個標籤 ID 搜索影片（AND 條件）\n\n認證：可選\n\nQuery 參數：\n- tag_ids: 標籤 ID 列表，逗號分隔，如 \"1,2,3\"\n\n重要說明：\n- 使用 AND 條件\n- 只返回同時擁有所有指定標籤的影片\n- 例如 tag_ids=1,2,3 會返回同時有標籤 1、2、3 的影片\n\n返回：\n- videos: 影片列表\n- total: 總數\n- page: 當前頁\n- page_size: 每頁數量\n- has_more: 是否有更多",
+        "tags": [
+          "1. 影片搜索"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "videos": [
+                    {
+                      "video_id": 7,
+                      "title": "搞笑短片集",
+                      "description": "精選最爆笑的短片合集",
+                      "cover_path": "/covers/video_007.jpg",
+                      "duration_seconds": 600,
+                      "category": "2",
+                      "video_type": 1,
+                      "is_free": true,
+                      "is_vip": false,
+                      "price": "0.00",
+                      "view_count": 312000,
+                      "like_count": 28000,
+                      "favorite_count": 12000,
+                      "comment_count": 8900,
+                      "tags": [
+                        "熱門",
+                        "新上架"
+                      ],
+                      "created_time": "2025-12-17 10:45:34"
+                    }
+                  ],
+                  "total": 1,
+                  "page": 1,
+                  "page_size": 20,
+                  "has_more": false
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tag_ids",
+            "in": "query",
+            "description": "標籤 ID，逗號分隔（必填）- 使用 AND 條件，返回同時擁有所有標籤的影片",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁碼，默認 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每頁數量，默認 20，最大 50",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "description": "排序方式：latest、popular、recommended",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/search/tags": {
+      "get": {
+        "summary": "2.1 獲取標籤列表",
+        "description": "獲取標籤列表（按影片數量降序排列）\n\n認證：不需要\n\n返回：\n- tags: 標籤列表\n  - tag_id: 標籤 ID\n  - name: 標籤名稱\n  - video_count: 該標籤下的影片數量",
+        "tags": [
+          "2. 標籤相關"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "tags": [
+                    {
+                      "tag_id": 1,
+                      "name": "熱門",
+                      "video_count": 7
+                    },
+                    {
+                      "tag_id": 5,
+                      "name": "高畫質",
+                      "video_count": 5
+                    },
+                    {
+                      "tag_id": 2,
+                      "name": "新上架",
+                      "video_count": 3
+                    },
+                    {
+                      "tag_id": 4,
+                      "name": "獨家",
+                      "video_count": 3
+                    },
+                    {
+                      "tag_id": 3,
+                      "name": "經典",
+                      "video_count": 2
+                    },
+                    {
+                      "tag_id": 6,
+                      "name": "字幕",
+                      "video_count": 1
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "返回數量，默認 50，最大 100",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/search/hot": {
+      "get": {
+        "summary": "3.1 獲取熱門搜索詞",
+        "description": "獲取熱門搜索詞列表（按搜索次數降序排列）\n\n認證：不需要\n\n返回：\n- keywords: 熱門搜索詞列表\n  - keyword: 搜索關鍵字\n  - search_count: 搜索次數",
+        "tags": [
+          "3. 熱門搜索"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "keywords": [
+                    {
+                      "keyword": "復仇者聯盟",
+                      "search_count": 2
+                    },
+                    {
+                      "keyword": "冒險",
+                      "search_count": 2
+                    },
+                    {
+                      "keyword": "星際",
+                      "search_count": 1
+                    },
+                    {
+                      "keyword": "復仇",
+                      "search_count": 1
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "返回數量，默認 10，最大 50",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/search/history": {
+      "get": {
+        "summary": "4.1 獲取用戶搜索歷史",
+        "description": "獲取當前用戶的搜索歷史\n\n認證：需要\n\n返回：\n- keywords: 搜索歷史關鍵字列表（最多 10 條，按時間降序排列）",
+        "tags": [
+          "4. 搜索歷史"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "keywords": [
+                    "星際",
+                    "冒險",
+                    "復仇"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "4.3 清空所有搜索歷史",
+        "description": "清空當前用戶的所有搜索歷史\n\n認證：需要\n\n說明：不傳 keyword 參數則清空全部，使用軟刪除方式",
+        "tags": [
+          "4. 搜索歷史"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/search/videos/{video_id}": {
+      "get": {
+        "summary": "1.1 單個影片詳情",
+        "description": "根據關鍵字搜索影片（模糊搜索影片標題和標籤）\n\n認證：可選（登入後會記錄搜索歷史）\n\n排序方式：\n- latest: 按創建時間降序\n- popular: 按播放量降序\n- recommended: 按推薦權重降序\n\n返回：\n- videos: 影片列表\n- total: 總數\n- page: 當前頁\n- page_size: 每頁數量\n- has_more: 是否有更多",
+        "tags": [
+          "5. 播放影片"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "example": {
+                  "videos": [
+                    {
+                      "video_id": 1,
+                      "title": "星際冒險",
+                      "description": "一段驚心動魄的宇宙探險之旅",
+                      "cover_path": "/covers/video_001.jpg",
+                      "duration_seconds": 7200,
+                      "category": "5",
+                      "video_type": 2,
+                      "is_free": false,
+                      "is_vip": true,
+                      "price": "99.00",
+                      "view_count": 158000,
+                      "like_count": 12500,
+                      "favorite_count": 8900,
+                      "comment_count": 2300,
+                      "tags": [
+                        "熱門",
+                        "高畫質"
+                      ],
+                      "created_time": "2025-12-17 10:45:34"
+                    }
+                  ],
+                  "total": 1,
+                  "page": 1,
+                  "page_size": 20,
+                  "has_more": false
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "BaseResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "状态码，0=成功"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

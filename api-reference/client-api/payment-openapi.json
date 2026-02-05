@@ -1,0 +1,179 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "第三方支付服務 API",
+    "description": "CMS 支付服務 API 測試集合\n\n包含:\n- 鑽石充值 (透過 Client 服務統一入口)\n- 會員購買 (透過 Client 服務統一入口)\n- 訂單查詢\n- 回調測試 (fgpay 服務)",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://dev-client.beauty-666.com",
+      "description": "开发环境"
+    }
+  ],
+  "tags": [
+    {
+      "name": "1. 鑽石充值 (Diamond)",
+      "description": ""
+    },
+    {
+      "name": "2. 會員購買 (Membership)",
+      "description": ""
+    },
+    {
+      "name": "3. 訂單查詢",
+      "description": ""
+    },
+    {
+      "name": "4. 回調測試 (Callback)",
+      "description": ""
+    },
+    {
+      "name": "5. 錯誤測試",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/api/v1/purchase/deposit": {
+      "post": {
+        "summary": "無效的 product_type",
+        "description": "測試使用無效的 product_type",
+        "tags": [
+          "5. 錯誤測試"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "payment_provider": {
+                    "type": "string"
+                  },
+                  "channel_code": {
+                    "type": "string"
+                  },
+                  "payer_name": {
+                    "type": "string"
+                  },
+                  "product_type": {
+                    "type": "string"
+                  },
+                  "product_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/purchase/deposit/query": {
+      "get": {
+        "summary": "查詢 - 訂單不存在",
+        "description": "測試查詢不存在的訂單",
+        "tags": [
+          "3. 訂單查詢"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "out_order_no",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/fgpay/callback/deposit/notify": {
+      "post": {
+        "summary": "模擬充值成功回調",
+        "description": "模擬第三方支付成功回調 (直接打到 fgpay 服務)\n\n環境變數需求:\n- mch_id: 商戶ID\n- merchant_key: 商戶密鑰\n- deposit_order_no: 充值訂單號\n- fgpay_base_url: fgpay 服務地址\n\npay_status:\n- 1: 未支付\n- 2: 已支付\n- 3: 超時\n- 4: 下單失敗",
+        "tags": [
+          "4. 回調測試 (Callback)"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "BaseResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "状态码，0=成功"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}
