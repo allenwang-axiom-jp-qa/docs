@@ -1,0 +1,89 @@
+---
+title: '获取订单详情'
+api: 'GET https://stg-api.beauty-666.com/api/v1/client/purchase/order/{order_id}'
+description: '根据订单ID获取订单详情'
+---
+
+## 请求头
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+</ParamField>
+
+
+## 路径参数
+
+<ParamField path="order_id" type="string" required>
+  Order Id
+  示例：`ORD20240101001`
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  响应消息
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  响应数据
+</ResponseField>
+
+
+<RequestExample>
+
+```bash cURL
+curl -X GET 'https://stg-api.beauty-666.com/api/v1/client/purchase/order/ORD20240101001' \
+  -H 'Authorization: Bearer YOUR_TOKEN'
+```
+
+```javascript JavaScript
+const response = await fetch('https://stg-api.beauty-666.com/api/v1/client/purchase/order/ORD20240101001', {
+  method: 'GET',
+  headers: {
+    'Authorization': 'Bearer ' + token,
+    'Content-Type': 'application/json'
+  }
+});
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    'https://stg-api.beauty-666.com/api/v1/client/purchase/order/ORD20240101001',
+    headers={
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+)
+data = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 成功响应
+{
+  "code": 0,
+  "message": "success",
+  "data": {
+    ...
+  }
+}
+```
+
+```json 错误响应
+{
+  "code": 400,
+  "message": "错误信息"
+}
+```
+
+</ResponseExample>

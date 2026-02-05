@@ -1,0 +1,108 @@
+---
+title: '2.3 批量檢查影片按讚狀態'
+api: 'GET https://stg-api.beauty-666.com/api/v1/social/like/check'
+description: '批量檢查當前用戶是否已對指定影片按讚'
+---
+
+批量檢查當前用戶是否已對指定影片按讚
+
+參數說明：
+- video_ids: 影片 ID 列表，逗號分隔（必填）
+
+返回：
+- liked_map: 按讚狀態 Map
+  - key: 影片 ID
+  - value: true/false（是否已按讚）
+
+範例響應：
+{
+  "liked_map": {
+    "1": true,
+    "2": false,
+    "3": true
+  }
+}
+
+## 请求头
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+</ParamField>
+
+
+## 查询参数
+
+<ParamField query="video_ids" type="string" required>
+  影片 ID 列表，逗號分隔
+  示例：`1,2,3`
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  响应消息
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  响应数据
+</ResponseField>
+
+
+<RequestExample>
+
+```bash cURL
+curl -X GET 'https://stg-api.beauty-666.com/api/v1/social/like/check' \
+  -H 'Authorization: Bearer YOUR_TOKEN'
+```
+
+```javascript JavaScript
+const response = await fetch('https://stg-api.beauty-666.com/api/v1/social/like/check', {
+  method: 'GET',
+  headers: {
+    'Authorization': 'Bearer ' + token,
+    'Content-Type': 'application/json'
+  }
+});
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    'https://stg-api.beauty-666.com/api/v1/social/like/check',
+    headers={
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+)
+data = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 成功响应
+{
+  "code": 0,
+  "message": "success",
+  "data": {
+    ...
+  }
+}
+```
+
+```json 错误响应
+{
+  "code": 400,
+  "message": "错误信息"
+}
+```
+
+</ResponseExample>

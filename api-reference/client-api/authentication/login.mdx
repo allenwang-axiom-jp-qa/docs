@@ -1,0 +1,105 @@
+---
+title: '用户登录'
+api: 'POST https://stg-api.beauty-666.com/api/v1/client/login'
+description: '使用账号密码登录系统'
+---
+
+
+## 请求体
+
+<ParamField body="account" type="string" required>
+  Account
+  示例：`User_6scvt3`
+</ParamField>
+
+<ParamField body="password" type="string" required>
+  Password
+  示例：`Pwd123456`
+</ParamField>
+
+<ParamField body="product" type="string" required>
+  Product
+  示例：`R8888`
+</ParamField>
+
+<ParamField body="platform" type="integer">
+  Platform
+  示例：`1`
+</ParamField>
+
+<ParamField body="is_mobile" type="integer">
+  Is Mobile
+</ParamField>
+
+<ParamField body="lang" type="string">
+  Lang
+  示例：`zh-CN`
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  响应消息
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  响应数据
+</ResponseField>
+
+
+<RequestExample>
+
+```bash cURL
+curl -X POST 'https://stg-api.beauty-666.com/api/v1/client/login' \
+  -H 'Content-Type: application/json'
+```
+
+```javascript JavaScript
+const response = await fetch('https://stg-api.beauty-666.com/api/v1/client/login', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    'https://stg-api.beauty-666.com/api/v1/client/login',
+    headers={
+        'Content-Type': 'application/json'
+    }
+)
+data = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 成功响应
+{
+  "code": 0,
+  "message": "success",
+  "data": {
+    ...
+  }
+}
+```
+
+```json 错误响应
+{
+  "code": 400,
+  "message": "错误信息"
+}
+```
+
+</ResponseExample>

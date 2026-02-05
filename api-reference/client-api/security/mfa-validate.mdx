@@ -1,0 +1,86 @@
+---
+title: '验证MFA'
+api: 'POST https://stg-api.beauty-666.com/api/v1/client/my/mfa/validate'
+description: '验证MFA验证码'
+---
+
+## 请求头
+
+<ParamField header="Authorization" type="string" required>
+  JWT Bearer token，格式：`Bearer YOUR_TOKEN`
+</ParamField>
+
+
+## 请求体
+
+<ParamField body="code" type="string" required>
+  Code
+  示例：`123456`
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  响应消息
+</ResponseField>
+
+
+<RequestExample>
+
+```bash cURL
+curl -X POST 'https://stg-api.beauty-666.com/api/v1/client/my/mfa/validate' \
+  -H 'Authorization: Bearer YOUR_TOKEN' \
+  -H 'Content-Type: application/json'
+```
+
+```javascript JavaScript
+const response = await fetch('https://stg-api.beauty-666.com/api/v1/client/my/mfa/validate', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer ' + token,
+    'Content-Type': 'application/json'
+  }
+});
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    'https://stg-api.beauty-666.com/api/v1/client/my/mfa/validate',
+    headers={
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+)
+data = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 成功响应
+{
+  "code": 0,
+  "message": "success",
+  "data": {
+    ...
+  }
+}
+```
+
+```json 错误响应
+{
+  "code": 400,
+  "message": "错误信息"
+}
+```
+
+</ResponseExample>

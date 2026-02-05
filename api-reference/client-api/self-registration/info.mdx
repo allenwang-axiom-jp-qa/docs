@@ -1,0 +1,76 @@
+---
+title: '获取注册信息'
+api: 'GET https://stg-api.beauty-666.com/api/v1/client/self/info'
+description: '根据注册码获取注册信息'
+---
+
+
+## 查询参数
+
+<ParamField query="code" type="string" required>
+  Code
+  示例：`reg_code_123`
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  响应消息
+</ResponseField>
+
+
+<RequestExample>
+
+```bash cURL
+curl -X GET 'https://stg-api.beauty-666.com/api/v1/client/self/info'
+```
+
+```javascript JavaScript
+const response = await fetch('https://stg-api.beauty-666.com/api/v1/client/self/info', {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    'https://stg-api.beauty-666.com/api/v1/client/self/info',
+    headers={
+        'Content-Type': 'application/json'
+    }
+)
+data = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 成功响应
+{
+  "code": 0,
+  "message": "success",
+  "data": {
+    ...
+  }
+}
+```
+
+```json 错误响应
+{
+  "code": 400,
+  "message": "错误信息"
+}
+```
+
+</ResponseExample>

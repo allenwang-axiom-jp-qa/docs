@@ -1,0 +1,96 @@
+---
+title: '手机号验证码登录'
+api: 'POST https://stg-api.beauty-666.com/api/v1/client/login/phone'
+description: '使用手机号和验证码登录'
+---
+
+
+## 请求体
+
+<ParamField body="phone" type="string" required>
+  Phone
+  示例：`13800138000`
+</ParamField>
+
+<ParamField body="code" type="string" required>
+  Code
+  示例：`123456`
+</ParamField>
+
+<ParamField body="area_code" type="string">
+  Area Code
+  示例：`+86`
+</ParamField>
+
+<ParamField body="product" type="string">
+  Product
+  示例：`R8888`
+</ParamField>
+
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，0 表示成功
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  响应消息
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  响应数据
+</ResponseField>
+
+
+<RequestExample>
+
+```bash cURL
+curl -X POST 'https://stg-api.beauty-666.com/api/v1/client/login/phone' \
+  -H 'Content-Type: application/json'
+```
+
+```javascript JavaScript
+const response = await fetch('https://stg-api.beauty-666.com/api/v1/client/login/phone', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    'https://stg-api.beauty-666.com/api/v1/client/login/phone',
+    headers={
+        'Content-Type': 'application/json'
+    }
+)
+data = response.json()
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 成功响应
+{
+  "code": 0,
+  "message": "success",
+  "data": {
+    ...
+  }
+}
+```
+
+```json 错误响应
+{
+  "code": 400,
+  "message": "错误信息"
+}
+```
+
+</ResponseExample>

@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "CMS OMS API Documentation",
+  "name": "CMS API Documentation",
   "logo": {
     "light": "/logo/light.svg",
     "dark": "/logo/dark.svg"
@@ -27,8 +27,12 @@
   },
   "tabs": [
     {
-      "name": "API Reference",
+      "name": "OMS API",
       "url": "api-reference"
+    },
+    {
+      "name": "Client API",
+      "url": "client-api"
     },
     {
       "name": "Deployment",
@@ -52,7 +56,7 @@
       ]
     },
     {
-      "group": "API Reference",
+      "group": "OMS API Reference",
       "pages": [
         "api-reference/overview"
       ]
@@ -215,6 +219,231 @@
       ]
     },
     {
+      "group": "Client API 总览",
+      "pages": [
+        "api-reference/client-api/overview"
+      ]
+    },
+    {
+      "group": "认证登录",
+      "pages": [
+        {
+          "group": "账号密码登录",
+          "pages": [
+            "api-reference/client-api/authentication/login",
+            "api-reference/client-api/authentication/refresh-token"
+          ]
+        },
+        {
+          "group": "验证码登录",
+          "pages": [
+            "api-reference/client-api/login-otp/phone-code",
+            "api-reference/client-api/login-otp/email-code",
+            "api-reference/client-api/login-otp/phone-login",
+            "api-reference/client-api/login-otp/email-login"
+          ]
+        },
+        {
+          "group": "自助注册",
+          "pages": [
+            "api-reference/client-api/self-registration/info",
+            "api-reference/client-api/self-registration/captcha",
+            "api-reference/client-api/self-registration/register",
+            "api-reference/client-api/self-registration/suggest"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "用户管理",
+      "pages": [
+        "api-reference/client-api/authentication/profile",
+        "api-reference/client-api/authentication/balance",
+        "api-reference/client-api/authentication/change-password",
+        "api-reference/client-api/authentication/change-nickname",
+        "api-reference/client-api/authentication/reset-password"
+      ]
+    },
+    {
+      "group": "验证服务",
+      "pages": [
+        "api-reference/client-api/verification/phone-code",
+        "api-reference/client-api/verification/email-code",
+        "api-reference/client-api/verification/phone-confirm",
+        "api-reference/client-api/verification/email-confirm"
+      ]
+    },
+    {
+      "group": "购买服务",
+      "pages": [
+        {
+          "group": "会员套餐",
+          "pages": [
+            "api-reference/client-api/purchase/membership-status",
+            "api-reference/client-api/purchase/membership-plans"
+          ]
+        },
+        {
+          "group": "钻石充值",
+          "pages": [
+            "api-reference/client-api/purchase/diamond-plans",
+            "api-reference/client-api/purchase/deposit",
+            "api-reference/client-api/purchase/deposit-query"
+          ]
+        },
+        {
+          "group": "视频购买",
+          "pages": [
+            "api-reference/client-api/purchase/content-order",
+            "api-reference/client-api/purchase/purchased-content"
+          ]
+        },
+        {
+          "group": "订单管理",
+          "pages": [
+            "api-reference/client-api/purchase/orders",
+            "api-reference/client-api/purchase/order-detail",
+            "api-reference/client-api/purchase/payment-status"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "视频服务",
+      "pages": [
+        {
+          "group": "视频播放",
+          "pages": [
+            "api-reference/client-api/video/detail",
+            "api-reference/client-api/video/progress-get",
+            "api-reference/client-api/video/progress-update",
+            "api-reference/client-api/authentication/hls-key"
+          ]
+        },
+        {
+          "group": "观看历史",
+          "pages": [
+            "api-reference/client-api/video/history-create",
+            "api-reference/client-api/video/history-list",
+            "api-reference/client-api/video/history-delete",
+            "api-reference/client-api/video/history-clear"
+          ]
+        },
+        {
+          "group": "短视频",
+          "pages": [
+            "api-reference/client-api/video/shortvideo"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "搜索服务",
+      "pages": [
+        {
+          "group": "视频搜索",
+          "pages": [
+            "api-reference/client-api/search/videos",
+            "api-reference/client-api/search/videos-by-tags",
+            "api-reference/client-api/search/video-detail"
+          ]
+        },
+        {
+          "group": "标签管理",
+          "pages": [
+            "api-reference/client-api/search/tags",
+            "api-reference/client-api/search/tags-hot",
+            "api-reference/client-api/search/hot-search"
+          ]
+        },
+        {
+          "group": "搜索历史",
+          "pages": [
+            "api-reference/client-api/search/history-get",
+            "api-reference/client-api/search/history-delete"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "社交互动",
+      "pages": [
+        {
+          "group": "评论功能",
+          "pages": [
+            "api-reference/client-api/social/comment-create",
+            "api-reference/client-api/social/comments-list",
+            "api-reference/client-api/social/replies-list",
+            "api-reference/client-api/social/comment-delete"
+          ]
+        },
+        {
+          "group": "点赞功能",
+          "pages": [
+            "api-reference/client-api/social/like-video",
+            "api-reference/client-api/social/like-comment",
+            "api-reference/client-api/social/like-check"
+          ]
+        },
+        {
+          "group": "收藏功能",
+          "pages": [
+            "api-reference/client-api/social/favorite-toggle",
+            "api-reference/client-api/social/favorite-list",
+            "api-reference/client-api/social/favorite-check"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "安全设置",
+      "pages": [
+        {
+          "group": "MFA/2FA",
+          "pages": [
+            "api-reference/client-api/security/mfa-totp-setup",
+            "api-reference/client-api/security/mfa-totp-activate",
+            "api-reference/client-api/security/mfa-validate",
+            "api-reference/client-api/security/2fa-reset-phone-code",
+            "api-reference/client-api/security/2fa-reset-email-code",
+            "api-reference/client-api/security/2fa-reset-confirm"
+          ]
+        },
+        {
+          "group": "提现密码",
+          "pages": [
+            "api-reference/client-api/withdrawal/set-password",
+            "api-reference/client-api/withdrawal/update-password",
+            "api-reference/client-api/withdrawal/check-password",
+            "api-reference/client-api/withdrawal/reset-phone-code",
+            "api-reference/client-api/withdrawal/reset-email-code",
+            "api-reference/client-api/withdrawal/reset-confirm"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "系统服务",
+      "pages": [
+        "api-reference/client-api/home/modules",
+        "api-reference/client-api/system/version",
+        "api-reference/client-api/system/domain",
+        "api-reference/client-api/system/product"
+      ]
+    },
+    {
+      "group": "广告服务",
+      "pages": [
+        "api-reference/client-api/advideo/progress"
+      ]
+    },
+    {
+      "group": "支付回调",
+      "pages": [
+        "api-reference/client-api/payment/callback-notify"
+      ]
+    },
+    {
       "group": "Deployment",
       "pages": [
         "deployment/setup",
@@ -226,7 +455,7 @@
     "github": "https://github.com/axiom888/cms-site-svc-oms"
   },
   "api": {
-    "baseUrl": "https://dev-admin.beauty-666.com",
+    "baseUrl": "https://stg-api.beauty-666.com",
     "auth": {
       "method": "bearer"
     }
