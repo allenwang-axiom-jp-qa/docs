@@ -1,32 +1,32 @@
 ---
-title: '1.1 回報播放進度'
+title: '上报播放进度'
 api: 'POST https://stg-api.beauty-666.com/api/v1/advideo/progress'
-description: '回報用戶觀看影片的進度'
+description: '上报用户观看视频的进度'
 ---
 
-回報用戶觀看影片的進度
+上报用户观看视频的进度
 
-**調用時機**：前端每 5 秒調用一次
+**调用时机**：前端每 5 秒调用一次
 
-**Request Body**:
-- user_id: 用戶 ID（必填）
-- video_id: 影片 ID（必填）
-- watched_sec: 本次觀看秒數（必填，最小值 1）
-- product: 產品代碼（必填）
+**请求体参数**:
+- user_id: 用户 ID（必填）
+- video_id: 视频 ID（必填）
+- watched_sec: 本次观看秒数（必填，最小值 1）
+- product: 产品代码（必填）
 
-**Response**:
-- trigger_ad: 是否觸發廣告
-- ad_video_url: 廣告影片 URL（觸發時返回）
-- ad_id: 廣告 ID（觸發時返回）
-- ad_name: 廣告名稱（觸發時返回）
-- ad_thumbnail_url: 廣告縮圖 URL（觸發時返回）
-- ad_link_url: 廣告連結 URL（觸發時返回）
-- ad_duration: 廣告時長（觸發時返回）
-- accumulated_sec: 當前累積觀看秒數
+**响应数据**:
+- trigger_ad: 是否触发广告
+- ad_video_url: 广告视频 URL（触发时返回）
+- ad_id: 广告 ID（触发时返回）
+- ad_name: 广告名称（触发时返回）
+- ad_thumbnail_url: 广告缩略图 URL（触发时返回）
+- ad_link_url: 广告链接 URL（触发时返回）
+- ad_duration: 广告时长（触发时返回）
+- accumulated_sec: 当前累计观看秒数
 
-**閾值說明**：
-- 預設閾值為 600 秒（10 分鐘）
-- 達到閾值後觸發廣告並重置計時器
+**阈值说明**：
+- 默认阈值为 600 秒（10 分鐘）
+- 达到阈值后触发广告并重置计时器
 
 ## 请求头
 

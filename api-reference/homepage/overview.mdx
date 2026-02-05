@@ -1,141 +1,141 @@
 ---
-title: 'Homepage API Overview'
-description: 'Manage homepage modules and items'
+title: '首页模块 API 总览'
+description: '管理首页模块和模块项'
 ---
 
-## Introduction
+## 简介
 
-The Homepage API allows you to manage homepage modules and their items for your application. The system includes 9 pre-configured modules that can be customized.
+首页模块 API 允许您管理应用程序的首页模块及其项目。系统包含 9 个可自定义的预配置模块。
 
-## Key Features
+## 主要功能
 
-- **9 Pre-configured Modules**: Fixed modules including banner, hot recommend, category nav, etc.
-- **Module Configuration**: Update titles, config JSON, order, and enabled status
-- **Module Items CRUD**: Full create, read, update, delete support for module items
-- **H5 Preview**: Optimized preview endpoint with batch query (2 queries instead of 10)
-- **Pagination Support**: All list endpoints support pagination
+- **9个预配置模块**: 固定模块包括轮播图、热门推荐、分类导航等
+- **模块配置**: 更新标题、配置JSON、排序和启用状态
+- **模块项 CRUD**: 完整的创建、读取、更新、删除模块项支持
+- **H5预览**: 优化的预览端点，批量查询（2次查询代替10次）
+- **分页支持**: 所有列表端点支持分页
 
-## Pre-configured Modules
+## 预配置模块
 
-| ID | Key | Title | Type | Description |
+| ID | 键名 | 标题 | 类型 | 描述 |
 |----|-----|-------|------|-------------|
-| 1 | banner | 轮播图 | banner | Homepage carousel |
-| 2 | hot_recommend | 热门推荐 | grid | Hot content grid |
-| 3 | category_nav | 分类导航 | category | Category navigation |
-| 4 | vip_zone | VIP专区 | vip | VIP exclusive content |
-| 5 | featured_videos | 精选视频 | video | Featured videos |
-| 6 | live_streaming | 直播间 | live | Live streaming |
-| 7 | new_arrivals | 最新上架 | product | New products |
-| 8 | discount_zone | 优惠专区 | promotion | Promotions |
-| 9 | customer_service | 客服中心 | service | Customer service |
+| 1 | banner | 轮播图 | banner | 首页轮播图 |
+| 2 | hot_recommend | 热门推荐 | grid | 热门内容网格 |
+| 3 | category_nav | 分类导航 | category | 分类导航 |
+| 4 | vip_zone | VIP专区 | vip | VIP专属内容 |
+| 5 | featured_videos | 精选视频 | video | 精选视频 |
+| 6 | live_streaming | 直播间 | live | 直播间 |
+| 7 | new_arrivals | 最新上架 | product | 最新上架 |
+| 8 | discount_zone | 优惠专区 | promotion | 优惠活动 |
+| 9 | customer_service | 客服中心 | service | 客服中心 |
 
 <Warning>
-  Module creation and deletion are not supported. Only the 9 pre-configured modules exist in the system.
+  不支持模块的创建和删除。系统中只有这9个预配置模块。
 </Warning>
 
-## Database Tables
+## 数据库表
 
-- `home_modules` - Homepage modules (9 pre-configured)
-- `home_module_items` - Homepage module items
+- `home_modules` - 首页模块（9个预配置）
+- `home_module_items` - 首页模块项
 
-## API Endpoints
+## API 端点
 
-### Module Management
+### 模块管理
 
 <CardGroup cols={2}>
   <Card
-    title="Get Overview"
+    title="获取总览"
     icon="chart-simple"
     href="/api-reference/homepage/modules#get-overview"
   >
-    Get module statistics
+    获取模块统计信息
   </Card>
   <Card
-    title="List Modules"
+    title="模块列表"
     icon="list"
     href="/api-reference/homepage/modules#list-modules"
   >
-    Get all modules with pagination
+    获取所有模块（支持分页）
   </Card>
   <Card
-    title="Get Module"
+    title="获取模块"
     icon="file"
     href="/api-reference/homepage/modules#get-module"
   >
-    Get single module details
+    获取单个模块详情
   </Card>
   <Card
-    title="Update Module"
+    title="更新模块"
     icon="pen"
     href="/api-reference/homepage/modules#update-module"
   >
-    Update module configuration
+    更新模块配置
   </Card>
 </CardGroup>
 
-### Module Items
+### 模块项
 
 <CardGroup cols={2}>
   <Card
-    title="List Items"
+    title="项目列表"
     icon="list"
     href="/api-reference/homepage/module-items#list-items"
   >
-    Get module items with pagination
+    获取模块项目（支持分页）
   </Card>
   <Card
-    title="Create Item"
+    title="创建项目"
     icon="plus"
     href="/api-reference/homepage/module-items#create-item"
   >
-    Create new module item
+    创建新的模块项目
   </Card>
   <Card
-    title="Update Item"
+    title="更新项目"
     icon="pen"
     href="/api-reference/homepage/module-items#update-item"
   >
-    Update module item
+    更新模块项目
   </Card>
   <Card
-    title="Delete Item"
+    title="删除项目"
     icon="trash"
     href="/api-reference/homepage/module-items#delete-item"
   >
-    Soft delete module item
+    软删除模块项目
   </Card>
 </CardGroup>
 
-### Preview
+### 预览
 
 <CardGroup cols={1}>
   <Card
-    title="H5 Preview"
+    title="H5预览"
     icon="mobile"
     href="/api-reference/homepage/preview"
   >
-    Get optimized preview data for H5 rendering
+    获取H5渲染的优化预览数据
   </Card>
 </CardGroup>
 
-## Performance
+## 性能优化
 
-The H5 preview endpoint is optimized with batch queries:
+H5预览端点已进行批量查询优化：
 
-- **Query Count**: 2 queries (vs 10 in naive implementation)
-- **Response Time**: ~10ms (vs ~50ms)
-- **Load Reduction**: 80% fewer database queries
+- **查询次数**: 2次查询（优化前：10次）
+- **响应时间**: ~10ms（优化前：~50ms）
+- **负载降低**: 减少80%的数据库查询
 
-## Version History
+## 版本历史
 
 ### v1.1 (2026-01-06)
-- Request/Response object standardization
-- Fixed H5 preview N+1 query issue (5x performance improvement)
-- YAGNI optimization (removed module create/delete)
-- Code reduction: 145 lines (24% reduction)
-- Added pagination support
+- 请求/响应对象标准化
+- 修复H5预览N+1查询问题（5倍性能提升）
+- YAGNI优化（移除模块创建/删除功能）
+- 代码减少：145行（减少24%）
+- 添加分页支持
 
 ### v1.0 (2026-01-05)
-- Initial release with 9 pre-configured modules
-- Module and item CRUD functionality
-- H5 preview endpoint
+- 初始发布，包含9个预配置模块
+- 模块和项目 CRUD 功能
+- H5预览端点
